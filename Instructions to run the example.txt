@@ -24,7 +24,7 @@ There are many ways to run R code. The proposed instructions here are focusing o
 5) Select all the code and click "run"
 :  The intermediate outputs for the data node 1 will be created ("Node2_output.csv")
 
-6) 4) Open the file "CoordNode_code_lin-reg.R". It should then appear in R
+6) Open the file "CoordNode_code_lin-reg.R". It should then appear in R
 7) Select all the code and click "run"
 
 8) The result file ("CoordNode_results_distributed_lin_reg.csv") will be created. You can open it to see the results.
