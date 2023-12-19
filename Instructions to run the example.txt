@@ -1,0 +1,33 @@
+There are many ways to run R code. The proposed instructions here are focusing on using a graphical interface
+
+::::::INSTALLING R, R STUDIO, AND THE EXEMPLE ::::::
+1. : Go to the page : https://posit.co/download/rstudio-desktop/ and follow the instructions for your operating system
+2. : Unpack the example files on one of your drives, you should end up with a folder containg two folders : a) "Centralised_inference" and b) "Distributed_inference"
+
+::::::EXECUTING THE CENTRALISED CODE::::::
+*** Make sure R studio is not currently running and close it if it is.
+1) Navigate to the folder "Centralised_inference"
+
+2) Open the file "PoolingOrg_code_lin_reg.R". It should then appear in R.
+3) Select all the code and click "run"
+4) The result file ("PoolingOrg_results_centralised_lin_reg.csv") will be created. You can open it to see the results.
+
+::::::EXECUTING THE DISTRIBUTED CODE::::::
+*** Make sure R studio is not currently running and close it if it is.
+1) Navigate to the folder "Distributed_inference"
+
+2) Open the file "Node1_code_lin-reg.R". It should then appear in R.
+3) Select all the code and click "run"
+:  The intermediate outputs for the data node 1 will be created ("Node1_output.csv")
+
+4) Open the file "Node2_code_lin-reg.R". It should then appear in R.
+5) Select all the code and click "run"
+:  The intermediate outputs for the data node 1 will be created ("Node2_output.csv")
+
+6) 4) Open the file "CoordNode_code_lin-reg.R". It should then appear in R
+7) Select all the code and click "run"
+
+8) The result file ("CoordNode_results_distributed_lin_reg.csv") will be created. You can open it to see the results.
+
+## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
+## Copyright : GRIIS / Université de Sherbrooke

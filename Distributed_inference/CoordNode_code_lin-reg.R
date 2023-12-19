@@ -1,0 +1,58 @@
+############### Distributed inference ####################
+############### Coordinating node code ###################
+
+## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
+## Copyright: GRIIS / Université de Sherbrooke
+
+# Load package KS : https://cran.r-project.org/package=ks https://cran.r-project.org/web/packages/ks/ks.pdf
+library(ks)
+
+# Importing data ----------------------------------------------------------
+
+# Set p as the number of predictors and K as the number of data nodes
+p <- 2
+K <- 2
+
+# Create data structures to load the data node outputs
+all_local_xtx <- array(0, dim=c(p+1,p+1, K))
+all_local_xty <- matrix(0, nrow=p+1, ncol=K)
+all_local_yty <- rep(0,K)
+all_local_n <- rep(0, K)
+
+# Loading output from all nodes in previously created data structures
+for (k in 1:K) {
+  output_k <- read.csv(paste0("Node", k, "_output.csv"))
+  all_local_xtx[,,k] <- invvec(output_k[,2])
+  all_local_xty[,k] <- output_k[1:(p+1),4]
+  all_local_yty[k] <- output_k[1,3]
+}
+
+# Aggregate of local statistics for linear regression model estimates -------
+
+xty <- as.matrix(rowSums(all_local_xty))
+yty <- sum(all_local_yty)
+xtx <- rowSums(all_local_xtx,dims=2)
+xtx_inverse <- solve(xtx)
+
+# Coefficient estimates in linear regression model-------------------------
+
+#Calculating estimates and Variance matrix
+
+beta <- xtx_inverse%*%xty
+varbeta <- (1/(xtx[1,1]-p-1))*drop((yty-((t(beta))%*%xty))) * xtx_inverse
+
+#Calculating CI bounds, here based on 0.05
+
+upper <- beta + qt(p=.05/2, df=xtx[1,1]-p-1, lower.tail=FALSE)*sqrt(diag(varbeta))
+lower <- beta - qt(p=.05/2, df=xtx[1,1]-p-1, lower.tail=FALSE)*sqrt(diag(varbeta))
+
+# Summary and output ------------------------------------------------------
+## Binding all the results together
+output <- setNames(data.frame(beta,upper,lower, row.names = c("Intercept","Pred1","Pred2")), c("Beta", "Upper", "Lower"))
+
+## Producing the CSV file containing the final outputs
+write.csv(output, file="CoordNode_results_distributed_lin_reg.csv")
+
+## Remove all environment variables. 
+## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)
+rm(list = ls())
