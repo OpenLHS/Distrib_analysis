@@ -7,7 +7,7 @@
 # Load package KS : https://cran.r-project.org/package=ks https://cran.r-project.org/web/packages/ks/ks.pdf
 library(ks)
 
-#Set data node number (1 or 2)
+#Set data node number
 k <- 1
 
 # Importing data ----------------------------------------------------------
