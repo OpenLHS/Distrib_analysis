@@ -48,7 +48,7 @@ lower <- beta - qt(p=.05/2, df=xtx[1,1]-p-1, lower.tail=FALSE)*sqrt(diag(varbeta
 
 # Summary and output ------------------------------------------------------
 ## Binding all the results together
-output <- setNames(data.frame(beta,upper,lower, row.names = c("Intercept","Pred1","Pred2")), c("Beta", "Upper", "Lower"))
+output <- setNames(data.frame(beta,upper,lower, row.names = c("Intercept",paste0("Pred", c(1:p)))), c("Beta", "Upper", "Lower"))
 
 ## Producing the CSV file containing the final outputs
 write.csv(output, file="CoordNode_results_distributed_lin_reg.csv")

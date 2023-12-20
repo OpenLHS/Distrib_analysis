@@ -41,8 +41,9 @@ lower <- beta - qt(p=.05/2, df=nrow(pooled_data)-ncol(intercept_pred), lower.tai
 
 # Summary and outputs ----------------------------------------------------
 
-output <- setNames(data.frame(beta,upper,lower, row.names = c("Intercept","Pred1","Pred2")), c("Beta", "Upper", "Lower"))
-  
+output <- setNames(data.frame(beta,upper,lower, row.names = c("Intercept",paste0("Pred", c(1:ncol(predictors))))), c("Beta", "Upper", "Lower"))
+
+## Producing the CSV file containing the final outputs
 write.csv(output, file="PoolingOrg_results_centralised_lin_reg.csv")
 
 ## Remove all environment variables. 
