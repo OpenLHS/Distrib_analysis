@@ -9,9 +9,24 @@ library(ks)
 
 # Importing data ----------------------------------------------------------
 
-# Set p as the number of predictors and K as the number of data nodes
-p <- 2
-K <- 2
+# Calculate number of data nodes from files fiting the pattern in the working directory
+K=length(list.files(pattern="Node[[:digit:]]+_output.csv"))
+
+# calculate number of predictors and validate it is the same in each file
+## Initialise p
+p <- 0
+for (k in 1:K) {
+  ## Calculate the number of predictors based on the data node output file
+  q = sqrt(nrow(read.csv(paste0("Node", k, "_output.csv"))))-1
+  ## if first data file opened, assigned the value to p
+  if (p == 0) {
+    p <- q
+  }
+  ## if a file has a different number of predictors, send an error
+  else if (p != q) {
+    stop("your files do not seem to contain the same number of predictors")
+  }
+}
 
 # Create data structures to load the data node outputs
 all_local_xtx <- array(0, dim=c(p+1,p+1, K))
