@@ -4,11 +4,21 @@
 ## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 ## Copyright: GRIIS / Université de Sherbrooke
 
+
+# Loading packages and setting up core variables --------------------------
+
 # Load package KS : https://cran.r-project.org/package=ks https://cran.r-project.org/web/packages/ks/ks.pdf
 library(ks)
+# Load package this.path to identify the script filename and deduce the node number.
+# https://cran.r-project.org/package=this.path https://cran.r-project.org/web/packages/this.path/this.path.pdf
+library("this.path")
 
-#Set data node number
-k <- 1
+
+#Set data node number based on the filename. This assumes a file with name like Node[[:digit:]]+_code_lin-reg.R
+filename <- basename2(this.path())
+fu<- min(unlist(gregexpr("_",filename)))
+k <- strtoi(substring(filename,5,fu-1))
+
 
 # Importing data ----------------------------------------------------------
 
@@ -27,13 +37,17 @@ intercept <- rep(1,nrow(node_data))
 ## joins the intercepts and the predictors
 intercept_pred <- data.frame(intercept,predictors)
 
+
 # Summary statistics to share to coordinating center ----------------------
+
 ## Matrix transpositions
 xtx <- t(as.matrix(intercept_pred))%*%as.matrix(intercept_pred)
 yty <- t(as.matrix(outcome))%*%as.matrix(outcome)
 xty <- t(as.matrix(intercept_pred))%*%as.matrix(outcome)
 
-# Summary and outputs -----------------------------------------------
+
+# Summary and outputs -----------------------------------------------------
+
 ## Binding all the results together
 outputs <- cbind(vec(xtx),vec(yty),vec(xty),nrow(node_data))
 
