@@ -1,12 +1,16 @@
 There are many ways to run R code. The proposed instructions here are focusing on using a graphical interface
 
-:::::: INSTALLING R, R STUDIO AND THE REQUIRED PACKAGES ::::::
+:::::: INSTALLING R and R STUDIO ::::::
 1) Go to the page : https://posit.co/download/rstudio-desktop/ and follow the instructions for your operating system
+
+:::::: INSTALLING THE REQUIRED PACKAGES ::::::
 : The example requires the use of two packages not present in the base installation :
 - KS : https://cran.r-project.org/package=ks https://cran.r-project.org/web/packages/ks/ks.pdf
 - this.path : https://cran.r-project.org/package=this.path https://cran.r-project.org/web/packages/this.path/this.path.pdf
+
 : R should prompt you to download the packages automatically
-2) If you work in an isolated environment, you might need to download them manually at the adress above and install them for your RStudio instance
+
+1) If you work in an isolated environment, you might need to download them manually at the adress above and install them for your RStudio instance
 : While describing the process here is out of scope, a web search will yield resources like https://riptutorial.com/r/example/5556/install-package-from-local-source that can be helpful.
 
 :::::: INSTALLING THE EXAMPLE ::::::
