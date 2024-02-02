@@ -42,5 +42,8 @@ There are many ways to run R code. The proposed instructions here are focusing o
 
 8) The result file ("CoordNode_results_distributed_lin_reg.csv") will be created. You can open it to see the results.
 
+:::::: ALTERNATIVE EXAMPLE ::::::
+1) To try with a more "realistic" example, you can use the data files contained in the folder "Newborn_test_data", copy them in the appropriate folders (overwriting the existing ones) and then follow the instructions above.
+
 ## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 ## Copyright : GRIIS / Université de Sherbrooke
