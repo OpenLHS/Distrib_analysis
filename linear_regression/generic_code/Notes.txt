@@ -1,0 +1,8 @@
+The file "Data-node_core_code_lin-reg.R" contains the actual analytical code to be used by data nodes to generate the intermediate results to be sent to the coordination node. It contains a function taking a node identifier as a parameter.
+
+The core code is meant to be called by another R file "Data-node_X_call_lin-reg.R". To use it, please change the "X" in the file name to a data node identifier and, if the this.path package is not available, please manually input the node identifier in the code where indicated.
+If the this.path package is available, the node identifier will be infered automatically from the file name.
+
+The file "CoordNode_code_lin-reg.R" needs to be colocated with a set of data nodes intermediate results to execute the final calculations to generate the linear regression results.
+
+The subfoler "pooled_comparator" contains code that can be used to execute a traditional pooled linear regression.
