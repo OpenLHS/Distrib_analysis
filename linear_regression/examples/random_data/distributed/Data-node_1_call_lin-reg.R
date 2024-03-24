@@ -26,7 +26,7 @@ if (thispath_available) {
 	# This assumes a file with name like Data-node_[[:digit:]]+_call_lin-reg.R
 	filename <- basename2(this.path())
 	fu<- min(unlist(gregexpr("_",filename)))
-	k <- strtoi(substring(filename,11,fu-1))
+	k <- strtoi(substring(filename,11,fu+1))
 
 } else {
 	# if the r package this.path is not available/installed, the data node identifier set above will be used instead.
@@ -38,4 +38,4 @@ data_lin_reg(k)
 
 ## Remove all environment variables. 
 ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)
-rm(list = ls())
+#rm(list = ls())
