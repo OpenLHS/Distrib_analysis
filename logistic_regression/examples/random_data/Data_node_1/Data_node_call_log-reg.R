@@ -34,7 +34,8 @@ if (require(this.path)) {
 }
   
 # Veryfiying if there is a coordination node output file present
-if (length(list.files(pattern="Coord_node_iter_[[:digit:]]+_output.csv")) > 0) {
+nbprimerfiles <- length(list.files(pattern="Coord_node_iter_[[:digit:]]+_primer.csv"))
+if (nbprimerfiles > 0) {
   source("Data_node_call_iter_log-reg.R")
   data_call_iter_log_reg(manualk,manualt)
 } else {

@@ -72,7 +72,7 @@ if (manualt >= 0) {
 } else {
   
   # List all the data files conforming the the pattern below. There should be at least 1
-  coordouputfileslist <- list.files(pattern="Coord_node_iter_[[:digit:]]+_output.csv")
+  coordouputfileslist <- list.files(pattern="Coord_node_iter_[[:digit:]]+_primer.csv")
   # Assuming there is at least one file found
   if (length(coordouputfileslist) > 0) {
     
@@ -88,7 +88,7 @@ if (manualt >= 0) {
     
     t <- sortediterlst[[1]]
   } else {
-    stop("There is more than one data file in this folder, the node number cannot be automatically identified")
+    stop("There is no primer file found")
   }
 }
 

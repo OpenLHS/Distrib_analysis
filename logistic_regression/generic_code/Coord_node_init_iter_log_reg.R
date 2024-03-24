@@ -4,8 +4,7 @@
 ## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 ## Copyright: GRIIS / Université de Sherbrooke
 
-# Load package rstudioapi : https://cran.r-project.org/package=rstudioapi 
-library(rstudioapi)
+coord_init_iter_log_reg <- function() {
 
 # Importing data and computing initial simple averaging estimator ---------
 
@@ -26,7 +25,7 @@ if (require(this.path)) {
   stop("The required conditions to automatically set the working directory are not met. See R file")
 }
 
-
+# Extract node data ----------------------------------------------------------
 K <- length(list.files(pattern="Data_node_[[:digit:]]+_iter_0_output.csv"))
 p <- 0
 for (k in 1:K) {
@@ -54,7 +53,7 @@ beta_sa <- beta_sa/n
 # Exporting simple averaging estimator to be sent to data nodes -----------
 
 write.csv(beta_sa,
-          file="Coord_node_iter_0_output.csv", row.names=FALSE)
+          file="Coord_node_iter_1_primer.csv", row.names=FALSE)
 
 # Exporting total sample size for variance estimation ---------------------
 
@@ -63,3 +62,6 @@ write.csv(n, file="Coord_node_sample_size.csv", row.names=FALSE)
 ## Remove all environment variables. 
 ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)
 rm(list = ls())
+
+return(TRUE)
+}

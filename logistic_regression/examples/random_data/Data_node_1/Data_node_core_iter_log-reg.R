@@ -48,7 +48,7 @@ if (require(this.path)) {
 
 node_data <- read.csv(paste0("Data_node_", k, ".csv"))
 
-beta_t <- read.csv(paste0("Coord_node_iter_", t, "_output.csv"))[,1]
+beta_t <- read.csv(paste0("Coord_node_iter_", t, "_primer.csv"))[,1]
 
 X_k <- as.matrix(cbind(1, node_data[,-1]))
 y_k <- node_data[,1]
@@ -62,9 +62,8 @@ V_k_t <- logreg_V(beta_t, X_k)
 
 # Exporting gradient and hessian ------------------------------------------
 
-newt <- t+1
 write.csv(cbind(D_k_t, V_k_t),
-          file=paste0("Data_node_", k, "_iter_", newt, "_output.csv"), row.names=FALSE)
+          file=paste0("Data_node_", k, "_iter_", t, "_output.csv"), row.names=FALSE)
 
 ## Remove all environment variables. 
 ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)

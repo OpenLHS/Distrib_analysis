@@ -10,7 +10,6 @@
 
 
 # If you want to override the node numbering based on filename, input 0 or a positive integer here
-manualk <- -1
 manualt <- -1
 
 # No modifications should be required below this point
@@ -33,14 +32,14 @@ if (require(this.path)) {
   stop("The required conditions to automatically set the working directory are not met. See R file")
 }
   
-# Veryfiying if there is a coordination node output file present
+# Verifying if there is a coordination node output file present
 nbprimerfiles <- length(list.files(pattern="Coord_node_iter_[[:digit:]]+_primer.csv"))
 if (nbprimerfiles > 0) {
-  source("Data_node_call_iter_log-reg.R")
-  data_call_iter_log_reg(manualk,manualt)
+  source("Coord_node_call_add_iter_log-reg.R")
+  coord_call_add_iter_log_reg(manualt)
 } else {
-  source("Data_node_call_init_log_reg.R")
-  data_call_init_log_reg(manualk)
+  source("Coord_node_init_iter_log_reg.R")
+  coord_init_iter_log_reg()
   }
 
 ## Remove all environment variables. 
