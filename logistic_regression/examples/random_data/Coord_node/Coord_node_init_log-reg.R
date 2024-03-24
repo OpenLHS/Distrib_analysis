@@ -54,7 +54,7 @@ beta_sa <- beta_sa/n
 # Exporting simple averaging estimator to be sent to data nodes -----------
 
 write.csv(beta_sa,
-          file="Coord_node_iter_1_output.csv", row.names=FALSE)
+          file="Coord_node_iter_0_output.csv", row.names=FALSE)
 
 # Exporting total sample size for variance estimation ---------------------
 

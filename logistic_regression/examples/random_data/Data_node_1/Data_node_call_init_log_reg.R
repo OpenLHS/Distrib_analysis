@@ -8,9 +8,10 @@
 # Currently, the automated node number allocation currently requires execution in R studio and rstudioapi package
 # https://cran.r-project.org/package=rstudioapi
 
-
+data_call_init_log_reg <- function(man_nodeid=-1) {
+  
 # If you want to override the node numbering based on filename, input 0 or a positive integer here
-manualk <- -1
+manualk <- man_nodeid
 
 # No modifications should be required below this point
 ###########################
@@ -72,3 +73,6 @@ if (k >= 0) {
 ## Remove all environment variables. 
 ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)
 rm(list = ls())
+
+return(TRUE)
+}

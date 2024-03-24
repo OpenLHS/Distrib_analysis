@@ -8,38 +8,40 @@
 # Currently, the automated node number allocation currently requires execution in R studio and rstudioapi package
 # https://cran.r-project.org/package=rstudioapi
 
-
+data_call_init_log_reg <- function(man_nodeid=-1) {
+  
 # If you want to override the node numbering based on filename, input 0 or a positive integer here
-manualk <- -1
+manualk <- man_nodeid
 
 # No modifications should be required below this point
 ###########################
 
 k <- -1
 
-# If there is a manual override, the node number (k) is set to the manual value
+# Set working directory automatically
+
+# this.path package is available
+if (require(this.path)) {
+  setwd(this.dir())
+  
+  # else if running in R studio and the rstudioapi is available, set the correct working directory
+} else if ((Sys.getenv("RSTUDIO") == "1") & (require("rstudioapi"))) {
+  print("RSTUDIO")
+  path <- dirname(rstudioapi::getActiveDocumentContext()$path)
+  setwd(path)
+  
+  # no known means to automatically set working directory
+} else {
+  stop("The required conditions to automatically set the working directory are not met. See R file")
+}
+
+
+# If there is a manual override, the node number (k) is set to the manual value --------------------------
 if (manualk >= 0) {
   k <- manualk
   
-  # Since there is no valid override number, the node number will be extracted from the data file name
+  # If there is no valid override number, there will be an attempt to extract the node number from the data file name
   } else {
-    
-    # Set working directory automatically
-    
-    # this.path package is available
-    if (require(this.path)) {
-      setwd(this.dir())
-    
-    # else if running in R studio and the rstudioapi is available, set the correct working directory
-    } else if ((Sys.getenv("RSTUDIO") == "1") & (require("rstudioapi"))) {
-        print("RSTUDIO")
-        path <- dirname(rstudioapi::getActiveDocumentContext()$path)
-        setwd(path)
-    
-    # no known means to automatically allocate node number
-    } else {
-      stop("The required conditions to automatically set the working directory are not met. See R file")
-    }
     
     # List all the data files conforming the the pattern below. There should be only 1
     datafileslist <- list.files(pattern="Data_node_[[:digit:]]+.csv")
@@ -71,3 +73,6 @@ if (k >= 0) {
 ## Remove all environment variables. 
 ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)
 rm(list = ls())
+
+return(TRUE)
+}

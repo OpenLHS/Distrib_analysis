@@ -8,10 +8,11 @@
 # Currently, the automated node number allocation currently requires execution in R studio and rstudioapi package
 # https://cran.r-project.org/package=rstudioapi
 
+data_call_iter_log_reg <- function(man_nodeid=-1, man_iter=-1) {
 
 # If you want to override the node numbering based on filename, input 0 or a positive integer here
-manualk <- -1
-manualt <- -1
+manualk <- man_nodeid
+manualt <- man_iter
 
 # No modifications should be required below this point
 ###########################
@@ -73,17 +74,28 @@ if (manualt >= 0) {
   # List all the data files conforming the the pattern below. There should be at least 1
   coordouputfileslist <- list.files(pattern="Coord_node_iter_[[:digit:]]+_output.csv")
   # Assuming there is at least one file found
-  if (length(datafileslist) > 0) {
-    t <- manualt
+  if (length(coordouputfileslist) > 0) {
+    
+    iterlst=list()
+    for (fl in coordouputfileslist){
+      outputfname <- fl
+      lastundersf <- max(unlist(gregexpr("_",outputfname)))
+      suffname <- nchar(outputfname)-11
+      iterfl <- strtoi(substring(outputfname,lastundersf-1,suffname))
+      iterlst <- append(iterlst,iterfl)
+    }
+    sortediterlst <- iterlst[order(names(setNames(iterlst, iterlst)),decreasing=TRUE)]
+    
+    t <- sortediterlst[[1]]
   } else {
     stop("There is more than one data file in this folder, the node number cannot be automatically identified")
   }
 }
 
-# Verifying that a valid node number could be allocated manually or automatically
-if (k >= 0) {
+# Verifying that a valid node number and sequence numbers could be allocated manually or automatically
+if (k >= 0 & t >= 0) {
   source("Data_node_core_iter_log-reg.R")
-  data_iter_log_reg(k,manualt)
+  data_iter_log_reg(k,t)
 } else {
   stop("Node numbering was not set properly")
 }
@@ -91,3 +103,6 @@ if (k >= 0) {
 ## Remove all environment variables. 
 ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)
 rm(list = ls())
+
+return(TRUE)
+}

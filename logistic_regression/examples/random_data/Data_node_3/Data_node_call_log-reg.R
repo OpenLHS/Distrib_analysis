@@ -8,15 +8,13 @@
 # Currently, the automated node number allocation currently requires execution in R studio and rstudioapi package
 # https://cran.r-project.org/package=rstudioapi
 
-data_call_init_log_reg <- function(man_nodeid=-1) {
-  
+
 # If you want to override the node numbering based on filename, input 0 or a positive integer here
-manualk <- man_nodeid
+manualk <- -1
+manualt <- -1
 
 # No modifications should be required below this point
 ###########################
-
-k <- -1
 
 # Set working directory automatically
 
@@ -34,45 +32,16 @@ if (require(this.path)) {
 } else {
   stop("The required conditions to automatically set the working directory are not met. See R file")
 }
-
-
-# If there is a manual override, the node number (k) is set to the manual value --------------------------
-if (manualk >= 0) {
-  k <- manualk
   
-  # If there is no valid override number, there will be an attempt to extract the node number from the data file name
-  } else {
-    
-    # List all the data files conforming the the pattern below. There should be only 1
-    datafileslist <- list.files(pattern="Data_node_[[:digit:]]+.csv")
-  
-    # Assuming there is only one data file found
-    if (length(datafileslist) == 1) {
-
-      filename <- datafileslist[[1]]
-      lastunders <- max(unlist(gregexpr("_",filename)))
-      lenmainfilename <- nchar(filename)-4
-      autok <- strtoi(substring(filename,lastunders+1,lenmainfilename))
-      
-      k <- autok
-      
-      # If there is more than one data file in the folder, the script will halt.
-      } else {
-        stop("There is more than one data file in this folder, the node number cannot be automatically identified")
-    }
-}
-
-# Verifying that a valid node number could be allocated manually or automatically
-if (k >= 0) {
-  source("Data_node_core_init_log_reg.R")
-  data_init_log_reg(k)
+# Veryfiying if there is a coordination node output file present
+if (length(list.files(pattern="Coord_node_iter_[[:digit:]]+_output.csv")) > 0) {
+  source("Data_node_call_iter_log-reg.R")
+  data_call_iter_log_reg(manualk,manualt)
 } else {
-  stop("Node numbering was not set properly")
-}
+  source("Data_node_call_init_log_reg.R")
+  data_call_init_log_reg(manualk)
+  }
 
 ## Remove all environment variables. 
 ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)
 rm(list = ls())
-
-return(TRUE)
-}
