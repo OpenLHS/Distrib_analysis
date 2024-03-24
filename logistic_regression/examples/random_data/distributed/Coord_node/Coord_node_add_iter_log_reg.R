@@ -44,7 +44,7 @@ write.csv(beta_new,
           file=paste0("Coord_node_iter_", t+1, "_primer.csv"), row.names=FALSE)
 
 # Calculating current round estimates if we have at least one round completed
-if (t>1) {
+if (t>0) {
   n <- read.csv("Coord_node_sample_size.csv")[,1]
   Sigma <- n * solve(V_t)
   write.csv(Sigma, file=paste0("Coord_node_iter_", t, "_covariance.csv"), row.names=FALSE)

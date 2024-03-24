@@ -34,15 +34,13 @@ There are many ways to run R code. The proposed instructions here are focusing o
 2) 	Take each output file generated (tagged "iter_0") and copy all three in the coordination node folder
 3)	Run the coordination bat file (or the corresponding r file)
 
-To perform an iteration:
+Then, to perform an iteration:
 4) 	Copy the primer csv file to each of the three data node folders
-5) 	run the bat file (or the corresponding r file) for each data node to initiate the process
+5) 	run the bat file (or the corresponding r file) for each data node
 6) 	take each output file generated (tagged with the most recent iteration number) and copy all three in the coordination node folder
 7) 	run the coordination bat file (or the corresponding r file)
 **	this step will generate but the estimators for this iteration and a primer file to be used if another iteration is desired
 8)	optional : compare the results of the previous iteration with the current one to decide if another iteration is pertinent (return to step 4) or not	
-
-*** Optional : if you want to try to generate new test datasets, the file "DataNodeDistrib_generation.R" might be useful
 
 ## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 ## Copyright : GRIIS / Université de Sherbrooke

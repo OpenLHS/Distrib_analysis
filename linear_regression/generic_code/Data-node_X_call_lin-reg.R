@@ -25,8 +25,8 @@ if (thispath_available) {
 	# When the this.path package is installed, automatically set data node identifier based on the filename.
 	# This assumes a file with name like Data-node_[[:digit:]]+_call_lin-reg.R
 	filename <- basename2(this.path())
-	fu<- min(unlist(gregexpr("_",filename)))
-	k <- strtoi(substring(filename,11,fu+1))
+	lenmainfilename <- nchar(filename)-15
+	k <- strtoi(substring(filename,11,lenmainfilename))
 
 } else {
 	# if the r package this.path is not available/installed, the data node identifier set above will be used instead.
