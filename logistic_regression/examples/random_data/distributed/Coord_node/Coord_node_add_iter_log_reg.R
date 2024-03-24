@@ -4,7 +4,7 @@
 ## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 ## Copyright: GRIIS / Université de Sherbrooke
 
-coord_add_iter_log_reg <- function(iterationseq=2) {
+coord_add_iter_log_reg <- function(iterationseq) {
 
 # Can be adjusted as needed  
 alpha <- 0.05
