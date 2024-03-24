@@ -1,0 +1,16 @@
+The examples already contain examplar datasets.
+Should you want to try generate different datasets, the DataNodeDistrib_generation.R could be helpful (but it is not required).
+
+To test the example:
+1. 	unpack all folders separately
+2. 	run the bat file (or the corresponding r file) for each data node to initiate the process
+3. 	take each output file generated (tagged "iter_0") and copy all three in the coordination node folder
+4. 	run the coordination bat file (or the corresponding r file)
+
+To run an iteration:
+5. 	copy the primer csv file to each of the three data node folders
+6. 	run the bat file (or the corresponding r file) for each data node to initiate the process
+7. 	take each output file generated (tagged with the most recent iteration number) and copy all three in the coordination node folder
+8. 	run the coordination bat file (or the corresponding r file)
+**	step #8 will generate but the estimators for this iteration and a primer file to be used if another iteration is desired
+9.	optional : compare the results of the previous iteration with the current one to decide if another iteration is pertinent or not	
