@@ -9,7 +9,7 @@
 # https://cran.r-project.org/package=rstudioapi
 
 
-# If you want to override the node numbering based on filename, input 0 or a positive integer here
+# If you want to override the iteration numbering based on filename, input 0 or a positive integer here
 manualt <- -1
 
 # No modifications should be required below this point
