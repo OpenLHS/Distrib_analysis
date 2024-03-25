@@ -30,9 +30,9 @@ There are many ways to run R code. The proposed instructions here are focusing o
 
 :::::: EXECUTING THE DISTRIBUTED CODE ::::::
 *** Make sure R studio is not currently running and close it if it is.
-1) 	Run the bat file (or the corresponding r file) for each data node to initiate the process
+1) 	Run the bat file (for windows users) or the corresponding r file (Data_node_call_log-reg.R) for each data node to initiate the process
 2) 	Take each output file generated (tagged "iter_0") and copy all three in the coordination node folder
-3)	Run the coordination bat file (or the corresponding r file)
+3)	Run the coordination bat file (for windows users) or the corresponding r file (Coord_node_call_iter_log-reg.R)
 
 Then, to perform an iteration:
 4) 	Copy the primer csv file to each of the three data node folders
