@@ -19,7 +19,7 @@ data_lin_reg <- function(nodeid) {
 	## Expecting data file name like Node1_data.csv where 1 is the variable k above
 	## Construct file name according to node data, assumes default parameters, like header and separator
 	## This assumes a file with name like Node[[:digit:]]+_data.csv
-	node_data <- read.csv(paste0("Node", k, "_data.csv"))
+	node_data <- read.csv(paste0("Data_node_", k, ".csv"))
 
 	## Code assumes a data frame where the first column is the outcome
 	## Creates a data frame with the outcome
