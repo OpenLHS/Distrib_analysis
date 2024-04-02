@@ -45,17 +45,16 @@ write.csv(beta_new,
 
 # Calculating current round estimates if we have at least one round completed
 if (t>0) {
-  n <- read.csv("Coord_node_sample_size.csv")[,1]
-  Sigma <- n * solve(V_t)
+  Sigma <- solve(V_t)
   write.csv(Sigma, file=paste0("Coord_node_iter_", t, "_covariance.csv"), row.names=FALSE)
   beta <- beta_new
   # Computing standard error ------------------------------------------------
   
-  se <- qnorm(1 - 0.5*alpha) * sqrt(diag(Sigma/n))
+  se <- qnorm(1 - 0.5*alpha) * sqrt(diag(Sigma))
   
   # Computing p-values ------------------------------------------------------
   
-  p_vals <- 2*(1 - pnorm(abs(beta)/sqrt(diag(Sigma/n))))
+  p_vals <- 2*(1 - pnorm(abs(beta)/sqrt(diag(Sigma))))
   
   # Exporting final results -------------------------------------------------
   

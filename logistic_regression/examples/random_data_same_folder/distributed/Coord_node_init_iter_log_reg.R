@@ -57,7 +57,6 @@ write.csv(beta_sa,
 
 # Exporting total sample size for variance estimation ---------------------
 
-write.csv(n, file="Coord_node_sample_size.csv", row.names=FALSE)
 
 ## Remove all environment variables. 
 ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)

@@ -55,9 +55,6 @@ beta_sa <- beta_sa/n
 write.csv(beta_sa,
           file="Coord_node_iter_1_primer.csv", row.names=FALSE)
 
-# Exporting total sample size for variance estimation ---------------------
-
-write.csv(n, file="Coord_node_sample_size.csv", row.names=FALSE)
 
 ## Remove all environment variables. 
 ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)
