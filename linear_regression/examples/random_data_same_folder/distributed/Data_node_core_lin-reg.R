@@ -36,18 +36,21 @@ data_lin_reg <- function(nodeid) {
 	# Summary statistics to share to coordinating center ----------------------
 
 	## Matrix transpositions
-	xtx <- t(as.matrix(intercept_pred))%*%as.matrix(intercept_pred)
-	yty <- t(as.matrix(outcome))%*%as.matrix(outcome)
-	xty <- t(as.matrix(intercept_pred))%*%as.matrix(outcome)
+	xtx <- vec(t(as.matrix(intercept_pred))%*%as.matrix(intercept_pred))
+	yty <- vec(t(as.matrix(outcome))%*%as.matrix(outcome))
+	xty <- vec(t(as.matrix(intercept_pred))%*%as.matrix(outcome))
+	
+	length(yty) <- length(xtx)
+	length(xty) <- length(xtx)
 
 
 	# Summary and outputs -----------------------------------------------------
 
 	## Binding all the results together
-	outputs <- cbind(vec(xtx),vec(yty),vec(xty),nrow(node_data))
+	outputs <- cbind(xtx,yty,xty)
 
 	## Producing the CSV file containing the output that will be used by the coordinating node to calculate the final result
-	write.csv(outputs, file=paste0("Node",k,"_output.csv"))
+	write.csv(outputs, file=paste0("Node",k,"_output.csv"),row.names = FALSE,na="")
 
 	## Remove all environment variables. 
 	## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)

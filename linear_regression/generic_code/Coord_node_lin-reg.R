@@ -33,14 +33,13 @@ for (k in 1:K) {
 all_local_xtx <- array(0, dim=c(p+1,p+1, K))
 all_local_xty <- matrix(0, nrow=p+1, ncol=K)
 all_local_yty <- rep(0,K)
-all_local_n <- rep(0, K)
 
 # Loading output from all nodes in previously created data structures
 for (k in 1:K) {
   output_k <- read.csv(paste0("Node", k, "_output.csv"))
-  all_local_xtx[,,k] <- invvec(output_k[,2])
-  all_local_xty[,k] <- output_k[1:(p+1),4]
-  all_local_yty[k] <- output_k[1,3]
+  all_local_xtx[,,k] <- invvec(output_k[,1])
+  all_local_xty[,k] <- output_k[1:(p+1),3]
+  all_local_yty[k] <- output_k[1,2]
 }
 
 # Aggregate of local statistics for linear regression model estimates -------
