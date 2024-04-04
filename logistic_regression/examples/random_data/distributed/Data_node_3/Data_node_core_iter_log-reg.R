@@ -62,7 +62,11 @@ V_k_t <- logreg_V(beta_t, X_k)
 
 # Exporting gradient and hessian ------------------------------------------
 
-write.csv(cbind(D_k_t, V_k_t),
+output <- cbind(D_k_t, V_k_t)
+colnames(output)[1] <- "gradient"
+colnames(output)[2] <- "hessian_intercept"
+colnames(output)[-c(1,2)] <- paste("hessian", colnames(output)[-c(1,2)], sep = "_")
+write.csv(output,
           file=paste0("Data_node_", k, "_iter_", t, "_output.csv"), row.names=FALSE)
 
 ## Remove all environment variables. 
