@@ -40,12 +40,13 @@ beta_new <- beta_old + solve(V_t, D_t)
 
 # Exporting updated estimator for a subsequent iteration ------------------
 
-write.csv(beta_new,
+write.csv(data.frame(coefs=beta_new),
           file=paste0("Coord_node_iter_", t+1, "_primer.csv"), row.names=FALSE)
 
 # Calculating current round estimates if we have at least one round completed
 if (t>0) {
   Sigma <- solve(V_t)
+  colnames(Sigma) <- c("(Intercept)", paste0("pred", seq(length(beta_new)-1)))
   write.csv(Sigma, file=paste0("Coord_node_iter_", t, "_covariance.csv"), row.names=FALSE)
   beta <- beta_new
   # Computing standard error ------------------------------------------------

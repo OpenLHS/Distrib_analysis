@@ -42,8 +42,10 @@ data_init_log_reg <- function(nodeid) {
   
   # Exporting local estimator and sample size -------------------------------
   
-  write.csv(c(coefs, n),
-            file=paste0("Data_node_",k,"_iter_0_output.csv"), row.names=FALSE)
+  length(n) <- length(coefs)
+  write.csv(cbind(coefs, n),
+            file=paste0("Data_node_",k,"_iter_0_output.csv"),
+            row.names=FALSE)
   
   ## Remove all environment variables. 
   ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)

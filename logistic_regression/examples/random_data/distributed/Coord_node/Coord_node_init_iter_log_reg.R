@@ -29,8 +29,8 @@ if (require(this.path)) {
 K <- length(list.files(pattern="Data_node_[[:digit:]]+_iter_0_output.csv"))
 p <- 0
 for (k in 1:K) {
-  node_k <- read.csv(paste0("Data_node_", k, "_iter_0_output.csv"))[,1]
-  q <- length(node_k) - 1
+  node_k <- read.csv(paste0("Data_node_", k, "_iter_0_output.csv"))
+  q <- nrow(node_k)
   if (p == 0) {
     # Initializing the number of predictors p, beta_sa and total sample size n
     p <- q
@@ -42,8 +42,8 @@ for (k in 1:K) {
   }
   
   # Adding local estimators and sample sizes
-  beta_k <- node_k[1:q]
-  n_k <- node_k[q+1]
+  beta_k <- node_k[,1]
+  n_k <- node_k[1,2]
   beta_sa <- beta_sa + n_k * beta_k
   n <- n + n_k
 }
@@ -52,10 +52,8 @@ beta_sa <- beta_sa/n
 
 # Exporting simple averaging estimator to be sent to data nodes -----------
 
-write.csv(beta_sa,
+write.csv(data.frame(coefs=beta_sa),
           file="Coord_node_iter_1_primer.csv", row.names=FALSE)
-
-# Exporting total sample size for variance estimation ---------------------
 
 
 ## Remove all environment variables. 
