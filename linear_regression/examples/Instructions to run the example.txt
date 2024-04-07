@@ -30,17 +30,19 @@ There are many ways to run R code. The proposed instructions here are focusing o
 
 :::::: EXECUTING THE DISTRIBUTED CODE ::::::
 *** Make sure R studio is not currently running and close it if it is.
+*** If you are not able to automatically set your working directory, manually set the variable manualwd = 1 in Data_node_call_lin-reg.R and Coord_node_lin-reg.R
+
 1) Navigate to the folder "distributed"
 
-2) Open the file "Data-node_1_call_lin-reg.R". It should then appear in R.
+2) Open the file "Data_node_call_lin-reg_1.R". It should then appear in R.
 3) Select all the code and click "run"
 :  The intermediate outputs for the data node 1 will be created ("Node1_output.csv")
 
-4) Open the file "Data-node_2_call_lin-reg.R". It should then appear in R.
+4) Open the file "Data_node_call_lin-reg_2.R". It should then appear in R.
 5) Select all the code and click "run"
 :  The intermediate outputs for the data node 1 will be created ("Node2_output.csv")
 
-6) Open the file "CoordNode_code_lin-reg.R". It should then appear in R
+6) Open the file "Coord_node_lin-reg.R". It should then appear in R
 7) Select all the code and click "run"
 
 8) The result file ("CoordNode_results_distributed_lin_reg.csv") will be created. You can open it to see the results.
