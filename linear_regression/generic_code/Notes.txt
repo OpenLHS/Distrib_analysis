@@ -1,8 +1,18 @@
-The file "Data-node_core_code_lin-reg.R" contains the actual analytical code to be used by data nodes to generate the intermediate results to be sent to the coordination node. It contains a function taking a node identifier as a parameter.
+The files in this folder can be used to support an example of distributed linear regression analysis
 
-The core code is meant to be called by another R file "Data-node_X_call_lin-reg.R". To use it, please change the "X" in the file name to a data node identifier and, if the this.path package is not available, please manually input the node identifier in the code where indicated.
-If the this.path package is available, the node identifier will be infered automatically from the file name.
+Assuming a data structure similar to the data node csv files in the example folder, this code can be used to execute a data node operation or a coordination node operation for a linear regression.
 
-The file "CoordNode_code_lin-reg.R" needs to be colocated with a set of data nodes intermediate results to execute the final calculations to generate the linear regression results.
+BAT command files are offered for windows users but similar ones can obviously be easily generated for other systems (these assume that RScript is in your system path). This requires the this.path package.
 
-The subfoler "pooled_comparator" contains code that can be used to execute a traditional pooled linear regression.
+If you want to use RStudio, for the data node, you can source "Data_node_call_lin-reg.R", and for the coordination node, it is "Coord_node_lin-reg.R".
+*** If you are not able to automatically set your working directory, manually set the variable manualwd = 1 in Data_node_call_lin-reg.R and Coord_node_lin-reg.R
+
+These files calls other r files based on what is the next step to be executed. Node number (k) are imputed automatically from the file names where possible. 
+An override can be applied if desired (see the comment section of the relevant files)
+
+The execution assumes that the required files are available in the same folder than the r file.
+
+The subfoler "pooled_comparator" contains code that can be used to execute a traditional pooled logistic regression.
+
+*** OF NOTE, this is PURELY to demonstrate the feasibility of distributed linear regressions. The code here has NOT been optimised NOR made secure in a significant way.
+*** A thorough review NEEDS to be undertaken before using this code in any production/research project

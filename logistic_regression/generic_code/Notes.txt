@@ -2,9 +2,10 @@ The files in this folder can be used to support an example of distributed logist
 
 Assuming a data structure similar to the data node csv files in the example folder, this code can be used to execute a data node operation or a coordination node operation for a logistic regression.
 
-BAT command files are offered for windows users but similar ones can obviously be easily generated for other systems (these assume that RScript is in your system path).
+BAT command files are offered for windows users but similar ones can obviously be easily generated for other systems (these assume that RScript is in your system path). This requires the this.path package.
 
 If you want to use RStudio, for the data node, you can source "Data_node_call_log-reg.R", and for the coordination node, it is "Coord_node_call_iter_log-reg.R".
+*** If you are not able to automatically set your working directory, manually set the variable manualwd = 1 in Data_node_call_log-reg.R and Coord_node_call_iter_log-reg.R
 
 These files calls other r files based on what is the next step to be executed. Iteration sequence number (t) and node number (k) are imputed automatically from the file names where possible. 
 An override can be applied if desired (see the comment section of the relevant files)
