@@ -16,7 +16,7 @@ if (t<2){
   stop()
 }
 
-if (manualwd == 1) {
+if (manualwd != 1) {
   
   # Set working directory automatically
   

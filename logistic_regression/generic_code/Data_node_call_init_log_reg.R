@@ -16,7 +16,7 @@ manualk <- man_nodeid
 # No modifications should be required below this point
 ###########################
 
-if (manualwd == 1) {
+if (manualwd != 1) {
 
   # Set working directory automatically
   

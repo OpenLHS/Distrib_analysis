@@ -10,7 +10,7 @@ manualwd <- man_wd
   
 # Importing data and computing initial simple averaging estimator ---------
 
-if (manualwd == 1) {
+if (manualwd != 1) {
   
   # Set working directory automatically
 

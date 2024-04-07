@@ -14,7 +14,7 @@ data_init_log_reg <- function(man_wd,nodeid) {
 
   # Importing data ----------------------------------------------------------
   
-if (manualwd == 1) {
+if (manualwd != 1) {
     
     # Set working directory automatically
   

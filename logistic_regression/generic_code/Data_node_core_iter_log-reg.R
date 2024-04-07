@@ -30,7 +30,7 @@ logreg_V <- function(beta, X) {
 
 # Importing data ----------------------------------------------------------
 
-if (manualwd == 1) {
+if (manualwd != 1) {
   
   # Set working directory automatically
 
