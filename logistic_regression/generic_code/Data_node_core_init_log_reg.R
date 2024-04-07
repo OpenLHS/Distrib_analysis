@@ -6,13 +6,17 @@
 
 # Loading packages and setting up core variables --------------------------
 
-data_init_log_reg <- function(nodeid) {
+data_init_log_reg <- function(man_wd,nodeid) {
+  
+  manualwd <- man_wd 
   
   k <- nodeid
 
   # Importing data ----------------------------------------------------------
   
-  # Set working directory automatically
+if (manualwd == 1) {
+    
+    # Set working directory automatically
   
   # this.path package is available
   if (require(this.path)) {
@@ -28,6 +32,10 @@ data_init_log_reg <- function(nodeid) {
   } else {
     stop("The required conditions to automatically set the working directory are not met. See R file")
   }
+} else {
+  print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
+}
+  
   
   # Expecting data file name like Data_node_k.csv where 1 is the variable k above
   # Construct file name according to node data

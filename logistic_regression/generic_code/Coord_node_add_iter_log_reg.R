@@ -4,13 +4,39 @@
 ## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 ## Copyright: GRIIS / Université de Sherbrooke
 
-coord_add_iter_log_reg <- function(iterationseq) {
+coord_add_iter_log_reg <- function(man_wd=-1,iterationseq=-1) {
 
 # Can be adjusted as needed  
 alpha <- 0.05
 
 # No modifications should be needed below this
 # -------------------------------------------------------------------------
+
+if (t<2){
+  stop()
+}
+
+if (manualwd == 1) {
+  
+  # Set working directory automatically
+  
+  # this.path package is available
+  if (require(this.path)) {
+    setwd(this.dir())
+    
+    # else if running in R studio and the rstudioapi is available, set the correct working directory
+  } else if ((Sys.getenv("RSTUDIO") == "1") & (require("rstudioapi"))) {
+    print("RSTUDIO")
+    path <- dirname(rstudioapi::getActiveDocumentContext()$path)
+    setwd(path)
+    
+    # no known means to automatically set working directory
+  } else {
+    stop("The required conditions to automatically set the working directory are not met. See R file")
+  }
+} else {
+  print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
+}
 
 t <- iterationseq
 
