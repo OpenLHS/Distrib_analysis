@@ -7,6 +7,10 @@
 
 # Loading packages and setting up core variables --------------------------
 
+# If you want to skip the automated working directory setting, input 1 here. 
+# If you do so, make sure the working directory is set correctly manualy.
+manualwd <- -1
+
 # If you want to override the node numbering based on filename, input 0 or a positive integer here
 manualk <- 1
 
@@ -15,21 +19,26 @@ manualk <- 1
 
 k <- -1
 
-# Set working directory automatically
+if (manualwd != 1) {
 
-# this.path package is available
-if (require(this.path)) {
-  setwd(this.dir())
+  # Set working directory automatically
   
-  # else if running in R studio and the rstudioapi is available, set the correct working directory
-} else if ((Sys.getenv("RSTUDIO") == "1") & (require("rstudioapi"))) {
-  print("RSTUDIO")
-  path <- dirname(rstudioapi::getActiveDocumentContext()$path)
-  setwd(path)
-  
-  # no known means to automatically set working directory
+  # this.path package is available
+  if (require(this.path)) {
+    setwd(this.dir())
+    
+    # else if running in R studio and the rstudioapi is available, set the correct working directory
+  } else if ((Sys.getenv("RSTUDIO") == "1") & (require("rstudioapi"))) {
+    print("RSTUDIO")
+    path <- dirname(rstudioapi::getActiveDocumentContext()$path)
+    setwd(path)
+    
+    # no known means to automatically set working directory
+  } else {
+    stop("The required conditions to automatically set the working directory are not met. See R file")
+  }
 } else {
-  stop("The required conditions to automatically set the working directory are not met. See R file")
+  print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
 }
 
 
@@ -62,7 +71,7 @@ if (manualk >= 0) {
 # Verifying that a valid node number could be allocated manually or automatically
 if (k >= 0) {
   source("Data_node_core_lin-reg.R")
-  data_lin_reg(k)
+  data_lin_reg(manualwd,k)
 } else {
   stop("Node numbering was not set properly")
 }

@@ -10,10 +10,36 @@
 # This is required for the analysis to take place
 library(ks)
 
-data_lin_reg <- function(nodeid) {
-
+data_lin_reg <- function(man_wd=-1,nodeid=-1) {
+	
+	manualwd <- man_wd
 	k <- nodeid
 
+	if (k<0){
+		stop
+	}
+	
+	if (manualwd != 1) {
+
+	  # Set working directory automatically
+	  
+	  # this.path package is available
+	  if (require(this.path)) {
+		setwd(this.dir())
+		
+		# else if running in R studio and the rstudioapi is available, set the correct working directory
+	  } else if ((Sys.getenv("RSTUDIO") == "1") & (require("rstudioapi"))) {
+		print("RSTUDIO")
+		path <- dirname(rstudioapi::getActiveDocumentContext()$path)
+		setwd(path)
+		
+		# no known means to automatically set working directory
+	  } else {
+		stop("The required conditions to automatically set the working directory are not met. See R file")
+	  }
+	} else {
+	  print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
+	}
 	# Importing data ----------------------------------------------------------
 
 	## Expecting data file name like Node1_data.csv where 1 is the variable k above
@@ -42,7 +68,6 @@ data_lin_reg <- function(nodeid) {
 	
 	length(yty) <- length(xtx)
 	length(xty) <- length(xtx)
-
 
 	# Summary and outputs -----------------------------------------------------
 
