@@ -8,33 +8,38 @@
 # Currently, the automated node number allocation currently requires execution in R studio and rstudioapi package
 # https://cran.r-project.org/package=rstudioapi
 
-coord_call_add_iter_log_reg <- function(man_iter=-1) {
+coord_call_add_iter_log_reg <- function(man_wd=-1,man_iter=-1) {
 
-# If you want to override the node numbering based on filename, input 0 or a positive integer here
+manualwd <- man_wd
 manualt <- man_iter
 
 # No modifications should be required below this point
 ###########################
 
-t <- -1
-
-# Set working directory automatically
-
-# this.path package is available
-if (require(this.path)) {
-  setwd(this.dir())
+if (manualwd != 1) {
   
-  # else if running in R studio and the rstudioapi is available, set the correct working directory
-} else if ((Sys.getenv("RSTUDIO") == "1") & (require("rstudioapi"))) {
-  print("RSTUDIO")
-  path <- dirname(rstudioapi::getActiveDocumentContext()$path)
-  setwd(path)
-  
-  # no known means to automatically set working directory
+  # Set working directory automatically
+
+  # this.path package is available
+  if (require(this.path)) {
+    setwd(this.dir())
+    
+    # else if running in R studio and the rstudioapi is available, set the correct working directory
+  } else if ((Sys.getenv("RSTUDIO") == "1") & (require("rstudioapi"))) {
+    print("RSTUDIO")
+    path <- dirname(rstudioapi::getActiveDocumentContext()$path)
+    setwd(path)
+    
+    # no known means to automatically set working directory
+  } else {
+    stop("The required conditions to automatically set the working directory are not met. See R file")
+  }
 } else {
-  stop("The required conditions to automatically set the working directory are not met. See R file")
+  print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
 }
 
+
+t <- -1
 # If there is a manual override, the iteration sequence number (t) is set to the manual value ------------
 if (manualt >= 0) {
   t <- manualt
@@ -66,7 +71,7 @@ if (manualt >= 0) {
 # Verifying that a valid sequence numbers could be allocated manually or automatically
 if (t >= 0) {
   source("Coord_node_add_iter_log_reg.R")
-  coord_add_iter_log_reg(t)
+  coord_add_iter_log_reg(manualwd,t)
 } else {
   stop("Node numbering was not set properly")
 }
