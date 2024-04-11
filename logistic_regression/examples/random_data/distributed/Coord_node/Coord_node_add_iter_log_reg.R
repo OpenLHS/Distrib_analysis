@@ -12,7 +12,7 @@ alpha <- 0.05
 # No modifications should be needed below this
 # -------------------------------------------------------------------------
 
-if (t<2){
+if (iterationseq < 1){
   stop()
 }
 
@@ -92,6 +92,11 @@ if (t>0) {
   write.csv(output,file=paste0("Coord_node_iter_", t, "_results.csv"))
   
 }
+
+
+## Remove all environment variables. 
+## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)
+rm(list = ls())
 
 return(TRUE)
 }
