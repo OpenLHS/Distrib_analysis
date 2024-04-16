@@ -24,8 +24,7 @@ logreg_D <- function(beta, X, y) {
 logreg_V <- function(beta, X) {
   n <- nrow(X)
   sig <- sigmoid(X %*% beta)[,1]
-  W <- diag(sig * (1-sig))
-  t(X) %*% W %*% X # / n
+  t(X*(sig*(1-sig)))%*%X # / n
 }
 
 # Importing data ----------------------------------------------------------
