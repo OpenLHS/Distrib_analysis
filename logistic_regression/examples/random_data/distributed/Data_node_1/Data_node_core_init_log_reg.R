@@ -45,7 +45,7 @@ if (manualwd != 1) {
   
   # Fitting local model to generate an initial local estimator --------------
   
-  fit <- glm(out1 ~ ., data=node_data)
+  fit <- glm(out1 ~ ., data=node_data, family="binomial")
   coefs <- as.vector(fit$coefficients)
   
   # Exporting local estimator and sample size -------------------------------

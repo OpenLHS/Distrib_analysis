@@ -11,7 +11,7 @@ p <- 4
 beta <- round(rnorm(p+1, mean=0, sd=2))
 
 # Node sample sizes
-n <- c(30, 100, 60)
+n <- c(50, 100, 60)
 
 ## Seed intialisation, unlikely to need to be changed.
 seedstart <- 1
