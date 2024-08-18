@@ -1,0 +1,27 @@
+Order of execution:
+
+1. Non-uniform intervals - Local
+: Generate local cutoff values
+
+2. Non-uniform intervals - Global
+: Generate global cutoff values
+
+3. Non-uniform intervals - Local
+: Generate matrix locally
+
+4. Non-uniform intervals - Global
+: Determine intervals
+
+5. Non-uniform intervals - Local
+: Split data according to partition
+
+*** Before executing the code, make sure the parameters in "Parameters.csv" are set to the right value (see next section).
+
+:::::: PARAMETERS TO AJUST ::::::
+
+The parameters should be determined by the central server and must not be modified by the local sites. The key parameters are as follows:
+
+- nbDataGrouped : This is the number of subjects that will be grouped together. The recommended value is 5.
+- increase : This is the value by which the size of the interval increases. The recommended value is 1, or the minimum distance between time values.
+
+For more explaination, see Data_aggregation_Brief_Summary.pdf.

@@ -1,0 +1,9 @@
+random_data and random_data_same_folder are based on the same example.
+
+The first one has the files separated in different folders to better mimic a distributed environment. To run, you need to copy the results across folders, which clarifies what is sent where.
+
+The second example is based on the same dataset, but if you simply want to look at the output, everything is happening in the same folder, wihtout the need to copy files across.
+
+lung_data_same_folder is an example based on the "lung" dataset in R.
+
+*** Optional : if you want to try to generate new test datasets, the file "data_generation.R" might be useful.

@@ -1,0 +1,56 @@
+There are many ways to run R code. The proposed instructions here are focusing on using a graphical interface.
+
+:::::: INSTALLING R and R STUDIO ::::::
+1)	Go to the page : https://posit.co/download/rstudio-desktop/ and follow the instructions for your operating system
+
+:::::: INSTALLING THE REQUIRED PACKAGES ::::::
+: The examples require the use a package not present in the base installation :
+- survival : https://cran.r-project.org/web/packages/survival/index.html https://cran.r-project.org/web/packages/survival/survival.pdf
+- MASS : https://cran.r-project.org/web/packages/MASS/index.html https://cran.r-project.org/web/packages/MASS/MASS.pdf
+
+: The examples will be easier to explore and adapt/change if the package "this.path" is also available.
+- this.path : https://cran.r-project.org/package=this.path https://cran.r-project.org/web/packages/this.path/this.path.pdf
+- Yet this is NOT required and you can safely ignore any warning about this is if you want to use the examples "as-is".
+
+: R should prompt you to download the packages automatically.
+
+1)	If you work in an isolated environment, you might need to download them manually at the adress above and install them for your RStudio instance.
+: While describing the process here is out of scope, a web search will yield resources like https://riptutorial.com/r/example/5556/install-package-from-local-source that can be helpful.
+
+:::::: INSTALLING THE EXAMPLE ::::::
+1)	Unpack one of the example folders on one of your drives.
+
+:::::: EXECUTING THE DISTRIBUTED CODE ::::::
+*** Make sure R studio is not currently running and close it if it is.
+*** If you are not able to automatically set your working directory, manually set the variable manualwd = 1 in Local_site_call.R and Global_server.R
+
+In the following procedure, x represents the number of the local site, and k represents the iteration number.
+
+Initialization:
+1) 	Run the local r file (Local_site_call_x.R) for each data node to compute local times and local beta estimates.
+	The files "Beta_local_x.csv", "Number_of_subjects_site_x.csv", "Times_x_output.csv" and "Vk_x.csv" will be generated. All files must be sent to the coordination center.
+2)	Run the coordination r file (Global_server.R) to compute global times and to initialise the values of beta.
+	The files "Beta_0_output.csv" and "Global_times_output.csv" will be generated. All files must be shared with the local sites.
+
+For the first iteration:
+3) 	Run the local r file (Local_site_call_x.R) for each data node to compute local parameters and local aggregates used for derivatives.
+	The files "Rikx.csv", "normDikx.csv", "sumZrx.csv", "sumExpx_output_k.csv", "sumZqExpx_output_k.csv" and "sumZqZrExpx_output_k.csv" will be generated. All files but "Rikx.csv" must be sent to the coordination center.
+4) 	Run the coordination r file (Global_server.R) to compute global parameters, to compute first and second derivative and to update beta estimate.
+	The file "Beta_k_output.csv" and "Results_iter_k.csv" will be generated. To continue, the coordination center must share the file "Beta_k_output.csv" with the local sites.
+
+Then, to perform other iterations:
+5) 	Run the local r file (Local_site_call_x.R) for each data node to compute local aggregates used for derivatives.
+	The files "sumExpx_output_k.csv", "sumZqExpx_output_k.csv" and "sumZqZrExpx_output_k.csv" will be generated. All files must be sent to the coordination center.
+6)	Run the coordination r file (Global_server.R) to compute first and second derivative and to update beta estimate.
+	The file "Beta_k_output.csv" and "Results_iter_k.csv" will be generated. To continue, the coordination center must share "Beta_k_output.csv" with the local sites.
+7)	optional : compare the results of the previous iteration with the current one to decide if another iteration is pertinent (return to step 5) or not.	
+
+:::::: EXECUTING THE POOLED SOLUTION CODE ::::::
+*** Make sure R studio is not currently running and close it if it is.
+1)	Navigate to the folder "pooled_solution".
+2)	Open the file "Solution.R". It should then appear in R.
+3)	Select all the code and click "run".
+4)	The results will be available in the console.
+
+## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
+## Copyright : GRIIS / Université de Sherbrooke

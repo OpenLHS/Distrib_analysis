@@ -1,0 +1,12 @@
+Repository structure
+
+1. The core article is in the root directory: "Lu et al. - 2015 - WebDISCO: A Web Service for Distributed Cox Model.pdf."
+: This describes the background of the work and presents the method used.
+
+2. Cox model
+: This folder contains generic code and examples of the distributed Cox model.
+
+3. Data aggregation
+: This folder contains generic code and examples to aggregate data for confidentiality.
+
+**Note:** The Cox model does not ensure data privacy by itself. The data must be aggregated first to ensure confidentiality.
