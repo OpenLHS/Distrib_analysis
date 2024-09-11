@@ -1,7 +1,3 @@
-The three folders contain different methods to categorize individuals into time intervals differently.
+The folders contain different methods to categorize individuals into time intervals differently. Currently, only one method is available.
 
 Average orders the data by time and averages the time values across a specified number of individuals.
-
-Uniform intervals divide the study's time span into equal segments, excluding the first and last few values if needed.
-
-Non-uniform intervals divide time into the shortest intervals possible, each containing at least x individuals, also excluding the first and last few values if needed.
