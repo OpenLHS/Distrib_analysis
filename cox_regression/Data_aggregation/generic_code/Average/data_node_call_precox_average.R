@@ -10,7 +10,7 @@
 
 # Prepopulated value as an example is 5. 
 # Adjust according to your specific situation.
-bucketsize <- 5
+eventbucketsize <- 5
 
 # If you want to skip the automated working directory setting, input 1 here. 
 # If you do so, make sure the working directory is set correctly manualy.
@@ -22,7 +22,7 @@ manualk <- -1
 # No modifications should be required below this point
 ###########################
 
-if (bucketsize < 1) {
+if (eventbucketsize < 1) {
 	stop("Node numbering was not set properly")
 }
 
@@ -56,7 +56,7 @@ if (manualk >= 0) {
 # Verifying that a valid node number could be allocated manually or automatically
 if (k >= 0) {
   source("data_node_precox_average.R")
-  data_node_precox_average(manualwd,k,bucketsize)
+  data_node_precox_average(manualwd,k,eventbucketsize)
 }  else {
   stop("Node numbering was not set properly")
 }

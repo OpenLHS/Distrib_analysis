@@ -7,9 +7,24 @@
 library("survival")
 library("dplyr")
 
+# Set the node number
+k <- 1
+
+# Set the specific beta values
+betas <- c(-2, -0.5, -1.4)  # Adjust these values
+
+# Number of observations
+N <- 1500  # When N is big, the model coefficients are close to betas
+
+# Generate custom covariates
+set.seed(1914217)
+
 # If you want to skip the automated working directory setting, input 1 here. 
 # If you do so, make sure the working directory is set correctly manualy.
 manualwd <- -1
+
+# No modifications should be required below this point
+###########################
 
 if (manualwd != 1) {
   
@@ -32,17 +47,6 @@ if (manualwd != 1) {
 } else {
   print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
 }
-
-# ------------------------- CODE STARTS HERE ------------------------
-
-# Set the specific beta values
-betas <- c(-2, -0.5, -1.4)  # Adjust these values
-
-# Number of observations
-N <- 1500  # When N is big, the model coefficients are close to betas
-
-# Generate custom covariates
-set.seed(1914217)
 
 # Distribution of covariates
 X1 <- rgamma(N, shape=2, scale=1)
@@ -94,7 +98,7 @@ model <- coxph(Surv(time, status) ~ X1 + X2 + X3, data = simdata)
 model$coefficients
 
 # Save the generated data to a CSV file
-write.csv(simdata, "Data_site_1.csv", row.names = FALSE)
+write.csv(simdata, file=paste0("Data_node_", k, ".csv"), row.names = FALSE)
 
 ## Remove all environment variables. 
 ## If you want to see the variable that were created, simply don't execute that line (and clear them manually after)
