@@ -44,6 +44,7 @@ if (manualwd != 1) {
   print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
 }
 
+###### à ajuster, le nom de fichier est différent.
 
 # If there is a manual override, the node number (k) is set to the manual value --------------------------
 if (manualk >= 0) {
@@ -79,6 +80,9 @@ if (k >= 0) {
     source("Local_site_core_times.R")
     data_event_times(manualwd, k, nbBetas)
     
+	
+#### pas certain de comprendre, on parle de global time (effectivement envoyé par le noeud de coord, mais on vérifie pour les fichiers de la deuxième étapes dans le code ?
+#### il faudrait plutôt valider qu'on a bien reçu les fichier du coordo non ? Ou en tout cas ceux-là et voir si on a déjà fait l'étape, pourquoi pas je supppose.	
     # If global times file exists -- call second function to calculate params
   } else if (!file.exists(paste0("normDik", manualk ,".csv"))) {
     source("Local_site_core_params.R")
@@ -91,6 +95,8 @@ if (k >= 0) {
   } else if (file.exists("Beta_0_output.csv")) {
     # Get the iteration number
     files <- list.files(pattern = "Beta_\\d+_output.csv")
+	
+### Humm idéalement des variables plus parlantes qui numbers et max number ;-) Est-ce que c'est plutôt l'itération ici ?
     numbers <- as.numeric(gsub("Beta_(\\d+)_output.csv", "\\1", files))
     max_number <- max(numbers)
     

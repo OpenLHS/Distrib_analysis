@@ -44,6 +44,7 @@ if (manualwd != 1) {
   print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
 }
 
+###### à ajuster, le nom de fichier est différent.
 
 # If there is a manual override, the node number (k) is set to the manual value --------------------------
 if (manualk >= 0) {
