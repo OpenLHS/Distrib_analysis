@@ -75,12 +75,12 @@ data_call_iter_cox_reg <- function(man_wd=-1, man_nodeid=-1, man_t=-1) {
     t <- max(indext, 0)    
   } 
   
-  # Verifying that a valid node number and sequence numbers could be allocated manually or automatically
+  # Verifying that a valid node number and iteration number could be allocated manually or automatically
   if (k >= 0 & t >= 0) {
     source("Data_node_core_iter_cox-reg.R")
     data_iter_cox_reg(manualwd,k,t)
   } else {
-    stop("Node numbering was not set properly")
+    stop("Either node numbering or iteration numbering was not set properly.")
   }
   
   ## Remove all environment variables. 
