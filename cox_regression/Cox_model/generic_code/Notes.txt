@@ -2,10 +2,10 @@ The files in this folder can be used to support an example of distributed surviv
 
 Assuming a data structure similar to the data sites CSV files in the example folder, this code can be used to execute a data node operation or a coordination node operation for a Cox model.
 
-If you want to use RStudio, for the data node, you can source "Local_site_call.R", and for the coordination node, it is "Global_server.R".
-*** Note: If you are not able to automatically set your working directory, manually set the variable manualwd = 1 in Local_site_call.R and Global_server.R.
+If you want to use RStudio, for the data node, you can source "Data_node_call_cox-reg_k.R", and for the coordination node, it is "Coord_node_call_iter_cox-reg.R".
+*** Note: If you are not able to automatically set your working directory, manually set the variable manualwd = 1 in "Data_node_call_cox-reg_k.R" and "Coord_node_call_iter_cox-reg.R".
 
-These files call other R files based on what is the next step to be executed. Iteration sequence number (k) and node number (x) are imputed automatically from the file names where possible. 
+These files call other R files based on what is the next step to be executed. Iteration sequence number (t) and node number (k) are imputed automatically from the file names where possible. 
 An override can be applied if desired (see the comment section of the relevant files).
 
 The execution assumes that the required files are available in the same folder as the R file.
@@ -15,9 +15,7 @@ The subfolder pooled_comparator contains code that can be used to execute a cent
 
 :::::: IMPORTANT NOTES BEFORE USING ::::::
 
-- Adjust the number of files "Local_site_call_x.R" according to the number of sites, and make sure to change the value of "manualk" to the site number.
-
-- The number of betas to calculate should be written in the header of all local files and the global server.
+- Adjust the number of files "Data_node_call_cox-reg_k.R" according to the number of sites, and make sure to change the value of "manualk" to the site number.
 
 - The code is written so that 0 = censored and 1 = event. Make sure to follow this structure with your dataset.
 

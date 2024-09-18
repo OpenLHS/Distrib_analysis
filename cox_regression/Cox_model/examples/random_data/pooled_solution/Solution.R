@@ -37,9 +37,9 @@ if (manualwd != 1) {
 
 ### Code starts here
 
-data1 <- read.csv("../Local_site_1/Data_site_1.csv")
-data2 <- read.csv("../Local_site_2/Data_site_2.csv")
-data3 <- read.csv("../Local_site_3/Data_site_3.csv")
+data1 <- read.csv("../distributed/Data_node_1/Data_node_1.csv")
+data2 <- read.csv("../distributed/Data_node_2/Data_node_2.csv")
+data3 <- read.csv("../distributed/Data_node_3/Data_node_3.csv")
 
 data <- rbind(data1, data2, data3)
 

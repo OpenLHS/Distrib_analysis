@@ -7,7 +7,8 @@
 library("survival")
 library("survminer")
 
-nbBetas <- ... # Input the number of betas
+# This assumes that all nodes recorded 3 predictors (covariates) in their data.
+nbBetas <- 3 # Input the number of betas
 
 # If you want to skip the automated working directory setting, input 1 here. 
 # If you do so, make sure the working directory is set correctly manualy.
@@ -39,9 +40,9 @@ if (manualwd != 1) {
 
 # Modify this according to the number of data sites
 # Make sure the path to the csv files are functional
-data1 <- read.csv("../Data_site_1.csv")
-data2 <- read.csv("../Data_site_2.csv")
-data3 <- read.csv("../Data_site_3.csv")
+data1 <- read.csv("../Data_node_1.csv")
+data2 <- read.csv("../Data_node_2.csv")
+data3 <- read.csv("../Data_node_3.csv")
 
 # Pool data
 data <- rbind(data1, data2, data3)
