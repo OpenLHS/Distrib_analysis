@@ -1,0 +1,32 @@
+There are many ways to run R code. The proposed instructions here are focusing on using a graphical interface
+
+:::::: INSTALLING R and R STUDIO ::::::
+1)	Go to the page : https://posit.co/download/rstudio-desktop/ and follow the instructions for your operating system
+
+:::::: INSTALLING THE REQUIRED PACKAGES ::::::
+: The examples require the use a package not present in the base installation :
+- dplyr : https://cran.r-project.org/web/packages/dplyr/index.html https://cran.r-project.org/web/packages/dplyr/dplyr.pdf
+
+: The examples will be easier to explore and adapt/change if the package "this.path" is also available.
+- this.path : https://cran.r-project.org/package=this.path https://cran.r-project.org/web/packages/this.path/this.path.pdf
+- Yet this is NOT required and you can safely ignore any warning about this is if you want to use the examples "as-is".
+
+: R should prompt you to download the packages automatically
+
+1)	If you work in an isolated environment, you might need to download them manually at the adress above and install them for your RStudio instance
+: While describing the process here is out of scope, a web search will yield resources like https://riptutorial.com/r/example/5556/install-package-from-local-source that can be helpful.
+
+:::::: INSTALLING THE EXAMPLE ::::::
+1)	Unpack one of the example folders on one of your drives
+
+
+:::::: EXECUTING THE CODE ::::::
+*** Make sure R studio is not currently running and close it if it is.
+*** If you are not able to automatically set your working directory, manually set the variable manualwd = 1
+
+1)	In the file "data_node_call_precox_average.R", select all the code and execute it. A new file will be generated, which contains the original data with modified times.
+2)	This data can now be used by a data node to participate into a privacy preserving Cox model.
+
+
+## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
+## Copyright : GRIIS / Université de Sherbrooke

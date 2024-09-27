@@ -1,0 +1,9 @@
+Folder structure
+
+1. generic_code
+: The generic_code folder contains examplar R code files pertaining to the distributed approach and its pooled comparator
+: Please read the code and its comments in the R file as files may require edition before being used
+
+2. examples
+: The examples folder contains a few examples. Each example folder is self-contained
+: Therefore, some files will be duplicated across examples, but this is to facilitate their exploration independantly

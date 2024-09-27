@@ -52,17 +52,17 @@ if (manualt >= 0) {
   # Assuming there is at least one file found
   if (length(coordouputfileslist) > 0) {
     
-    iterlst=list()
+    itervec=vector(mode="numeric")
     for (fl in coordouputfileslist){
       outputfname <- fl
-      lastundersf <- max(unlist(gregexpr("_",outputfname)))
-      suffname <- nchar(outputfname)-11
-      iterfl <- strtoi(substring(outputfname,lastundersf-1,suffname))
-      iterlst <- append(iterlst,iterfl)
+      underspositions <- unlist(gregexpr("_",outputfname))
+      lastundersf <- max(underspositions)
+      beforelastundersf <- underspositions[length(underspositions)-1]
+      iterfl <- strtoi(substring(outputfname,beforelastundersf+1,lastundersf-1)) 
+      itervec <- append(itervec,iterfl)
     }
-    sortediterlst <- iterlst[order(names(setNames(iterlst, iterlst)),decreasing=TRUE)]
     
-    t <- sortediterlst[[1]]
+    t <- max(itervec)
   } else {
     stop("There is no primer file found")
   }
