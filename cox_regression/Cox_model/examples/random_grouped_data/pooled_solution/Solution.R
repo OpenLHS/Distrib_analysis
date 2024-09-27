@@ -8,6 +8,7 @@ library("survival")
 library("survminer")
 
 nbBetas <- 3 # Input the number of betas
+K <- 3 # Imput the number of nodes
 
 # If you want to skip the automated working directory setting, input 1 here. 
 # If you do so, make sure the working directory is set correctly manualy.
@@ -37,11 +38,18 @@ if (manualwd != 1) {
 
 ### Code starts here
 
-data1 <- read.csv("../distributed/Data_grouped_node_1/Data_node_grouped_1.csv")
-data2 <- read.csv("../distributed/Data_grouped_node_2/Data_node_grouped_2.csv")
-data3 <- read.csv("../distributed/Data_grouped_node_3/Data_node_grouped_3.csv")
 
-data <- rbind(data1, data2, data3)
+# Read data
+data = data.frame()
+for(k in 1:K){
+  if(!file.exists(paste0("../distributed/Data_grouped_node_", k, "/Data_node_grouped_", k ,".csv"))){
+    warning("Attempt to find a file with grouped data failed and thus this will use ungrouped data. Be aware that this algorithm is based on WebDisco which is deemed non-confidential for ungrouped data.")
+    node_data <- read.csv(paste0("../distributed/Data_node_", k, "/Data_node_", k, ".csv"))
+  } else {
+    node_data <- read.csv(paste0("../distributed/Data_grouped_node_", k, "/Data_node_grouped_", k, ".csv"))
+  }
+  data <- rbind(data, node_data)
+}
 
 column_indices <- (3:(nbBetas + 2))
 formula <- as.formula(paste("Surv(time, status) ~", paste(paste0("data[,", column_indices, "]"), collapse = " + ")))
@@ -51,3 +59,4 @@ summary(res.cox)
 ## Remove all environment variables. 
 ## If you want to see the variable that were created, simply don't execute that line (and clear them manually after)
 rm(list = ls())
+
