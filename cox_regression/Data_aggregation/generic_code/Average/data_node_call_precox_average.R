@@ -54,11 +54,11 @@ if (eventbucketsize < 1) {
   }
   
   # Verifying that a valid node number could be allocated manually or automatically
-  if (k >= 0) {
+  if (k >= 0 & file.exists(paste0("Data_node_", k, ".csv"))) {
     source("data_node_precox_average.R")
     data_node_precox_average(manualwd,k,eventbucketsize)
   }  else {
-    stop("Node numbering was not set properly")
+    stop(paste0("Either node numbering was not set properly or file 'Data_node_", k, ".csv' doesn't exist."))
   }
 
 }
