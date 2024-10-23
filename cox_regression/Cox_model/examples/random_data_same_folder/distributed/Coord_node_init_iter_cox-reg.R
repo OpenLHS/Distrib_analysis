@@ -41,6 +41,28 @@ coord_init_iter_cox_reg <- function(man_wd=-1) {
   # This assumes unique event times outputs have a name like Times_[[:digit:]]+_output.csv
   K=length(list.files(pattern="Times_[[:digit:]]+_output.csv"))
 
+  # Predictor verification
+  
+  k=1
+  Pred_names <- read.csv(paste0("Predictor_names_" ,k, ".csv"))
+  All_same_names <- TRUE
+  for(k in 2:K){
+    Same_names <- read.csv(paste0("Predictor_names_" ,k, ".csv"))
+      
+    if(!all(Pred_names[-(1:2),]==Same_names[-(1:2),])){
+      warning("Node data files seems to have different column structure which may yield wrong results. \n Make sure each node uses the same variable names and the same order in the data file to ensure good estimation.")
+      All_same_names = FALSE
+      }
+  }
+  
+  if(!All_same_names){
+    for(k in 1:nrow(Pred_names)){
+      Pred_names[k,1] <- paste0("X" ,k-2)
+    }
+  }
+  
+  write.csv(Pred_names, file = "Global_Predictor_names.csv", row.names = FALSE)
+  
   # Time initialization -----------------------------------------------------
   # Read local times from all sites
   times_list <- list()

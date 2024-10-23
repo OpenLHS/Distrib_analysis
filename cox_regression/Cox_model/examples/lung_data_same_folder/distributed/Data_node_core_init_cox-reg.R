@@ -55,6 +55,9 @@ data_init_cox_reg <- function(man_wd,nodeid) {
   res.cox <- coxph(formula, node_data, ties = "breslow")
   write.csv(coef(res.cox), file=paste0("Beta_local_",k,".csv"),row.names = FALSE,na="0")
   
+  # Write variables names
+  write.csv(colnames(node_data), file=paste0("Predictor_names_", k, ".csv"), row.names = FALSE)
+  
   # Get variance-covariance matrix
   Vk <- vcov(res.cox)
   write.csv(Vk, file=paste0("Vk_",k,".csv"),row.names = FALSE,na="")

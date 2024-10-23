@@ -21,6 +21,10 @@ The subfolder pooled_comparator contains code that can be used to execute a cent
 
 - The first two columns must be named "time" and "status" (order not important).
 
+- All other columns (predictor variables) must be in the same order and should share the same names accross nodes.
+
+- Categorical variables should already be binarized before running this code.
+
 - To start over, it is important to delete all "output" files.
 
 - For the moment, the code works only with complete data (incomplete data with NA values should not make the code crash, but will cause calculation errors).
