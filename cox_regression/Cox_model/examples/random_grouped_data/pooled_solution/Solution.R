@@ -5,7 +5,6 @@
 
 # Includes
 library("survival")
-library("survminer")
 
 nbBetas <- 3 # Input the number of betas
 K <- 3 # Imput the number of nodes
