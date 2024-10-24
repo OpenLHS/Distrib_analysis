@@ -28,15 +28,17 @@ In the following procedure, k represents the number of the local node, and t rep
 
 Initialization:
 1) 	Run the local r file ("Data_node_call_cox-reg_k.R") for each data node to compute local times and local beta estimates.
-	The files "Beta_local_k.csv", "N_node_k.csv", "Times_k_output.csv" and "Vk_k.csv" will be generated. All files must be sent to the coordination node.
+	The files "Beta_local_k.csv", "N_node_k.csv", "Times_k_output.csv", "Vk_k.csv" and "Predictor_names_1.csv" will be generated. All files must be sent to the coordination node.
 2)	Run the coordination r file ("Coord_node_call_iter_cox-reg.R") to compute global times and to initialise the values of beta.
-	The files "Beta_0_output.csv" and "Global_times_output.csv" will be generated. All files must be shared with the local nodes.
+	The files "Beta_0_output.csv" and "Global_times_output.csv" will be generated. These files must be shared with the local nodes.
+	The file "Global_Predictor_names.csv" will also be generated if all nodes have the same data structure. It does not need to be shared with the local nodes.
 
 For the first iteration:
 3) 	Run the local r file ("Data_node_call_cox-reg_k.R") for each data node to compute local parameters and local aggregates used for derivatives.
 	The files "Rikk.csv", "normDikk.csv", "sumZrk.csv", "sumExpx_output_t.csv", "sumZqExpk_output_t.csv" and "sumZqZrExpk_output_t.csv" will be generated. All files but "Rikk.csv" must be sent to the coordination node.
 4) 	Run the coordination r file ("Coord_node_call_iter_cox-reg.R") to compute global parameters, to compute first and second derivative and to update beta estimate.
-	The file "Beta_t_output.csv" and "Results_iter_t.csv" will be generated. To continue, the coordination node must share the file "Beta_t_output.csv" with the local nodes.
+	The files "normDikGlobal.csv" and "sumZrGlobal.csv" will be generated. They should be kept at the coordination node. 
+	The files "Beta_t_output.csv" and "Results_iter_t.csv" will be generated. To continue, the coordination node must share the file "Beta_t_output.csv" with the local nodes.
 
 Then, to perform other iterations:
 5) 	Run the local r file ("Data_node_call_cox-reg_k.R") for each data node to compute local aggregates used for derivatives.

@@ -1,3 +1,4 @@
 The folders aims at containing different methods to categorize individuals into time intervals differently. Currently, only one method is available.
 
-Average orders the data by time and averages the time values across a specified number of individuals.
+1. Average 
+: orders the data by time and averages the time values across a specified number of individuals.
