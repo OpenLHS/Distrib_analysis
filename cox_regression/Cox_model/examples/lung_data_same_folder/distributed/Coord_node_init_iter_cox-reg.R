@@ -50,7 +50,7 @@ coord_init_iter_cox_reg <- function(man_wd=-1) {
     Same_names <- read.csv(paste0("Predictor_names_" ,k, ".csv"))
       
     if(!all(Pred_names[-(1:2),]==Same_names[-(1:2),])){
-      warning("Node data files seems to have different column structure which may yield wrong results. \n Make sure each node uses the same variable names and the same order in the data file to ensure good estimation.")
+      stop("Node data files seems to have different column structure which may yield wrong results. \n Make sure each node uses the same variable names and the same order in the data file before running this algorithm.")
       All_same_names = FALSE
       }
   }
