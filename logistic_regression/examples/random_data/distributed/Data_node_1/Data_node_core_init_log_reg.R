@@ -43,6 +43,11 @@ if (manualwd != 1) {
   node_data <- read.csv(paste0("Data_node_", k, ".csv"))
   n <- nrow(node_data)
   
+  # Method isn't yet available for missing data
+  if(any(is.na.data.frame(node_data))){
+    stop("At least one NA was found in the data. \n The algorithm currently works only with complete data.")
+  }
+  
   # Fitting local model to generate an initial local estimator --------------
   
   fit <- glm(out1 ~ ., data=node_data, family="binomial")

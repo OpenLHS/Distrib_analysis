@@ -47,6 +47,11 @@ data_lin_reg <- function(man_wd=-1,nodeid=-1) {
 	## This assumes a file with name like Node[[:digit:]]+_data.csv
 	node_data <- read.csv(paste0("Data_node_", k, ".csv"))
 
+	# Method isn't yet available for missing data
+	if(any(is.na.data.frame(node_data))){
+	  stop("At least one NA was found in the data. \n The algorithm currently works only with complete data.")
+	}
+	
 	## Code assumes a data frame where the first column is the outcome
 	## Creates a data frame with the outcome
 	outcome <- node_data[c(1)]
