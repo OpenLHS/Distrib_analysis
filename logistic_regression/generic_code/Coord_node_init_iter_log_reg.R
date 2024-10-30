@@ -34,21 +34,22 @@ if (manualwd != 1) {
 
 # Extract node data ----------------------------------------------------------
 K <- length(list.files(pattern="Data_node_[[:digit:]]+_iter_0_output.csv"))
-p <- 0
-for (k in 1:K) {
+p <- 0 
+k <- 1
+Pred_names <- read.csv(paste0("Predictor_names_" ,k, ".csv"))
+node_1 <- read.csv(paste0("Data_node_", k, "_iter_0_output.csv"))
+beta_sa <- rep(0, nrow(node_1))
+n <- 0
+
+for (k in 1:K) { 
   node_k <- read.csv(paste0("Data_node_", k, "_iter_0_output.csv"))
-  q <- nrow(node_k)
-  if (p == 0) {
-    # Initializing the number of predictors p, beta_sa and total sample size n
-    p <- q
-    beta_sa <- rep(0, q)
-    n <- 0
-    }
-  else if (p != q) {
-    stop("Nodes files do not seem to contain the same number of predictors.")
+  Same_names <- read.csv(paste0("Predictor_names_" ,k, ".csv"))
+  
+  if(!all(Pred_names==Same_names)){
+    stop("Node data files seems to have different column structure which may yield wrong results. \n Make sure each node uses the same variable names and the same order in the data file before running this algorithm.")
   }
   
-  # Adding local estimators and sample sizes
+  # Adding local estimators and sample sizes 
   beta_k <- node_k[,1]
   n_k <- node_k[1,2]
   beta_sa <- beta_sa + n_k * beta_k
@@ -62,6 +63,7 @@ beta_sa <- beta_sa/n
 write.csv(data.frame(coefs=beta_sa),
           file="Coord_node_iter_1_primer.csv", row.names=FALSE)
 
+write.csv(Pred_names, file="Global_Predictor_names.csv", row.names=FALSE)
 
 ## Remove all environment variables. 
 ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)

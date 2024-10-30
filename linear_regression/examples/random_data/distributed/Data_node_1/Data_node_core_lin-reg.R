@@ -42,7 +42,7 @@ data_lin_reg <- function(man_wd=-1,nodeid=-1) {
 	}
 	# Importing data ----------------------------------------------------------
 
-	## Expecting data file name like Node1_data.csv where 1 is the variable k above
+	## Expecting data file name like Data_node_1 where 1 is the variable k above
 	## Construct file name according to node data, assumes default parameters, like header and separator
 	## This assumes a file with name like Node[[:digit:]]+_data.csv
 	node_data <- read.csv(paste0("Data_node_", k, ".csv"))
@@ -77,6 +77,9 @@ data_lin_reg <- function(man_wd=-1,nodeid=-1) {
 	## Producing the CSV file containing the output that will be used by the coordinating node to calculate the final result
 	write.csv(outputs, file=paste0("Node",k,"_output.csv"),row.names = FALSE,na="")
 
+	# Write variables names
+	write.csv(colnames(node_data)[-1], file=paste0("Predictor_names_", k, ".csv"), row.names = FALSE)
+	
 	## Remove all environment variables. 
 	## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)
 	rm(list = ls())

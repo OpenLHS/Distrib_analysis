@@ -69,10 +69,12 @@ beta_new <- beta_old + solve(V_t, D_t)
 write.csv(data.frame(coefs=beta_new),
           file=paste0("Coord_node_iter_", t+1, "_primer.csv"), row.names=FALSE)
 
+Predictor_names <- read.csv("Global_Predictor_names.csv")
+
 # Calculating current round estimates if we have at least one round completed
 if (t>0) {
   Sigma <- solve(V_t)
-  colnames(Sigma) <- c("(Intercept)", paste0("pred", seq(length(beta_new)-1)))
+  colnames(Sigma) <- c("(Intercept)", Predictor_names$x)
   write.csv(Sigma, file=paste0("Coord_node_iter_", t, "_covariance.csv"), row.names=FALSE)
   beta <- beta_new
   # Computing standard error ------------------------------------------------
@@ -88,7 +90,7 @@ if (t>0) {
   output <- cbind(beta, beta - se, beta + se, p_vals)
   colnames(output) <- c("Estimate", paste0("CI lower bound (alpha=", alpha, ")"),
                         paste0("CI upper bound (alpha=", alpha, ")"), "p-value")
-  rownames(output) <- c("(Intercept)", paste0("pred", seq(length(beta)-1)))
+  rownames(output) <- c("(Intercept)", Predictor_names$x)
   write.csv(output,file=paste0("Coord_node_iter_", t, "_results.csv"))
   
 }

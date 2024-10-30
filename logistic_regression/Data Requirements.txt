@@ -1,10 +1,8 @@
-:::::: DATA REQUIREMENTS (Cox_model) ::::::
+:::::: DATA REQUIREMENTS (logistic_regression) ::::::
 
 - Data is expected to be saved in a .csv file.
 
-- The code is written so that 0 = censored and 1 = event for the "status" variable. Make sure to follow this structure with your dataset.
-
-- The first two columns of your Data file must be named "time" and "status" (order not important).
+- The first column of your Data file must be the outcome variable and must be named "out1".
 
 - All other columns (predictor variables) must be in the same order and must share the same names accross nodes.
 

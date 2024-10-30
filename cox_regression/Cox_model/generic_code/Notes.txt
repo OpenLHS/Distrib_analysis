@@ -11,3 +11,6 @@ An override can be applied if desired (see the comment section of the relevant f
 The execution assumes that the required files are available in the same folder as the R file.
 
 The subfolder pooled_comparator contains code that can be used to execute a centralized Cox model. Make sure to read the code and make the needed adjustments before launching.
+
+*** OF NOTE, this is PURELY to demonstrate the feasibility of distributed Cox models. The code here has NOT been optimised NOR made secure in a significant way.
+*** A thorough review NEEDS to be undertaken before using this code in any production/research project
