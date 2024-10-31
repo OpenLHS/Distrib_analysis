@@ -1,6 +1,6 @@
 The files in this folder can be used to support an example of distributed survival analysis with a Cox model.
 
-Assuming a data structure similar to the data sites CSV files in the example folder, this code can be used to execute a data node operation or a coordination node operation for a Cox model.
+Assuming a data structure similar to the data nodes CSV files in the example folder, this code can be used to execute a data node operation or a coordination node operation for a Cox model.
 
 If you want to use RStudio, for the data node, you can source "Data_node_call_cox-reg_k.R", and for the coordination node, it is "Coord_node_call_iter_cox-reg.R".
 *** Note: If you are not able to automatically set your working directory, manually set the variable manualwd = 1 in "Data_node_call_cox-reg_k.R" and "Coord_node_call_iter_cox-reg.R".
@@ -12,15 +12,5 @@ The execution assumes that the required files are available in the same folder a
 
 The subfolder pooled_comparator contains code that can be used to execute a centralized Cox model. Make sure to read the code and make the needed adjustments before launching.
 
-
-:::::: IMPORTANT NOTES BEFORE USING ::::::
-
-- Adjust the number of files "Data_node_call_cox-reg_k.R" according to the number of sites, and make sure to change the value of "manualk" to the site number.
-
-- The code is written so that 0 = censored and 1 = event. Make sure to follow this structure with your dataset.
-
-- The first two columns must be named "time" and "status" (order not important).
-
-- To start over, it is important to delete all "output" files.
-
-- For the moment, the code works only with complete data (incomplete data with NA values should not make the code crash, but will cause calculation errors).
+*** OF NOTE, this is PURELY to demonstrate the feasibility of distributed Cox models. The code here has NOT been optimised NOR made secure in a significant way.
+*** A thorough review NEEDS to be undertaken before using this code in any production/research project

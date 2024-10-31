@@ -6,7 +6,6 @@
 
 # Loading packages and setting up core variables --------------------------
 library("survival")
-library("survminer")
 
 data_init_cox_reg <- function(man_wd,nodeid) {
   
@@ -43,6 +42,11 @@ data_init_cox_reg <- function(man_wd,nodeid) {
     node_data <- read.csv(paste0("Data_node_grouped_", k, ".csv"))
   }
   
+  # Method isn't yet available for missing data
+  if(any(is.na.data.frame(node_data))){
+    stop("At least one NA was found in the data. \n The algorithm currently works only with complete data.")
+  }
+  
   # Get event times, write in csv
   event_times <- unique(node_data$time[node_data$status == 1])
   write.csv(event_times, file=paste0("Times_",k,"_output.csv"),row.names = FALSE,na="")
@@ -55,6 +59,9 @@ data_init_cox_reg <- function(man_wd,nodeid) {
   formula <- as.formula(paste("Surv(time, status) ~", paste(paste0("node_data[,", column_indices, "]"), collapse = " + ")))
   res.cox <- coxph(formula, node_data, ties = "breslow")
   write.csv(coef(res.cox), file=paste0("Beta_local_",k,".csv"),row.names = FALSE,na="0")
+  
+  # Write variables names
+  write.csv(colnames(node_data), file=paste0("Predictor_names_", k, ".csv"), row.names = FALSE)
   
   # Get variance-covariance matrix
   Vk <- vcov(res.cox)

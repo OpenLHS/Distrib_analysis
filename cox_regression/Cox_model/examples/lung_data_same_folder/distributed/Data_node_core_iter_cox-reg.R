@@ -6,7 +6,6 @@
 
 # Loading packages and setting up core variables --------------------------
 library("survival")
-library("survminer")
 
 data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
   

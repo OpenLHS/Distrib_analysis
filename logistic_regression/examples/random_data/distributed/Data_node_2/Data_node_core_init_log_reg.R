@@ -37,11 +37,16 @@ if (manualwd != 1) {
 }
   
   
-  # Expecting data file name like Data_node_k.csv where 1 is the variable k above
+  # Expecting data file name like Data_node_1.csv where 1 is the variable k above
   # Construct file name according to node data
   # Assumes default parameters, like header and separator
   node_data <- read.csv(paste0("Data_node_", k, ".csv"))
   n <- nrow(node_data)
+  
+  # Method isn't yet available for missing data
+  if(any(is.na.data.frame(node_data))){
+    stop("At least one NA was found in the data. \n The algorithm currently works only with complete data.")
+  }
   
   # Fitting local model to generate an initial local estimator --------------
   
@@ -54,6 +59,9 @@ if (manualwd != 1) {
   write.csv(cbind(coefs, n),
             file=paste0("Data_node_",k,"_iter_0_output.csv"),
             row.names=FALSE)
+  
+  # Write variables names
+  write.csv(colnames(node_data)[-1], file=paste0("Predictor_names_", k, ".csv"), row.names = FALSE)
   
   ## Remove all environment variables. 
   ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)

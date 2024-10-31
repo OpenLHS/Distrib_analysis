@@ -159,10 +159,12 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
     output <- cbind(beta, exp(beta), exp(-beta),  exp(beta - se), exp(beta + se), sqrt(var), p_vals)
     output <- format(output, digits = 6, nsmall = 6)
     colnames(output) <- c(" coef", " exp(coef)", " exp(-coef)", " lower .95", " upper .95", " se(coef)", " Pr(>|z|)")
-    rownames(output) <- paste0("X", seq_len(length(beta$x)))
+    Predictor_names <- read.csv("Global_Predictor_names.csv")
+    
+    rownames(output) <- Predictor_names$x[-(1:2)]
     
     # Wrt the output to a CSV file
-    write.csv(output, file = paste0("Results_tr_", t, ".csv"), quote = FALSE, row.names = TRUE)
+    write.csv(output, file = paste0("Results_iter_", t, ".csv"), quote = FALSE, row.names = TRUE)
     
     
     if (!is.null(error_message)) {

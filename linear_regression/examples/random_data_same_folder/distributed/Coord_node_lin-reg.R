@@ -40,21 +40,17 @@ if (manualwd != 1) {
 # This assumes intermediate data results with a name like Node[[:digit:]]+_output.csv
 K=length(list.files(pattern="Node[[:digit:]]+_output.csv"))
 
-# calculate number of predictors and validate it is the same in each file
-## Initialise p
-p <- 0
-for (k in 1:K) {
-  ## Calculate the number of predictors based on the data node output file
-  q = sqrt(nrow(read.csv(paste0("Node", k, "_output.csv"))))-1
-  ## if first data file opened, assigned the value to p
-  if (p == 0) {
-    p <- q
-  }
-  ## if a file has a different number of predictors, send an error
-  else if (p != q) {
-    stop("your files do not seem to contain the same number of predictors")
+# Predictor verification
+k <- 1
+Pred_names <- read.csv(paste0("Predictor_names_" ,k, ".csv"))
+for(k in 2:K){
+  Same_names <- read.csv(paste0("Predictor_names_" ,k, ".csv"))
+  
+  if(!all(Pred_names==Same_names)){
+    stop("Node data files seems to have different column structure which may yield wrong results. \n Make sure each node uses the same variable names and the same order in the data file before running this algorithm.")
   }
 }
+p <- nrow(Pred_names) 
 
 # Create data structures to load the data node outputs
 all_local_xtx <- array(0, dim=c(p+1,p+1, K))
@@ -90,7 +86,7 @@ lower <- beta - qt(p=.05/2, df=xtx[1,1]-p-1, lower.tail=FALSE)*sqrt(diag(varbeta
 
 # Summary and output ------------------------------------------------------
 ## Binding all the results together
-output <- setNames(data.frame(beta,upper,lower, row.names = c("Intercept",paste0("Pred", c(1:p)))), c("Beta", "Upper", "Lower"))
+output <- setNames(data.frame(beta,upper,lower, row.names = c("Intercept",Pred_names$x)), c("Beta", "Upper", "Lower"))
 
 ## Producing the CSV file containing the final outputs
 write.csv(output, file="CoordNode_results_distributed_lin_reg.csv")

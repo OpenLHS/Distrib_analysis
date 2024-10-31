@@ -4,5 +4,5 @@ Repository structure
 : This describes the background of the work and presents a survey of the litterature pertinent to this domain as of December 2023
 
 2. Methods
-: The material pertaining to each method is located in its related folder, including generic code and examples
+: The material pertaining to each method is located in its related folder, including generic code, requirements and examples
 : Each method folder is self-contained

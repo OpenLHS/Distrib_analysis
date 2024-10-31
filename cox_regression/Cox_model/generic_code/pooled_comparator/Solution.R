@@ -5,7 +5,6 @@
 
 # Includes
 library("survival")
-library("survminer")
 
 # This assumes that all nodes recorded 3 predictors (covariates) in their data.
 nbBetas <- 3 # Input the number of betas
