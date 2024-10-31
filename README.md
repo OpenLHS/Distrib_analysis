@@ -8,6 +8,7 @@ The origin and fundementals can be found in this paper : https://www.medrxiv.org
 * Pr Félix Camirand-Lemyre : Felix.Camirand.Lemyre@usherbrooke.ca
 * Simon Lévesque : Simon.Levesque3@usherbrooke.ca
 * Marie-Pier Domingue : Marie-Pier.Domingue2@usherbrooke.ca
+* Jean-Philippe Morissette : jean-philippe.morissette@usherbrooke.ca
 * Jean-Francois Ethier : JF.Ethier@usherbrooke.ca
 
 Research group: **GRIIS** - Groupe de recherche interdisciplinaire en informatique de la santé (https://griis.ca)
