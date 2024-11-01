@@ -47,9 +47,13 @@ if (manualwd != 1) {
   if(any(is.na.data.frame(node_data))){
     stop("At least one NA was found in the data. \n The algorithm currently works only with complete data.")
   }
-  
+
+  # Makes sure the outcome variable is properly coded as 0s and 1s.
+  if(any(unique(node_data$out1) %in% c(0,1))){
+    stop("The outcome variable (out1) contains values that are different from 0 and 1, which isn't allowed.")
+  }
+    
   # Fitting local model to generate an initial local estimator --------------
-  
   fit <- glm(out1 ~ ., data=node_data, family="binomial")
   coefs <- as.vector(fit$coefficients)
   
