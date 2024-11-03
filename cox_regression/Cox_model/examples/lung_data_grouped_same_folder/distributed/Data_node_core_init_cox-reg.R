@@ -47,6 +47,10 @@ data_init_cox_reg <- function(man_wd,nodeid) {
     stop("At least one NA was found in the data. \n The algorithm currently works only with complete data.")
   }
   
+  # Makes sure the status variable is properly coded as 0s and 1s.
+  if(any(unique(node_data$status) %in% c(0,1))){
+    stop("The status variable contains values that are different from 0 and 1, which isn't allowed.")
+  
   # Get event times, write in csv
   event_times <- unique(node_data$time[node_data$status == 1])
   write.csv(event_times, file=paste0("Times_",k,"_output.csv"),row.names = FALSE,na="")
