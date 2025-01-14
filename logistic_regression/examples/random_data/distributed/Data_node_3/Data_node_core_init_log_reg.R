@@ -36,12 +36,17 @@ if (manualwd != 1) {
   print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
 }
   
-  
   # Expecting data file name like Data_node_1.csv where 1 is the variable k above
   # Construct file name according to node data
   # Assumes default parameters, like header and separator
   node_data <- read.csv(paste0("Data_node_", k, ".csv"))
   n <- nrow(node_data)
+  # Verifying if weights are available. If not, use values of 1s as uniform weights.
+    if (file.exists(paste0("Weights_node_", k, ".csv"))) {
+      node_weights <- read.csv(paste0("Weights_node_", k, ".csv"))[,1]
+  } else {
+      node_weights <- rep(1, n)
+  }
   
   # Method isn't yet available for missing data
   if(any(is.na.data.frame(node_data))){
@@ -54,7 +59,7 @@ if (manualwd != 1) {
   }
     
   # Fitting local model to generate an initial local estimator --------------
-  fit <- glm(out1 ~ ., data=node_data, family="binomial")
+  fit <- glm(out1 ~ ., data=node_data, family="binomial", weights = node_weights)
   coefs <- as.vector(fit$coefficients)
   
   # Exporting local estimator and sample size -------------------------------
