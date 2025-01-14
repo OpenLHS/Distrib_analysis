@@ -49,7 +49,7 @@ if (manualwd != 1) {
   }
 
   # Makes sure the outcome variable is properly coded as 0s and 1s.
-  if(any(unique(node_data$out1) %in% c(0,1))){
+  if(!all(unique(node_data$out1) %in% c(0,1))){
     stop("The outcome variable (out1) contains values that are different from 0 and 1, which isn't allowed.")
   }
     
