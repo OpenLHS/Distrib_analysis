@@ -75,7 +75,7 @@ V_k_t <- logreg_V(beta_t, X_k, W_k)
 
 # Exporting gradient and hessian ------------------------------------------
 
-output <- cbind(D_k_t, V_k_t)
+output <- as.data.frame(cbind(D_k_t, V_k_t))
 colnames(output)[1] <- "gradient"
 colnames(output)[2] <- "hessian_intercept"
 colnames(output)[-c(1,2)] <- paste("hessian", colnames(output)[-c(1,2)], sep = "_")

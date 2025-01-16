@@ -27,11 +27,6 @@ logreg_V <- function(beta, X, W) {
   t(X) %*% W %*% diag(sig*(1-sig)) %*% X # / n
 }
 
-Weight_prediction <- function(beta, X){ # (!) devrait-il y avoir quelque chose en lien avec les poids? (donc un parametre W?)
-  sig <- sigmoid(X %*% beta)[,1]
-  return(t(X) %*% diag(sig*(1-sig)))
-} 
-
 # Importing data ----------------------------------------------------------
 
 if (manualwd != 1) {
@@ -89,10 +84,15 @@ write.csv(output,
 
 # Computing & exporting weight predictions --------------------------------
 
-predicted_weights <- Weight_prediction(beta_t, X_k)
+node_propensity <- sigmoid(X_k %*% beta_t)
+IPW <- node_data$Tx/node_propensity + (1-node_data$Tx)/(1-node_propensity)
 
-write.csv(predicted_weights,
-          file=paste0("Weights_node_", k, "_iter_", t, ".csv"), row.names = FALSE)
+Weights_output <- as.data.frame(cbind(IPW, node_propensity))
+colnames(Weights_output)[1] <- "IPW"
+colnames(Weights_output)[2] <- "Propensity_score"
+
+write.csv(Weights_output,
+          file=paste0("IPW_node_", k, "_iter_", t, ".csv"), row.names = FALSE)
 
 ## Remove all environment variables. 
 ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)
