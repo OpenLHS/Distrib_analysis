@@ -42,12 +42,12 @@ t <- iterationseq
 
 # Importing data and aggregating gradients and hessians -------------------
 
-beta_old <- read.csv(paste0("Coord_node_iter_", t, "_primer.csv"))[,1]
+beta_old <- read.csv(paste0("Coord_node_iter_", t, "_W_primer.csv"))[,1]
 
-K <- length(list.files(pattern=paste0("Data_node_[[:digit:]]+_iter_", t, "_output.csv")))
+K <- length(list.files(pattern=paste0("Data_node_[[:digit:]]+_iter_", t, "_W_output.csv")))
 p <- 0
 for (k in 1:K) {
-  node_k <- read.csv(paste0("Data_node_", k, "_iter_", t, "_output.csv"))
+  node_k <- read.csv(paste0("Data_node_", k, "_iter_", t, "_W_output.csv"))
   q <- nrow(node_k)
   if (p == 0) {
     p <- q
@@ -67,33 +67,33 @@ beta_new <- beta_old + solve(V_t, D_t)
 # Exporting updated estimator for a subsequent iteration ------------------
 
 write.csv(data.frame(coefs=beta_new),
-          file=paste0("Coord_node_iter_", t+1, "_primer.csv"), row.names=FALSE)
+          file=paste0("Coord_node_iter_", t+1, "_W_primer.csv"), row.names=FALSE)
 
-Predictor_names <- read.csv("Global_Predictor_names.csv")
-
+#Predictor_names <- read.csv("Global_Predictor_names.csv")
+#
 # Calculating current round estimates if we have at least one round completed
-if (t>0) {
-  Sigma <- solve(V_t)
-  colnames(Sigma) <- c("(Intercept)", Predictor_names$x)
-  write.csv(Sigma, file=paste0("Coord_node_iter_", t, "_covariance.csv"), row.names=FALSE)
-  beta <- beta_new
-  # Computing standard error ------------------------------------------------
-  
-  se <- qnorm(1 - 0.5*alpha) * sqrt(diag(Sigma))
-  
-  # Computing p-values ------------------------------------------------------
-  
-  p_vals <- 2*(1 - pnorm(abs(beta)/sqrt(diag(Sigma))))
-  
-  # Exporting final results -------------------------------------------------
-  
-  output <- cbind(beta, beta - se, beta + se, p_vals)
-  colnames(output) <- c("Estimate", paste0("CI lower bound (alpha=", alpha, ")"),
-                        paste0("CI upper bound (alpha=", alpha, ")"), "p-value")
-  rownames(output) <- c("(Intercept)", Predictor_names$x)
-  write.csv(output,file=paste0("Coord_node_iter_", t, "_results.csv"))
-  
-}
+#if (t>0) {
+#  Sigma <- solve(V_t)
+#  colnames(Sigma) <- c("(Intercept)", Predictor_names$x)
+#  write.csv(Sigma, file=paste0("Coord_node_iter_", t, "_covariance.csv"), row.names=FALSE)
+#  beta <- beta_new
+#  # Computing standard error ------------------------------------------------
+#  
+#  se <- qnorm(1 - 0.5*alpha) * sqrt(diag(Sigma))
+#  
+#  # Computing p-values ------------------------------------------------------
+#  
+#  p_vals <- 2*(1 - pnorm(abs(beta)/sqrt(diag(Sigma))))
+#  
+#  # Exporting final results -------------------------------------------------
+#  
+#  output <- cbind(beta, beta - se, beta + se, p_vals)
+#  colnames(output) <- c("Estimate", paste0("CI lower bound (alpha=", alpha, ")"),
+#                        paste0("CI upper bound (alpha=", alpha, ")"), "p-value")
+#  rownames(output) <- c("(Intercept)", Predictor_names$x)
+#  write.csv(output,file=paste0("Coord_node_iter_", t, "_results.csv"))
+#  
+#}
 
 
 ## Remove all environment variables. 

@@ -13,14 +13,14 @@
 manualwd <- -1
 
 # If you want to override the node numbering based on filename, input 0 or a positive integer here
-manualk <- -1
+manualk <- 3
 manualt <- -1
 
 # No modifications should be required below this point
 ###########################
 
 if (manualwd != 1) {
-
+  
   # Set working directory automatically
   
   # this.path package is available
@@ -40,16 +40,16 @@ if (manualwd != 1) {
 } else {
   print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
 }
-  
+
 # Veryfiying if there is a coordination node output file present
-nbprimerfiles <- length(list.files(pattern="Coord_node_iter_[[:digit:]]+_primer.csv"))
+nbprimerfiles <- length(list.files(pattern="Coord_node_iter_[[:digit:]]+_W_primer.csv"))
 if (nbprimerfiles > 0) {
   source("Data_node_call_iter_log-reg.R")
   data_call_iter_log_reg(manualwd,manualk,manualt)
 } else {
   source("Data_node_call_init_log_reg.R")
   data_call_init_log_reg(manualwd,manualk)
-  }
+}
 
 ## Remove all environment variables. 
 ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)

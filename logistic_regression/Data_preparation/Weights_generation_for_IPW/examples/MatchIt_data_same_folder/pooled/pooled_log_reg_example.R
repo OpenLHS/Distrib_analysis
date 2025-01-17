@@ -45,12 +45,3 @@ print(confint.default(fit))
 
 # Predicted probabilities
 predict(fit, data_pooled, type="response")
-
-
-W1 = Weights_save[1:200]
-W2 = Weights_save[201:400]
-W3 = Weights_save[-(1:400)]
-
-write.csv(as.data.frame(W1), file = "Weights_node_1.csv", row.names = F)
-write.csv(as.data.frame(W2), file = "Weights_node_2.csv", row.names = F)
-write.csv(as.data.frame(W3), file = "Weights_node_3.csv", row.names = F)

@@ -76,7 +76,7 @@ if (manualt >= 0) {
 } else {
   
   # List all the data files conforming the the pattern below. There should be at least 1
-  coordouputfileslist <- list.files(pattern="Coord_node_iter_[[:digit:]]+_primer.csv")
+  coordouputfileslist <- list.files(pattern="Coord_node_iter_[[:digit:]]+_W_primer.csv")
   # Assuming there is at least one file found
   if (length(coordouputfileslist) > 0) {
     
@@ -84,9 +84,9 @@ if (manualt >= 0) {
     for (fl in coordouputfileslist){
       outputfname <- fl
       underspositions <- unlist(gregexpr("_",outputfname))
-      lastundersf <- max(underspositions)
       beforelastundersf <- underspositions[length(underspositions)-1]
-      iterfl <- strtoi(substring(outputfname,beforelastundersf+1,lastundersf-1)) 
+      beforebeforelastundersf <- underspositions[length(underspositions)-2]
+      iterfl <- strtoi(substring(outputfname,beforebeforelastundersf+1,beforelastundersf-1)) 
       itervec <- append(itervec,iterfl)
     }
     

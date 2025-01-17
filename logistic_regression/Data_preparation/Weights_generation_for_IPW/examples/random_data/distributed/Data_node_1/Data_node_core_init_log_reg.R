@@ -59,14 +59,14 @@ if (manualwd != 1) {
   }
     
   # Fitting local model to generate an initial local estimator --------------
-  fit <- glm(out1 ~ ., data=node_data, family="binomial", weights = node_weights)
+  fit <- glm(Tx ~ ., data=node_data, family="binomial", weights = node_weights)
   coefs <- as.vector(fit$coefficients)
   
   # Exporting local estimator and sample size -------------------------------
   
   length(n) <- length(coefs)
   write.csv(cbind(coefs, n),
-            file=paste0("Data_node_",k,"_iter_0_output.csv"),
+            file=paste0("Data_node_",k,"_iter_0_W_output.csv"),
             row.names=FALSE)
   
   # Write variables names

@@ -61,7 +61,7 @@ if (file.exists(paste0("Weights_node_", k, ".csv"))) {
   node_weights <- rep(1, n)
 }
 
-beta_t <- read.csv(paste0("Coord_node_iter_", t, "_primer.csv"))[,1]
+beta_t <- read.csv(paste0("Coord_node_iter_", t, "_W_primer.csv"))[,1]
 
 X_k <- as.matrix(cbind(1, node_data[,-1]))
 y_k <- node_data[,1]
@@ -80,7 +80,19 @@ colnames(output)[1] <- "gradient"
 colnames(output)[2] <- "hessian_intercept"
 colnames(output)[-c(1,2)] <- paste("hessian", colnames(output)[-c(1,2)], sep = "_")
 write.csv(output,
-          file=paste0("Data_node_", k, "_iter_", t, "_output.csv"), row.names=FALSE)
+          file=paste0("Data_node_", k, "_iter_", t, "_W_output.csv"), row.names=FALSE)
+
+# Computing & exporting weight predictions --------------------------------
+
+node_propensity <- sigmoid(X_k %*% beta_t)
+IPW <- node_data$Tx/node_propensity + (1-node_data$Tx)/(1-node_propensity)
+
+Weights_output <- as.data.frame(cbind(IPW, node_propensity))
+colnames(Weights_output)[1] <- "IPW"
+colnames(Weights_output)[2] <- "Propensity_score"
+
+write.csv(Weights_output,
+          file=paste0("IPW_node_", k, "_iter_", t, ".csv"), row.names = FALSE)
 
 ## Remove all environment variables. 
 ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)

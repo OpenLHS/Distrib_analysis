@@ -38,7 +38,7 @@ if (file.exists(paste0("Weights_pooled.csv"))) {
 
 # Fitting and printing pooled model
 print("Pooled logistic regression results:")
-fit <- glm(out1 ~ ., data=data_pooled, family="binomial", weights = weights_pooled)
+fit <- glm(Tx ~ ., data=data_pooled, family="binomial", weights = weights_pooled)
 print(summary(fit)$coefficients)
 print("Confidence intervals")
 print(confint.default(fit))

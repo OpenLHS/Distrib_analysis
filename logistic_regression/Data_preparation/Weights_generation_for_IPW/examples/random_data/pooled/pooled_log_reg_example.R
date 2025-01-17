@@ -29,11 +29,19 @@ data_pooled <- rbind(read.csv(paste0("Data_node_1.csv")),
                      read.csv(paste0("Data_node_2.csv")),
                      read.csv(paste0("Data_node_3.csv")))
 
-weights_pooled <- read.csv("Weights_pooled.csv")[,1]
+# Verifying if weights are available. If not, use values of 1s as uniform weights.
+if (file.exists(paste0("Weights_pooled.csv"))) {
+  weights_pooled <- read.csv("Weights_pooled.csv")[,1]
+} else {
+  weights_pooled <- rep(1, nrow(data_pooled))
+}
 
 # Fitting and printing pooled model
 print("Pooled logistic regression results:")
-fit <- glm(out1 ~ ., data=data_pooled, family="binomial", weights = weights_pooled)
+fit <- glm(Tx ~ ., data=data_pooled, family="binomial", weights = weights_pooled)
 print(summary(fit)$coefficients)
 print("Confidence intervals")
 print(confint.default(fit))
+
+# Predicted probabilities
+predict(fit, data_pooled, type="response")

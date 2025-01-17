@@ -42,7 +42,7 @@ if (manualwd != 1) {
 }
   
 # Verifying if there is a coordination node output file present
-nbprimerfiles <- length(list.files(pattern="Coord_node_iter_[[:digit:]]+_primer.csv"))
+nbprimerfiles <- length(list.files(pattern="Coord_node_iter_[[:digit:]]+_W_primer.csv"))
 if (nbprimerfiles > 0) {
   source("Coord_node_call_add_iter_log-reg.R")
   coord_call_add_iter_log_reg(manualwd,manualt)

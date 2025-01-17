@@ -13,7 +13,7 @@
 manualwd <- -1
 
 # If you want to override the node numbering based on filename, input 0 or a positive integer here
-manualk <- -1
+manualk <- 1
 manualt <- -1
 
 # No modifications should be required below this point
@@ -42,7 +42,7 @@ if (manualwd != 1) {
 }
   
 # Veryfiying if there is a coordination node output file present
-nbprimerfiles <- length(list.files(pattern="Coord_node_iter_[[:digit:]]+_primer.csv"))
+nbprimerfiles <- length(list.files(pattern="Coord_node_iter_[[:digit:]]+_W_primer.csv"))
 if (nbprimerfiles > 0) {
   source("Data_node_call_iter_log-reg.R")
   data_call_iter_log_reg(manualwd,manualk,manualt)
