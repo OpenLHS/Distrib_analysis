@@ -16,8 +16,17 @@ manualwd <- -1
 manualk <- 2
 manualt <- -1
 
+# If you do not want to use a threshold for the probabilities estimated, input 0 here.
+# Threshold value should be betweeen 0 and 0.5 and will be applied like this:
+# score<threshold || score>(1-threshold)
+manualthresh <- 0.01
+
 # No modifications should be required below this point
 ###########################
+
+if (manualthresh<0 | manualthresh>0.5){
+  stop("The threshold for propensity score must be between 0 and 0.5.")
+}
 
 if (manualwd != 1) {
   
@@ -45,10 +54,10 @@ if (manualwd != 1) {
 nbprimerfiles <- length(list.files(pattern="Coord_node_iter_[[:digit:]]+_W_primer.csv"))
 if (nbprimerfiles > 0) {
   source("Data_node_call_iter_log-reg.R")
-  data_call_iter_log_reg(manualwd,manualk,manualt)
+  data_call_iter_log_reg(manualwd,manualk,manualt,manualthresh)
 } else {
   source("Data_node_call_init_log_reg.R")
-  data_call_init_log_reg(manualwd,manualk)
+  data_call_init_log_reg(manualwd,manualk,manualthresh)
 }
 
 ## Remove all environment variables. 
