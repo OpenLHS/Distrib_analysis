@@ -7,8 +7,12 @@
 # This assumes three data node files in the same folder named as below
 # The output is visible in RStudio console
 
-# Set working directory automatically
+# If you do not want to use a threshold for the probabilities estimated, input 0 here.
+# Threshold value should be betweeen 0 and 0.5 and will be applied like this:
+# score<threshold || score>(1-threshold)
+manualthresh <- 0.01
 
+# Set working directory automatically
 # this.path package is available
 if (require(this.path)) {
   setwd(this.dir())
@@ -44,4 +48,10 @@ print("Confidence intervals")
 print(confint.default(fit))
 
 # Predicted probabilities
-predict(fit, data_pooled, type="response")
+predprop <- predict(fit, data_pooled, type="response")
+
+# Predicted probabilities after threshold
+predprop[predprop<manualthresh] = manualthresh
+predprop[predprop>(1-manualthresh)] = 1-manualthresh
+
+predprop
