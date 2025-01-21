@@ -8,29 +8,21 @@
 # Currently, the automated node number allocation currently requires execution in R studio and rstudioapi package
 # https://cran.r-project.org/package=rstudioapi
 
+
 # If you want to skip the automated working directory setting, input 1 here. 
 # If you do so, make sure the working directory is set correctly manualy.
 manualwd <- -1
 
-# If you want to override the node numbering based on filename, input 0 or a positive integer here
-manualk <- 2
+# If you want to override the iteration numbering based on filename, input 0 or a positive integer here
 manualt <- -1
-
-# If you do not want to use a threshold for the probabilities estimated, input 0 here.
-# Threshold value should be between 0 and 0.5. See details in the instructions.
-manualthresh <- 0.01
 
 # No modifications should be required below this point
 ###########################
 
-if (manualthresh<0 | manualthresh>0.5){
-  stop("The threshold for propensity score must be between 0 and 0.5.")
-}
-
 if (manualwd != 1) {
   
   # Set working directory automatically
-  
+
   # this.path package is available
   if (require(this.path)) {
     setwd(this.dir())
@@ -48,16 +40,16 @@ if (manualwd != 1) {
 } else {
   print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
 }
-
-# Veryfiying if there is a coordination node output file present
+  
+# Verifying if there is a coordination node output file present
 nbprimerfiles <- length(list.files(pattern="Coord_node_iter_[[:digit:]]+_W_primer.csv"))
 if (nbprimerfiles > 0) {
-  source("Data_node_call_iter_log-reg.R")
-  data_call_iter_log_reg(manualwd,manualk,manualt,manualthresh)
+  source("Coord_node_call_add_iter_log-reg.R")
+  coord_call_add_iter_log_reg(manualwd,manualt)
 } else {
-  source("Data_node_call_init_log_reg.R")
-  data_call_init_log_reg(manualwd,manualk,manualthresh)
-}
+  source("Coord_node_init_iter_log_reg.R")
+  coord_init_iter_log_reg(manualwd)
+  }
 
 ## Remove all environment variables. 
 ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)

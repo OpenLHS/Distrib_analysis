@@ -8,29 +8,18 @@
 # Currently, the automated node number allocation currently requires execution in R studio and rstudioapi package
 # https://cran.r-project.org/package=rstudioapi
 
-# If you want to skip the automated working directory setting, input 1 here. 
-# If you do so, make sure the working directory is set correctly manualy.
-manualwd <- -1
+coord_call_add_iter_log_reg <- function(man_wd=-1,man_iter=-1) {
 
-# If you want to override the node numbering based on filename, input 0 or a positive integer here
-manualk <- 2
-manualt <- -1
-
-# If you do not want to use a threshold for the probabilities estimated, input 0 here.
-# Threshold value should be between 0 and 0.5. See details in the instructions.
-manualthresh <- 0.01
+manualwd <- man_wd
+manualt <- man_iter
 
 # No modifications should be required below this point
 ###########################
 
-if (manualthresh<0 | manualthresh>0.5){
-  stop("The threshold for propensity score must be between 0 and 0.5.")
-}
-
 if (manualwd != 1) {
   
   # Set working directory automatically
-  
+
   # this.path package is available
   if (require(this.path)) {
     setwd(this.dir())
@@ -49,16 +38,47 @@ if (manualwd != 1) {
   print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
 }
 
-# Veryfiying if there is a coordination node output file present
-nbprimerfiles <- length(list.files(pattern="Coord_node_iter_[[:digit:]]+_W_primer.csv"))
-if (nbprimerfiles > 0) {
-  source("Data_node_call_iter_log-reg.R")
-  data_call_iter_log_reg(manualwd,manualk,manualt,manualthresh)
+
+t <- -1
+# If there is a manual override, the iteration sequence number (t) is set to the manual value ------------
+if (manualt >= 0) {
+  t <- manualt
+  
+  # If there is no valid override sequence number, there will be an attempt to extract the number from the data file name
 } else {
-  source("Data_node_call_init_log_reg.R")
-  data_call_init_log_reg(manualwd,manualk,manualthresh)
+  
+  # List all the data files conforming the the pattern below. There should be at least 1
+  coordouputfileslist <- list.files(pattern="Coord_node_iter_[[:digit:]]+_W_primer.csv")
+  # Assuming there is at least one file found
+  if (length(coordouputfileslist) > 0) {
+    
+    itervec=vector(mode="numeric")
+    for (fl in coordouputfileslist){
+      outputfname <- fl
+      underspositions <- unlist(gregexpr("_",outputfname))
+      beforelastundersf <- underspositions[length(underspositions)-1]
+      beforebeforelastundersf <- underspositions[length(underspositions)-2]
+      iterfl <- strtoi(substring(outputfname,beforebeforelastundersf+1,beforelastundersf-1)) 
+      itervec <- append(itervec,iterfl)
+    }
+    
+    t <- max(itervec)
+  } else {
+    stop("There is no primer file found")
+  }
+}
+
+# Verifying that a valid sequence numbers could be allocated manually or automatically
+if (t >= 0) {
+  source("Coord_node_add_iter_log_reg.R")
+  coord_add_iter_log_reg(manualwd,t)
+} else {
+  stop("Node numbering was not set properly")
 }
 
 ## Remove all environment variables. 
 ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)
 rm(list = ls())
+
+return(TRUE)
+}

@@ -8,8 +8,7 @@
 # The output is visible in RStudio console
 
 # If you do not want to use a threshold for the probabilities estimated, input 0 here.
-# Threshold value should be betweeen 0 and 0.5 and will be applied like this:
-# score<threshold || score>(1-threshold)
+# Threshold value should be between 0 and 0.5. See details in the instructions.
 manualthresh <- 0.01
 
 # Set working directory automatically
@@ -50,8 +49,9 @@ print(confint.default(fit))
 # Predicted probabilities
 predprop <- predict(fit, data_pooled, type="response")
 
-# Predicted probabilities after threshold
+# Printing predicted probabilities after threshold
 predprop[predprop<manualthresh] = manualthresh
 predprop[predprop>(1-manualthresh)] = 1-manualthresh
 
-predprop
+print("Propensity scores")
+print(predprop)

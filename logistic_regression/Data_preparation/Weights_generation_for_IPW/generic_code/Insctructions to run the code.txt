@@ -23,7 +23,6 @@ There are many ways to run R code. The proposed instructions here are focusing o
 :::::: EXECUTING THE CENTRALISED CODE ::::::
 *** Make sure R studio is not currently running and close it if it is.
 1)	Navigate to the folder "pooled"
-
 2)	Open the file "pooled_log_reg_example.R". It should then appear in R.
 3)	Select all the code and click "run"
 4)	The results will be available in the console

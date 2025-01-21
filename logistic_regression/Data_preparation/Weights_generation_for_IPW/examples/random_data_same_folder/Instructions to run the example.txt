@@ -3,12 +3,12 @@ There are many ways to run R code. The proposed instructions here are focusing o
 :::::: INSTALLING R and R STUDIO ::::::
 1)	Go to the page : https://posit.co/download/rstudio-desktop/ and follow the instructions for your operating system
 
-:::::: INSTALLING THE REQUIRED PACKAGES ::::::
-: The examples require the use a package not present in the base installation :
-- KS : https://cran.r-project.org/package=ks https://cran.r-project.org/web/packages/ks/ks.pdf
+:::::: INSTALLING THE REQUIRED PACKAGES :::::: 
+: There are no package not present in the base installation that are a requirement for this code to run.
 
-: The examples will be easier to explore and adapt/change if the package "this.path" is also available.
-- this.path : https://cran.r-project.org/package=this.path https://cran.r-project.org/web/packages/this.path/this.path.pdf
+: The examples will be easier to explore and adapt/change if the packages "this.path" and "rstudioapi" are also available.
+- this.path : https://cran.r-project.org/web/packages/this.path/index.html
+- rstudioapi: https://cran.r-project.org/web/packages/rstudioapi/index.html
 - Yet this is NOT required and you can safely ignore any warning about this is if you want to use the examples "as-is".
 
 : R should prompt you to download the packages automatically
@@ -19,6 +19,12 @@ There are many ways to run R code. The proposed instructions here are focusing o
 :::::: INSTALLING THE EXAMPLE ::::::
 1)	Unpack one of the example folders on one of your drives
 : In it, you should find two folders : a) "pooled" and b) "distributed"
+
+:::::: PARAMETERS ::::::
+1) 	Threshold (manualthresh)
+	This value is used to avoid issues with propension scores that are too close to 0 or too close to 1. 
+	Any value that is smaller than the threshold will be set to the value of the threshold.
+	Any value that is bigger than 1-threshold will be set to the value of 1-threshold.
 
 :::::: EXECUTING THE CENTRALISED CODE ::::::
 *** Make sure R studio is not currently running and close it if it is.
@@ -31,14 +37,17 @@ There are many ways to run R code. The proposed instructions here are focusing o
 :::::: EXECUTING THE DISTRIBUTED CODE ::::::
 *** Make sure R studio is not currently running and close it if it is.
 *** If you are not able to automatically set your working directory, manually set the variable manualwd = 1 in Data_node_call_log-reg.R and Coord_node_call_iter_log-reg.R
-1) 	Run the bat file (for windows users) or the corresponding r file (Data_node_call_log-reg_X.R) for each data node to initiate the process
-2)	Run the coordination bat file (for windows users) or the corresponding r file (Coord_node_call_iter_log-reg.R)
+1) 	Run the bat file (for windows users) or the corresponding r file (Data_node_call_log-reg.R) for each data node to initiate the process
+2) 	Take each output file generated and copy all of them in the coordination node folder
+3)	Run the coordination bat file (for windows users) or the corresponding r file (Coord_node_call_iter_log-reg.R)
 
 Then, to perform an iteration:
-3) 	run the bat file (or the corresponding r file) for each data node
-4) 	run the coordination bat file (or the corresponding r file)
+4) 	Copy the primer csv file to each of the three data node folders
+5) 	run the bat file (or the corresponding r file) for each data node
+6) 	take each output file generated (tagged with the most recent iteration number) and copy all three in the coordination node folder
+7) 	run the coordination bat file (or the corresponding r file)
 **	this step will generate but the estimators for this iteration and a primer file to be used if another iteration is desired
-5)	optional : compare the results of the previous iteration with the current one to decide if another iteration is pertinent (return to step 3) or not	
+8)	optional : compare the results of the previous iteration with the current one to decide if another iteration is pertinent (return to step 4) or not	
 
 ## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 ## Copyright : GRIIS / Université de Sherbrooke

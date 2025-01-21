@@ -1,6 +1,6 @@
-The files in this folder can be used to support an example of distributed logistic regression analysis
+The files in this folder can be used to support an example that computes the propensity score of an individual and the inverse probability weight associated with that score.
 
-Assuming a data structure similar to the data node csv files in the example folder, this code can be used to execute a data node operation or a coordination node operation for a logistic regression.
+Assuming a data structure similar to the data node csv files in the example folder, this code can be used to execute a data node operation or a coordination node operation for a propensity score computation.
 
 BAT command files are offered for windows users but similar ones can obviously be easily generated for other systems (these assume that RScript is in your system path). This requires the this.path package.
 
@@ -12,7 +12,7 @@ An override can be applied if desired (see the comment section of the relevant f
 
 The execution assumes that the required files are available in the same folder than the r file (for example, a primer file from the coordination node).
 
-The subfoler "pooled_comparator" contains code that can be used to execute a traditional pooled logistic regression.
+The subfoler "pooled_comparator" contains code that can be used to execute a pooled propensity score computation.
 
-*** OF NOTE, this is PURELY to demonstrate the feasibility of distributed logistic regressions. The code here has NOT been optimised NOR made secure in a significant way.
+*** OF NOTE, this is PURELY to demonstrate the feasibility of distributed propensity score computation. The code here has NOT been optimised NOR made secure in a significant way.
 *** A thorough review NEEDS to be undertaken before using this code in any production/research project.
