@@ -36,17 +36,25 @@ if (manualwd != 1) {
 K <- length(list.files(pattern="Data_node_[[:digit:]]+_iter_0_W_output.csv"))
 p <- 0 
 k <- 1
-Pred_names <- read.csv(paste0("Predictor_names_" ,k, ".csv"))
+Settings <- read.csv(paste0("Local_Settings_" ,k, ".csv"))
+Pred_names <- Settings[,1]
+Threshold <- Settings[1,2]
 node_1 <- read.csv(paste0("Data_node_", k, "_iter_0_W_output.csv"))
 beta_sa <- rep(0, nrow(node_1))
 n <- 0
 
 for (k in 1:K) { 
   node_k <- read.csv(paste0("Data_node_", k, "_iter_0_W_output.csv"))
-  Same_names <- read.csv(paste0("Predictor_names_" ,k, ".csv"))
+  OtherSettings <- read.csv(paste0("Local_Settings_" ,k, ".csv"))
+  Same_names <- OtherSettings[,1]
+  Same_Threshold <- OtherSettings[1,2]
   
   if(!all(Pred_names==Same_names)){
     stop("Node data files seems to have different column structure which may yield wrong results. \n Make sure each node uses the same variable names and the same order in the data file before running this algorithm.")
+  }
+  
+  if(!Threshold==Same_Threshold){
+    stop("Node data files seems to use different threshold values for probabilities, which may yield incoherent results. \n Make sure each node uses the same threshold before running this algorithm.")
   }
   
   # Adding local estimators and sample sizes 
@@ -63,7 +71,12 @@ beta_sa <- beta_sa/n
 write.csv(data.frame(coefs=beta_sa),
           file="Coord_node_iter_1_W_primer.csv", row.names=FALSE)
 
-write.csv(Pred_names, file="Global_Predictor_names.csv", row.names=FALSE)
+# Exporting global settings
+length(Threshold) <- length(Pred_names)
+globalinfo <- cbind(Pred_names, Threshold)
+colnames(globalinfo)[1] <- "Predictor_names"
+colnames(globalinfo)[2] <- "Prob_threshold"
+write.csv(globalinfo, file="Global_Settings.csv", row.names=FALSE)
 
 ## Remove all environment variables. 
 ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)

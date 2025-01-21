@@ -8,11 +8,12 @@
 # Currently, the automated node number allocation currently requires execution in R studio and rstudioapi package
 # https://cran.r-project.org/package=rstudioapi
 
-data_call_iter_log_reg <- function(man_wd=-1,man_nodeid=-1, man_iter=-1) {
+data_call_iter_log_reg <- function(man_wd=-1,man_nodeid=-1, man_iter=-1, man_thresh) {
 
 manualwd <- man_wd
 manualk <- man_nodeid
 manualt <- man_iter
+probthresh <- man_thresh
 
 # No modifications should be required below this point
 ###########################
@@ -100,7 +101,7 @@ if (manualt >= 0) {
 # Verifying that a valid node number and sequence numbers could be allocated manually or automatically
 if (k >= 0 & t >= 0) {
   source("Data_node_core_iter_log-reg.R")
-  data_iter_log_reg(manualwd,k,t)
+  data_iter_log_reg(manualwd,k,t,probthresh)
 } else {
   stop("Node numbering was not set properly")
 }

@@ -8,11 +8,12 @@
 # Currently, the automated node number allocation currently requires execution in R studio and rstudioapi package
 # https://cran.r-project.org/package=rstudioapi
 
-data_call_iter_log_reg <- function(man_wd=-1,man_nodeid=-1, man_iter=-1) {
+data_call_iter_log_reg <- function(man_wd=-1,man_nodeid=-1, man_iter=-1, man_thresh) {
 
 manualwd <- man_wd
 manualk <- man_nodeid
 manualt <- man_iter
+probthresh <- man_thresh
 
 # No modifications should be required below this point
 ###########################
@@ -84,6 +85,7 @@ if (manualt >= 0) {
     for (fl in coordouputfileslist){
       outputfname <- fl
       underspositions <- unlist(gregexpr("_",outputfname))
+      lastundersf <- max(underspositions) #(!) N'est plus necessaire
       beforelastundersf <- underspositions[length(underspositions)-1]
       beforebeforelastundersf <- underspositions[length(underspositions)-2]
       iterfl <- strtoi(substring(outputfname,beforebeforelastundersf+1,beforelastundersf-1)) 
@@ -99,7 +101,7 @@ if (manualt >= 0) {
 # Verifying that a valid node number and sequence numbers could be allocated manually or automatically
 if (k >= 0 & t >= 0) {
   source("Data_node_core_iter_log-reg.R")
-  data_iter_log_reg(manualwd,k,t)
+  data_iter_log_reg(manualwd,k,t,probthresh)
 } else {
   stop("Node numbering was not set properly")
 }

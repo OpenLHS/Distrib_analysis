@@ -4,11 +4,12 @@
 ## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 ## Copyright: GRIIS / Université de Sherbrooke
 
-data_iter_log_reg <- function(man_wd,nodeid, iterationseq) {
+data_iter_log_reg <- function(man_wd,nodeid, iterationseq, man_thresh) {
 
 manualwd <- man_wd  
 k <- nodeid
 t <- iterationseq
+probthresh <- man_thresh
 
 # Logistic-regression-specific functions
 
@@ -85,6 +86,11 @@ write.csv(output,
 # Computing & exporting weight predictions --------------------------------
 
 node_propensity <- sigmoid(X_k %*% beta_t)
+
+# If needed, apply threshold on probabilities smaller/bigger than preset threshold 
+node_propensity[node_propensity<probthresh] = probthresh
+node_propensity[node_propensity>(1-probthresh)] = 1-probthresh
+
 IPW <- node_data$Tx/node_propensity + (1-node_data$Tx)/(1-node_propensity)
 
 Weights_output <- as.data.frame(cbind(IPW, node_propensity))

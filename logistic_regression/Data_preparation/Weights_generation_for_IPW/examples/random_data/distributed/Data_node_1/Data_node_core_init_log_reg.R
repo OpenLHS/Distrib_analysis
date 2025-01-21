@@ -6,11 +6,13 @@
 
 # Loading packages and setting up core variables --------------------------
 
-data_init_log_reg <- function(man_wd,nodeid) {
+data_init_log_reg <- function(man_wd,nodeid,man_thresh) {
   
   manualwd <- man_wd 
   
   k <- nodeid
+  
+  probthresh <- man_thresh
 
   # Importing data ----------------------------------------------------------
   
@@ -69,8 +71,12 @@ if (manualwd != 1) {
             file=paste0("Data_node_",k,"_iter_0_W_output.csv"),
             row.names=FALSE)
   
-  # Write variables names
-  write.csv(colnames(node_data)[-1], file=paste0("Predictor_names_", k, ".csv"), row.names = FALSE)
+  # Export local settings
+  length(probthresh) <- length(colnames(node_data)[-1])
+  localinfo <- cbind(colnames(node_data)[-1], probthresh)
+  colnames(localinfo)[1] <- "Predictor_names"
+  colnames(localinfo)[2] <- "Prob_threshold"
+  write.csv(localinfo, file=paste0("Local_Settings_", k, ".csv"), row.names = FALSE)
   
   ## Remove all environment variables. 
   ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)
