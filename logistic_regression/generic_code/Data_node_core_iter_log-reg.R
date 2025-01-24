@@ -16,15 +16,15 @@ sigmoid <- function(x) {
   exp(x) / (1 + exp(x))
 }
 
-logreg_D <- function(beta, X, y) {
+logreg_D <- function(beta, X, y, W) {
   n <- nrow(X)
-  t(X) %*% (y - sigmoid(X %*% beta)) # / n
+  t(X) %*% W %*% (y - sigmoid(X %*% beta)) # / n
 }
 
-logreg_V <- function(beta, X) {
+logreg_V <- function(beta, X, W) {
   n <- nrow(X)
   sig <- sigmoid(X %*% beta)[,1]
-  t(X*(sig*(1-sig)))%*%X # / n
+  t(X) %*% W %*% diag(sig*(1-sig)) %*% X # / n
 }
 
 # Importing data ----------------------------------------------------------
@@ -52,22 +52,30 @@ if (manualwd != 1) {
 }
 
 node_data <- read.csv(paste0("Data_node_", k, ".csv"))
+n <- nrow(node_data)
+
+# Verifying if weights are available. If not, use values of 1s as uniform weights.
+if (file.exists(paste0("Weights_node_", k, ".csv"))) {
+  node_weights <- read.csv(paste0("Weights_node_", k, ".csv"))[,1]
+} else {
+  node_weights <- rep(1, n)
+}
 
 beta_t <- read.csv(paste0("Coord_node_iter_", t, "_primer.csv"))[,1]
 
 X_k <- as.matrix(cbind(1, node_data[,-1]))
 y_k <- node_data[,1]
-
+W_k <- diag(node_weights)
 
 # Computing local gradient and hessian for current iteration --------------
 
-D_k_t <- logreg_D(beta_t, X_k, y_k)
-V_k_t <- logreg_V(beta_t, X_k)
+D_k_t <- logreg_D(beta_t, X_k, y_k, W_k)
+V_k_t <- logreg_V(beta_t, X_k, W_k)
 
 
 # Exporting gradient and hessian ------------------------------------------
 
-output <- cbind(D_k_t, V_k_t)
+output <- as.data.frame(cbind(D_k_t, V_k_t))
 colnames(output)[1] <- "gradient"
 colnames(output)[2] <- "hessian_intercept"
 colnames(output)[-c(1,2)] <- paste("hessian", colnames(output)[-c(1,2)], sep = "_")
