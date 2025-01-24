@@ -46,6 +46,7 @@ data_lin_reg <- function(man_wd=-1,nodeid=-1) {
 	## Construct file name according to node data, assumes default parameters, like header and separator
 	## This assumes a file with name like Node[[:digit:]]+_data.csv
 	node_data <- read.csv(paste0("Data_node_", k, ".csv"))
+	n <- nrow(node_data)
 
 	# Verifying if weights are available. 
 	
@@ -124,7 +125,6 @@ data_lin_reg <- function(man_wd=-1,nodeid=-1) {
 	length(xtWy) <- length(xtWx)
 	
 	# Size of dataset
-	n <- nrow(node_data)
 	length(n) <- length(xtWx)
 
 	# Summary and outputs -----------------------------------------------------
