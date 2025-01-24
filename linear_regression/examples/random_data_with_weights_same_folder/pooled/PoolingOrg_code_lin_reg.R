@@ -13,8 +13,7 @@ if (file.exists("Pooled_data.csv")){
   # Pooling data for comparison with pooled model
 } else{
   pooled_data <- rbind(read.csv(paste0("Data_node_1.csv")),
-                       read.csv(paste0("Data_node_2.csv")),
-                       read.csv(paste0("Data_node_3.csv")))
+                       read.csv(paste0("Data_node_2.csv")))
 }
 
 ## Code assumes a data frame where the first column is the outcome
