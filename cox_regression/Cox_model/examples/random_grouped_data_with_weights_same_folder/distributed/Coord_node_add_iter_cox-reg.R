@@ -56,6 +56,12 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
     
     sumZrGlobal <- 0
     
+    # (!) layout (!)
+    for(i in 1:K){
+      Wprimek <- read.csv(paste0("Wprime",i,".csv"))[,1]
+    }
+    # (!) utile? (!)
+    
     for(i in 1:K){
       normDik <- read.csv(paste0("normDik", i, ".csv"), header = FALSE, blank.lines.skip = FALSE)
       if(i == 1){
@@ -72,7 +78,7 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
   }
   
   # Verification to make sure new data is used to compute beta
-  if (file.exists((paste0("sumExp", K, "_output_", t, ".csv")))){
+  if (file.exists((paste0("sumWExp", K, "_output_", t, ".csv")))){
     
     # Get old beta
     beta <-  read.csv(paste0("Beta_", t-1, "_output.csv"))
@@ -82,37 +88,37 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
     for(i in 1:K){
       
       # Retrieve data from local sts
-      sumExp <- read.csv(paste0("sumExp", i, "_output_", t, ".csv"), header = FALSE, blank.lines.skip = FALSE)
-      sumExp <- matrix(as.numeric(as.matrix(sumExp[-1, ])), ncol = 1, byrow = FALSE)
+      sumWExp <- read.csv(paste0("sumWExp", i, "_output_", t, ".csv"), header = FALSE, blank.lines.skip = FALSE)
+      sumWExp <- matrix(as.numeric(as.matrix(sumWExp[-1, ])), ncol = 1, byrow = FALSE)
       
-      sumZqExp <- read.csv(paste0("sumZqExp", i, "_output_", t, ".csv"), header = FALSE, blank.lines.skip = FALSE)
-      sumZqExp <- matrix(as.numeric(as.matrix(sumZqExp[-1, ])), ncol = nbBetas, byrow = FALSE)
+      sumWZqExp <- read.csv(paste0("sumWZqExp", i, "_output_", t, ".csv"), header = FALSE, blank.lines.skip = FALSE)
+      sumWZqExp <- matrix(as.numeric(as.matrix(sumWZqExp[-1, ])), ncol = nbBetas, byrow = FALSE)
       
-      sumZqZrExp <- read.csv(paste0("sumZqZrExp", i, "_output_", t, ".csv"), header = FALSE, blank.lines.skip = FALSE)
-      sumZqZrExp <- array(as.numeric(as.matrix(sumZqZrExp[-1, ])), dim = c(nbBetas, nbBetas, ncol(sumZqZrExp)))
+      sumWZqZrExp <- read.csv(paste0("sumWZqZrExp", i, "_output_", t, ".csv"), header = FALSE, blank.lines.skip = FALSE)
+      sumWZqZrExp <- array(as.numeric(as.matrix(sumWZqZrExp[-1, ])), dim = c(nbBetas, nbBetas, ncol(sumWZqZrExp)))
       
       # Initialize global matrices if first tration
       if(i == 1){
-        sumExpGlobal <- matrix(0, nrow = nrow(sumExp), ncol = ncol(sumExp))
-        sumZqExpGlobal <- matrix(0, nrow = nrow(sumZqExp), ncol = ncol(sumZqExp))
-        sumZqZrExpGlobal <- array(0, dim = dim(sumZqZrExp))
+        sumWExpGlobal <- matrix(0, nrow = nrow(sumWExp), ncol = ncol(sumWExp))
+        sumWZqExpGlobal <- matrix(0, nrow = nrow(sumWZqExp), ncol = ncol(sumWZqExp))
+        sumWZqZrExpGlobal <- array(0, dim = dim(sumWZqZrExp))
       }
       
       # Sum values
-      sumExpGlobal <- sumExpGlobal + sumExp
-      sumZqExpGlobal <- sumZqExpGlobal + sumZqExp
-      sumZqZrExpGlobal <- sumZqZrExpGlobal + sumZqZrExp
+      sumWExpGlobal <- sumWExpGlobal + sumWExp
+      sumWZqExpGlobal <- sumWZqExpGlobal + sumWZqExp
+      sumWZqZrExpGlobal <- sumWZqZrExpGlobal + sumWZqZrExp
     }
     
     # Calculate first derivative -------------------------------------------
     normDikGlobal <- as.matrix(read.csv("normDikGlobal.csv"))
     sumZrGlobal <- as.matrix(read.csv("sumZrGlobal.csv"))
     
-    ZrExp_Divided_by_Exp <- sumZqExpGlobal/do.call(cbind, replicate(nbBetas, sumExpGlobal, simplify = FALSE))
-    Norm_Times_ZrExp_Divided_by_Exp <- do.call(cbind, replicate(nbBetas, normDikGlobal, simplify = FALSE)) * ZrExp_Divided_by_Exp
-    sum_Norm_Times_ZrExp_Divided_by_Exp <- colSums(Norm_Times_ZrExp_Divided_by_Exp)
+    WZrExp_Divided_by_WExp <- sumWZqExpGlobal/do.call(cbind, replicate(nbBetas, sumWExpGlobal, simplify = FALSE))
+    Norm_Times_WZrExp_Divided_by_WExp <- do.call(cbind, replicate(nbBetas, normDikGlobal, simplify = FALSE)) * WZrExp_Divided_by_WExp
+    sum_Norm_Times_WZrExp_Divided_by_WExp <- colSums(Norm_Times_WZrExp_Divided_by_WExp)
     
-    lr_beta <- sumZrGlobal - sum_Norm_Times_ZrExp_Divided_by_Exp
+    lr_beta <- sumZrGlobal - sum_Norm_Times_WZrExp_Divided_by_WExp
     
     # Calculate second derivative ------------------------------------------
     lrq_beta <- matrix(NA, nrow = nbBetas, ncol = nbBetas)
@@ -120,9 +126,9 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
     # a, b and c are the three division present in the equation
     for (i in 1:nbBetas) {
       for (j in 1:nbBetas) {
-        a <- sumZqZrExpGlobal[i, j, ] / sumExpGlobal
-        b <- sumZqExpGlobal[, i] / sumExpGlobal
-        c <- sumZqExpGlobal[, j] / sumExpGlobal
+        a <- sumWZqZrExpGlobal[i, j, ] / sumWExpGlobal
+        b <- sumWZqExpGlobal[, i] / sumWExpGlobal
+        c <- sumWZqExpGlobal[, j] / sumWExpGlobal
         
         value_ij <- a - b * c
         Norm_times_value_ij <- normDikGlobal * value_ij

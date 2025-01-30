@@ -50,9 +50,16 @@ for(k in 1:K){
   data <- rbind(data, node_data)
 }
 
+# Verifying if weights are available. If not, use values of 1s as uniform weights.
+if (file.exists(paste0("Weights_pooled.csv"))) {
+  weights_pooled <- read.csv("Weights_pooled.csv")[,1]
+} else {
+  weights_pooled <- rep(1, nrow(data))
+}
+
 column_indices <- (3:(nbBetas + 2))
 formula <- as.formula(paste("Surv(time, status) ~", paste(paste0("data[,", column_indices, "]"), collapse = " + ")))
-res.cox <- coxph(formula, data, ties = "breslow")
+res.cox <- coxph(formula, data, ties = "breslow", weights = weights_pooled)
 summary(res.cox)
 
 ## Remove all environment variables. 

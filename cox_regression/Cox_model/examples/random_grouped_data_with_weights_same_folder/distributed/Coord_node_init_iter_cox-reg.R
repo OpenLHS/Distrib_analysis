@@ -39,8 +39,9 @@ coord_init_iter_cox_reg <- function(man_wd=-1) {
 
   # Calculate number of data nodes from files fitting the pattern in the working directory
   # This assumes unique event times outputs have a name like Times_[[:digit:]]+_output.csv
-  K=length(list.files(pattern="Times_[[:digit:]]+_output.csv"))
-
+  K=length(list.files(pattern="Times_[[:digit:]]+_output.csv")) 
+  
+  
   # Predictor verification
   k=1
   Pred_names <- read.csv(paste0("Predictor_names_" ,k, ".csv"))
