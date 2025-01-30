@@ -88,7 +88,7 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
     # Last case is when no weights are provided. Uses uniform weights
   } else { 
     n <- nrow(node_data)
-    node_weights <- rep(1/n, n)
+    node_weights <- rep(1, n)
   }
   
   # Find number of Betas (covariates)

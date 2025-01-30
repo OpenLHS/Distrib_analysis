@@ -56,9 +56,13 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
     
     sumZrGlobal <- 0
     
+    Wprimek <- read.csv(paste0("Wprime",1,".csv"))[,1]
+    Wprime <- Wprimek
+    
     # (!) layout (!)
-    for(i in 1:K){
+    for(i in 2:K){
       Wprimek <- read.csv(paste0("Wprime",i,".csv"))[,1]
+      Wprime <- Wprime + Wprimek
     }
     # (!) utile? (!)
     
@@ -70,11 +74,15 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
       normDikGlobal <- normDikGlobal + matrix(as.numeric(as.matrix(normDik[-1, ])), ncol = 1, byrow = FALSE)
       
       sumZr <- read.csv(paste0("sumZr", i, ".csv"))
-      sumZrGlobal <- sumZrGlobal + colSums(sumZr)
+      sumZrGlobal <- sumZrGlobal + sumZr # (!) retirer colsums
     }
     
-    write.csv(normDikGlobal, file="normDikGlobal.csv", row.names = FALSE)
-    write.csv(sumZrGlobal, file="sumZrGlobal.csv", row.names = FALSE)
+    WN <- Wprime*normDikGlobal
+    WZ <- Wprime*sumZrGlobal 
+    WZ2 <- colSums(WZ)
+    
+    write.csv(WN, file="normDikGlobal.csv", row.names = FALSE) # (!) on essaie autre chose ici
+    write.csv(WZ2, file="sumZrGlobal.csv", row.names = FALSE) # (!) on essaie autre chose ici
   }
   
   # Verification to make sure new data is used to compute beta
