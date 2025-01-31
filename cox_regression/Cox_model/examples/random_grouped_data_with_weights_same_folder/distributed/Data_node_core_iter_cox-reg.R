@@ -122,14 +122,13 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
       Rik[[i]] <- which(node_data$time >= Dlist[i])
     }
     
-    # Sum of covariates associated with subjects with observed events at time i
+    # Sum of covariates*weight associated with subjects with observed events at time i 
     sumWZr <- matrix(0, nrow = length(Dik), ncol = nbBetas)
     for (i in seq_along(Dik)) {
       indices <- Dik[[i]]
       for (x in 1:nbBetas) {
         current_sum <- sum(node_data[[3 + x - 1]][indices]*node_weights[indices])           
         sumWZr[i, x] <- ifelse(is.na(current_sum), 0, current_sum)      # if NA, put = 0 (might induce errors, but avoids crashing)
-                                                                       # (!) Réfléchir à si on a besoin d'utiliser les poids et calculer wiZr ici...
       }
     }
     
@@ -146,15 +145,6 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
       }
     }
     
-    # Convert Dik
-    max_length <- max(sapply(Dik, function(x) if (is.null(x)) 0 else length(x)))
-    padded_rows <- lapply(Dik, pad_with_na, max_length)
-    df <- as.data.frame(do.call(rbind, padded_rows))
-    df[is.na(df)] <- ""
-    
-    # Norm Dik
-    normDik <- apply(df, 1, function(row) sum(row != ""))
-    
     # Convert Wprime
     max_length <- max(sapply(Wprime_list, function(x) if (is.null(x)) 0 else length(x)))
     padded_rows <- lapply(Wprime_list, pad_with_na, max_length)
@@ -170,7 +160,6 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
     df2 <- as.data.frame(do.call(rbind, padded_rows))
     
     # Write
-    write.csv(normDik, file=paste0("normDik",k,".csv"),row.names = FALSE,na="")
     write.csv(df2, file=paste0("Rik",k,".csv"),row.names = FALSE,na="")
     write.csv(sumWZr, file=paste0("sumWZr",k,".csv"),row.names = FALSE,na="")
     write.csv(Wprimek, file=paste0("Wprime",k,".csv"), row.names = FALSE, na="")

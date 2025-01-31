@@ -6,6 +6,7 @@
 # Includes
 library("survival")
 
+robust_flag <- F # Robust set to FALSE since this is how the distributed algorithm is coded.
 nbBetas <- 3 # Input the number of betas
 K <- 3 # Imput the number of nodes
 
@@ -59,7 +60,7 @@ if (file.exists(paste0("Weights_pooled.csv"))) {
 
 column_indices <- (3:(nbBetas + 2))
 formula <- as.formula(paste("Surv(time, status) ~", paste(paste0("data[,", column_indices, "]"), collapse = " + ")))
-res.cox <- coxph(formula, data, ties = "breslow", weights = weights_pooled, robust = F)
+res.cox <- coxph(formula, data, ties = "breslow", weights = weights_pooled, robust = robust_flag) 
 summary(res.cox)
 
 ## Remove all environment variables. 

@@ -56,34 +56,19 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
     
     sumWZrGlobal <- 0
     
-    Wprimek <- read.csv(paste0("Wprime",1,".csv"))[,1]
-    Wprime <- Wprimek
-    
-    # (!) layout (!)
-    for(i in 2:K){
-      Wprimek <- read.csv(paste0("Wprime",i,".csv"))[,1]
-      Wprime <- Wprime + Wprimek
-    }
-    # (!) utile? (!)
-    
     for(i in 1:K){
-      normDik <- read.csv(paste0("normDik", i, ".csv"), header = FALSE, blank.lines.skip = FALSE)
+      Wprimek <- read.csv(paste0("Wprime",i,".csv"))[,1]
       if(i == 1){
-        normDikGlobal <- matrix(0, nrow = nrow(normDik)-1, ncol = 1)
+        Wprime <- vector(mode = "numeric", length = length(Wprimek))
       }
-      normDikGlobal <- normDikGlobal + matrix(as.numeric(as.matrix(normDik[-1, ])), ncol = 1, byrow = FALSE)
+      Wprime <- Wprime + Wprimek
       
       sumWZr <- read.csv(paste0("sumWZr", i, ".csv"))
       sumWZrGlobal <- sumWZrGlobal + colSums(sumWZr) 
     }
-    
-    #WN <- Wprime*normDikGlobal
-    #WZ <- Wprime*sumWZrGlobal 
-    #WZ2 <- colSums(WZ)
-    
+
     write.csv(Wprime, file = "WprimeGlobal.csv", row.names = FALSE)
-    write.csv(normDikGlobal, file="normDikGlobal.csv", row.names = FALSE) # (!) on essaie autre chose ici
-    write.csv(sumWZrGlobal, file="sumWZrGlobal.csv", row.names = FALSE) # (!) on essaie autre chose ici
+    write.csv(sumWZrGlobal, file="sumWZrGlobal.csv", row.names = FALSE) 
   }
   
   # Verification to make sure new data is used to compute beta
@@ -120,7 +105,6 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
     }
     
     # Calculate first derivative -------------------------------------------
-    normDikGlobal <- as.matrix(read.csv("normDikGlobal.csv"))
     WprimeGlobal <- as.matrix(read.csv("WprimeGlobal.csv"))
     sumWZrGlobal <- as.matrix(read.csv("sumWZrGlobal.csv"))
     
