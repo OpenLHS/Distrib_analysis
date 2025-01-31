@@ -123,12 +123,12 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
     }
     
     # Sum of covariates associated with subjects with observed events at time i
-    sumZr <- matrix(0, nrow = length(Dik), ncol = nbBetas)
+    sumWZr <- matrix(0, nrow = length(Dik), ncol = nbBetas)
     for (i in seq_along(Dik)) {
       indices <- Dik[[i]]
       for (x in 1:nbBetas) {
-        current_sum <- sum(node_data[[3 + x - 1]][indices])           
-        sumZr[i, x] <- ifelse(is.na(current_sum), 0, current_sum)      # if NA, put = 0 (might induce errors, but avoids crashing)
+        current_sum <- sum(node_data[[3 + x - 1]][indices]*node_weights[indices])           
+        sumWZr[i, x] <- ifelse(is.na(current_sum), 0, current_sum)      # if NA, put = 0 (might induce errors, but avoids crashing)
                                                                        # (!) Réfléchir à si on a besoin d'utiliser les poids et calculer wiZr ici...
       }
     }
@@ -164,21 +164,15 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
     # Wprimek
     Wprimek <- rowSums(df)
     
-    # Wprime*Norm Dik (!)
-    #W_normDik <- Wprime * normDik
-    
     # Convert Rik
     max_length <- max(sapply(Rik, function(x) if (is.null(x)) 0 else length(x)))
     padded_rows <- lapply(Rik, pad_with_na, max_length)
     df2 <- as.data.frame(do.call(rbind, padded_rows))
     
-    # Wprime*sumZr (!)
-    #W_sumZr <- sumZr*Wprime
-    
     # Write
     write.csv(normDik, file=paste0("normDik",k,".csv"),row.names = FALSE,na="")
     write.csv(df2, file=paste0("Rik",k,".csv"),row.names = FALSE,na="")
-    write.csv(sumZr, file=paste0("sumZr",k,".csv"),row.names = FALSE,na="")
+    write.csv(sumWZr, file=paste0("sumWZr",k,".csv"),row.names = FALSE,na="")
     write.csv(Wprimek, file=paste0("Wprime",k,".csv"), row.names = FALSE, na="")
     
   } 
@@ -237,9 +231,8 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
     node_weights <- rep(1, n)
   }
   
-  # Create the sumWExp, sumWWExp, sumWZqExp and sumWZqZrExp matrix
+  # Create the sumWExp, sumWZqExp and sumWZqZrExp matrix
   sumWExp <- numeric(nrow(Rik))
-  sumWWExp <- numeric(nrow(Rik))
   sumWZqExp <- matrix(0, nrow = nrow(Rik), ncol = nbBetas)
   sumWZqZrExp <- array(0, dim = c(nbBetas, nbBetas, nrow(Rik)))
   
