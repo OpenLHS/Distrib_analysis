@@ -51,7 +51,7 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
   # This assumes unique event times outputs have a name like Times_[[:digit:]]+_output.csv
   K=length(list.files(pattern="Times_[[:digit:]]+_output.csv"))
   
-  # If first tration - some more initialization
+  # If first iteration - some more initialization
   if (t == 1){
     
     sumWZrGlobal <- 0
@@ -85,24 +85,34 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
       sumWExp <- read.csv(paste0("sumWExp", i, "_output_", t, ".csv"), header = FALSE, blank.lines.skip = FALSE)
       sumWExp <- matrix(as.numeric(as.matrix(sumWExp[-1, ])), ncol = 1, byrow = FALSE)
       
+      sumExpZ <- read.csv(paste0("sumExpZ", i, "_output_", t, ".csv"), header = FALSE, blank.lines.skip = FALSE)
+      sumExpZ <- matrix(as.numeric(as.matrix(sumExpZ[-1, ])), ncol = nbBetas, byrow = FALSE)
+      
       sumWZqExp <- read.csv(paste0("sumWZqExp", i, "_output_", t, ".csv"), header = FALSE, blank.lines.skip = FALSE)
       sumWZqExp <- matrix(as.numeric(as.matrix(sumWZqExp[-1, ])), ncol = nbBetas, byrow = FALSE)
       
       sumWZqZrExp <- read.csv(paste0("sumWZqZrExp", i, "_output_", t, ".csv"), header = FALSE, blank.lines.skip = FALSE)
       sumWZqZrExp <- array(as.numeric(as.matrix(sumWZqZrExp[-1, ])), dim = c(nbBetas, nbBetas, ncol(sumWZqZrExp)))
       
-      # Initialize global matrices if first tration
+      # Initialize global matrices if first iteration
       if(i == 1){
         sumWExpGlobal <- matrix(0, nrow = nrow(sumWExp), ncol = ncol(sumWExp))
+        sumExpZGlobal <- matrix(0, nrow = nrow(sumExpZ), ncol = ncol(sumExpZ))
         sumWZqExpGlobal <- matrix(0, nrow = nrow(sumWZqExp), ncol = ncol(sumWZqExp))
         sumWZqZrExpGlobal <- array(0, dim = dim(sumWZqZrExp))
       }
       
       # Sum values
       sumWExpGlobal <- sumWExpGlobal + sumWExp
+      sumExpZGlobal <- sumExpZGlobal + sumExpZ
       sumWZqExpGlobal <- sumWZqExpGlobal + sumWZqExp
       sumWZqZrExpGlobal <- sumWZqZrExpGlobal + sumWZqZrExp
     }
+    
+    # Calculate residuals related quantities -------------------------------
+    
+    #xbar_ri
+    ExpZ_divided_by_wExp <- sumExpZGlobal/do.call(cbind, replicate(nbBetas, sumWExpGlobal, simplify = FALSE))
     
     # Calculate first derivative -------------------------------------------
     WprimeGlobal <- as.matrix(read.csv("WprimeGlobal.csv"))
@@ -165,7 +175,54 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
     
     # Wrt the output to a CSV file
     write.csv(output, file = paste0("Results_iter_", t, ".csv"), quote = FALSE, row.names = TRUE)
+    write.csv(fisher_info, file = paste0("Fisher_", t, ".csv"), quote = FALSE, row.names = FALSE)
     
+    # Files and code for robust se -------------------------------------------
+    
+    # Every iteration
+    write.csv(sumWExpGlobal, file = paste0("sumWExpGlobal_output_", t-1, ".csv"), row.names = FALSE)
+    write.csv(as.data.frame(ExpZ_divided_by_wExp), file = paste0("xbarri_", t-1, ".csv"), quote = FALSE, row.names = FALSE)
+    
+    
+    # Iteration specific
+    
+    if(t>2){
+      # Sum over sites
+      for(k in 1:K){
+        # xbar ri / sum(exp(b*z)): global
+        x_invWExp_k <- read.csv(paste0("xbarri_inverseWExp_", k, "_output_", t-2, ".csv"))
+        if(k == 1){
+          x_invWexpGlobal <- matrix(0, nrow = nrow(x_invWExp_k), ncol = ncol(x_invWExp_k))
+        }
+        x_invWexpGlobal <- x_invWexpGlobal + x_invWExp_k
+        
+        # 1 / sum(exp(b*z)): global
+        invWExp_k <- read.csv(paste0("inverseWExp_", k, "_output_", t-2, ".csv"))
+        if(k == 1){
+          invWExpGlobal <- matrix(0, nrow = nrow(invWExp_k), ncol = ncol(invWExp_k))
+        }
+        invWExpGlobal <- invWExpGlobal + invWExp_k
+      }
+      
+      # Write csv
+      write.csv(x_invWexpGlobal, file = paste0("xbarri_inverseWExp_Global_output_", t-2, ".csv"), row.names = FALSE)
+      write.csv(invWExpGlobal, file = paste0("inverseWExp_Global_output_", t-2, ".csv"), row.names = FALSE)
+    }
+    
+    if(t>3){
+      # Compute Robust SE
+      RobustSE <- vector(mode = "numeric", length = nbBetas)
+      DD <- matrix(0, nrow = nbBetas, ncol = nbBetas)
+      for(i in 1:K){
+        DDk <- as.vector(read.csv(paste0("DD", i, "_output_", t-3, ".csv"))[,1])
+        DDkComplete <- as.vector(read.csv(paste0("Full_DD", i, "_output_", t-3, ".csv"))[,1])
+        RobustSE <- RobustSE + DDk
+        DD <- DD + DDk
+      }
+      write.csv(sqrt(RobustSE), file = paste0("RobustSE_output_", t-3, ".csv"))
+      write.csv(DD, file = paste0("DD_output_", t-3, ".csv"))
+      
+    }
     
     if (!is.null(error_message)) {
       message(error_message)

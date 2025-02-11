@@ -6,7 +6,7 @@
 # Includes
 library("survival")
 
-robust_flag <- F # Robust set to FALSE since this is how the distributed algorithm is coded.
+robust_flag <- T # Robust set to FALSE since this is how the distributed algorithm is coded.
 nbBetas <- 3 # Input the number of betas
 K <- 3 # Imput the number of nodes
 
