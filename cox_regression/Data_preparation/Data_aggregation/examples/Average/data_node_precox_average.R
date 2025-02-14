@@ -70,7 +70,7 @@ create_groups <- function(data, fcteventbucketsize) {
   last_group <- max(data$group)
   if (sum(data$group == last_group & data$status == 1) < fcteventbucketsize) {
     data <- data %>%
-      mutate(group = if_else(group == last_group, last_group - 1, group))
+      mutate(group = ifelse(group == last_group, last_group - 1, group))
   }
   
   return(data)
