@@ -39,12 +39,18 @@ if (manualwd != 1) {
 
 # Modify this according to the number of data sites
 # Make sure the path to the csv files are functional
-data1 <- read.csv("../Data_node_1.csv")
-data2 <- read.csv("../Data_node_2.csv")
-data3 <- read.csv("../Data_node_3.csv")
-
-# Pool data
-data <- rbind(data1, data2, data3)
+# Read data
+data = data.frame()
+K = 3
+for(k in 1:K){
+  if(!file.exists(paste0("../distributed/Data_node_grouped_", k ,".csv"))){
+    warning("Attempt to find a file with grouped data failed and thus this will use ungrouped data. Be aware that this algorithm is based on WebDisco which is deemed non-confidential for ungrouped data.")
+    node_data <- read.csv(paste0("../distributed/Data_node_", k, ".csv"))
+  } else {
+    node_data <- read.csv(paste0("../distributed/Data_node_grouped_", k, ".csv"))
+  }
+  data <- rbind(data, node_data)
+}
 
 # Calculate Cox model
 column_indices <- (3:(nbBetas + 2))
