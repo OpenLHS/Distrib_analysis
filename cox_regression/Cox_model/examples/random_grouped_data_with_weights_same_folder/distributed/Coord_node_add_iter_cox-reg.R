@@ -112,7 +112,7 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
     # Calculate residuals related quantities -------------------------------
     
     #xbar_ri
-    ExpZ_divided_by_wExp <- sumExpZGlobal/do.call(cbind, replicate(nbBetas, sumWExpGlobal, simplify = FALSE))
+    ExpZ_divided_by_wExp <- sumExpZGlobal/do.call(cbind, replicate(nbBetas, sumWExpGlobal, simplify = FALSE)) # (!) ok, devra peut-être ¸etre ajuster pour avoir le bon nom de variables
     
     # Calculate first derivative -------------------------------------------
     WprimeGlobal <- as.matrix(read.csv("WprimeGlobal.csv"))

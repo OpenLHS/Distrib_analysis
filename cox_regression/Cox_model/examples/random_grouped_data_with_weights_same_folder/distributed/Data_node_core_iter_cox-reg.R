@@ -285,13 +285,14 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
       sumWExp[i] <- 0
       sumExpZ[i,] <- 0
       sumWZqExp[i, ] <- rep(0, nbBetas)
+      sumExpZ[i,] <- sumWZqExp[i, ] # (!) Ca marche, ce qui veut dire qu'on n'a pas besoin de sumExpZ. C'est le même calcul 2 fois... (Surtout qu'on a besoin des poids finalement!)
       sumWZqZrExp[, , i] <- matrix(0, nrow = nbBetas, ncol = nbBetas)
     }
   }
   
   # Write in csv
   write.csv(sumWExp, file=paste0("sumWExp",k,"_output_", t+1,".csv"),row.names = FALSE,na="")
-  write.csv(sumExpZ, file=paste0("sumExpZ",k,"_output_", t+1,".csv"),row.names = FALSE,na="")
+  write.csv(sumWZqExp, file=paste0("sumExpZ",k,"_output_", t+1,".csv"),row.names = FALSE,na="") # (!) j'ai changé la qté qu'on sauvegarde pour que ça marche, mais on devra mettre ça clean éventuellement.
   write.csv(sumWZqExp, file=paste0("sumWZqExp",k,"_output_", t+1,".csv"),row.names = FALSE,na="")
   
   # Write in csv for 3D matrix (a bit more complex than 2d)
@@ -359,10 +360,13 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
         sumWExp_Values <- matrix(0, nrow = length(r), ncol = 1)
         sumWExp_Values <- sumWExpGlobal[r, 1] 
         
-        inverse <- 1/sumWExp_Values
+        weight_values <- matrix(0, nrow = length(r), ncol = 1)
+        weight_values <- node_weights[r]
+        
+        inverse <- weight_values/sumWExp_Values # (!) maintenant, représente w/sum w*exp, qui est ce qu'on veut!
         sum_exp <- sum(inverse)
         
-        xbarrr_inverse  <- xbarri[r,]*inverse
+        xbarrr_inverse  <- xbarri[r,]*inverse # (!) en principe, ceci est encore valde
         sum_xbarrr_exp <- colSums(xbarrr_inverse)
         
       }
@@ -394,7 +398,7 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
     z_matrix <- as.matrix(node_data[, 3:ncol(node_data)])
     
     # 2nd term
-    exp_oldb_z <- exp(z_matrix%*%old_beta)
+    exp_oldb_z <- node_weights * exp(z_matrix%*%old_beta) # (!) changement ici
     mult_factor_xbar_exp <- read.csv(paste0("xbarri_inverseWExp_Global_output_", t-2, ".csv"))
     
     # Expand factor
