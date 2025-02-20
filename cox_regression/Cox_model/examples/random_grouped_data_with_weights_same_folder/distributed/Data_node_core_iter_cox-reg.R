@@ -329,7 +329,7 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
       test_mat[i,] <- c(i, test_index)
     }
     
-      sumWExpGlobal <- read.csv(paste0("sumWExpGlobal_output_", t-1, ".csv"))
+    sumWExpGlobal <- read.csv(paste0("sumWExpGlobal_output_", t-1, ".csv"))
     xbarri <- read.csv(paste0("xbarri_", t-1, ".csv"))
     
     sumInverseWexp <- matrix(0, nrow = nrow(sumWExpGlobal), ncol = ncol(sumWExpGlobal))
@@ -339,6 +339,7 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
     for(i in 1:nrow(Rik_comp)){
       r <- as.numeric(Rik_comp[i,])
       r <- r[!is.na(r)]
+      r_old <- r # (!) représente les numéros de lignes des individus à garder
       
       # Change line number for position in global time list
       r <- test_mat[r,2]
@@ -361,7 +362,7 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
         sumWExp_Values <- sumWExpGlobal[r, 1] 
         
         weight_values <- matrix(0, nrow = length(r), ncol = 1)
-        weight_values <- node_weights[r]
+        weight_values <- node_weights[r_old] # (!) problème avec les poids ici? car donne des poids uniforme? --> on a changé pour r_old, qui représente les individus.
         
         inverse <- weight_values/sumWExp_Values # (!) maintenant, représente w/sum w*exp, qui est ce qu'on veut!
         sum_exp <- sum(inverse)
@@ -424,6 +425,9 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
     DDk <- t(Dk) %*% Dk
     
     # Write csv
+    write.csv(second_term, file = paste0("second_term", k, "_output_", t-2, ".csv"), row.names = F, na="")
+    write.csv(third_term, file = paste0("third_term", k, "_output_", t-2, ".csv"), row.names = F, na="")
+    
     write.csv(sch_res, file = paste0("SchoenfeldResiduals", k, "_output_", t-2, ".csv"), row.names = FALSE, na="")
     write.csv(sco_res, file = paste0("ScoreResiduals", k, "_output_", t-2, ".csv"), row.names = FALSE, na="")
     write.csv(diag(DDk), file = paste0("DD", k, "_output_", t-2, ".csv"), row.names = FALSE, na="")
