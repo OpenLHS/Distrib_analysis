@@ -82,11 +82,8 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
     for(i in 1:K){
       
       # Retrieve data from local sts
-      sumWExp <- read.csv(paste0("sumWExp", i, "_output_", t, ".csv"), header = FALSE, blank.lines.skip = FALSE) # (!) À valider. S'assurer qu'on a vraiment les bons noms de variables ici.
+      sumWExp <- read.csv(paste0("sumWExp", i, "_output_", t, ".csv"), header = FALSE, blank.lines.skip = FALSE) 
       sumWExp <- matrix(as.numeric(as.matrix(sumWExp[-1, ])), ncol = 1, byrow = FALSE)
-      
-      sumExpZ <- read.csv(paste0("sumExpZ", i, "_output_", t, ".csv"), header = FALSE, blank.lines.skip = FALSE)
-      sumExpZ <- matrix(as.numeric(as.matrix(sumExpZ[-1, ])), ncol = nbBetas, byrow = FALSE)
       
       sumWZqExp <- read.csv(paste0("sumWZqExp", i, "_output_", t, ".csv"), header = FALSE, blank.lines.skip = FALSE)
       sumWZqExp <- matrix(as.numeric(as.matrix(sumWZqExp[-1, ])), ncol = nbBetas, byrow = FALSE)
@@ -97,14 +94,12 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
       # Initialize global matrices if first iteration
       if(i == 1){
         sumWExpGlobal <- matrix(0, nrow = nrow(sumWExp), ncol = ncol(sumWExp))
-        sumExpZGlobal <- matrix(0, nrow = nrow(sumExpZ), ncol = ncol(sumExpZ))
         sumWZqExpGlobal <- matrix(0, nrow = nrow(sumWZqExp), ncol = ncol(sumWZqExp))
         sumWZqZrExpGlobal <- array(0, dim = dim(sumWZqZrExp))
       }
       
       # Sum values
       sumWExpGlobal <- sumWExpGlobal + sumWExp
-      sumExpZGlobal <- sumExpZGlobal + sumExpZ
       sumWZqExpGlobal <- sumWZqExpGlobal + sumWZqExp
       sumWZqZrExpGlobal <- sumWZqZrExpGlobal + sumWZqZrExp
     }
@@ -112,7 +107,7 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
     # Calculate residuals related quantities -------------------------------
     
     # Compute xbar ri (also known as \hat{a} in Collett)
-    ExpZ_divided_by_wExp <- sumExpZGlobal/do.call(cbind, replicate(nbBetas, sumWExpGlobal, simplify = FALSE)) # (!) ok, devra peut-être ¸etre ajuster pour avoir le bon nom de variables
+    xbarri <- sumWZqExpGlobal/do.call(cbind, replicate(nbBetas, sumWExpGlobal, simplify = FALSE))
     
     # Calculate first derivative -------------------------------------------
     WprimeGlobal <- as.matrix(read.csv("WprimeGlobal.csv"))
@@ -173,7 +168,7 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
     
     rownames(output) <- Predictor_names$x[-(1:2)]
     
-    # Wrt the output to a CSV file
+    # Write the output to a CSV file
     write.csv(output, file = paste0("Results_iter_", t, ".csv"), quote = FALSE, row.names = TRUE)
     write.csv(fisher_info, file = paste0("Fisher_", t, ".csv"), quote = FALSE, row.names = FALSE)
     
@@ -181,7 +176,7 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
     
     # Every iteration
     write.csv(sumWExpGlobal, file = paste0("sumWExpGlobal_output_", t-1, ".csv"), row.names = FALSE)
-    write.csv(as.data.frame(ExpZ_divided_by_wExp), file = paste0("xbarri_", t-1, ".csv"), quote = FALSE, row.names = FALSE)
+    write.csv(as.data.frame(xbarri), file = paste0("xbarri_", t-1, ".csv"), quote = FALSE, row.names = FALSE)
     
     
     # Iteration specific
@@ -189,7 +184,7 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
     if(t>2){ # (!) À valider: Peut-on commencer plus tôt pour ce qui est des iterations specific?
       # Sum over sites
       for(k in 1:K){
-        # xbar ri / sum(exp(b*z)): global # (!) À valider. S'assurer d'utiliser les bons noms de variables pour cette section.
+        # xbar ri / sum(exp(b*z)): global 
         x_invWExp_k <- read.csv(paste0("xbarri_inverseWExp_", k, "_output_", t-2, ".csv"))
         if(k == 1){
           x_invWexpGlobal <- matrix(0, nrow = nrow(x_invWExp_k), ncol = ncol(x_invWExp_k))
@@ -205,20 +200,38 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
       }
       
       # Write csv
-      write.csv(x_invWexpGlobal, file = paste0("xbarri_inverseWExp_Global_output_", t-2, ".csv"), row.names = FALSE) # (!) À valider: Chaque écriture est nécessaire
+      write.csv(x_invWexpGlobal, file = paste0("xbarri_inverseWExp_Global_output_", t-2, ".csv"), row.names = FALSE) 
       write.csv(invWExpGlobal, file = paste0("inverseWExp_Global_output_", t-2, ".csv"), row.names = FALSE)
     }
     
     if(t>3){
       # Compute Robust SE
-      RobustSE <- vector(mode = "numeric", length = nbBetas)
-      DD <- matrix(0, nrow = nbBetas, ncol = nbBetas)
+      RobustSE2 <- vector(mode = "numeric", length = nbBetas)
+#      DD <- matrix(0, nrow = nbBetas, ncol = nbBetas)
       for(i in 1:K){
         DDk <- as.vector(read.csv(paste0("DD", i, "_output_", t-3, ".csv"))[,1])
-        RobustSE <- RobustSE + DDk
-        DD <- DD + DDk
+        RobustSE2 <- RobustSE2 + DDk
+#        DD <- DD + DDk
       }
-      write.csv(sqrt(RobustSE), file = paste0("RobustSE_output_", t-3, ".csv")) # (!) À changer. Pour l'instant fonctionne, mais on voudra créer une sortie similaire à ce que R nous donne.
+ 
+      RobustSE <- sqrt(RobustSE2)
+           
+      # Create output
+      oldBeta <- read.csv(paste0("Beta_", t-3, "_output.csv"))
+      Robustz <- abs(oldBeta/RobustSE)
+      RobustP <- 2*(1-pnorm(Robustz$x))
+      
+      alphaz <- abs(qnorm(alpha/2))
+      
+      # Exporting final results
+      output <- cbind(oldBeta, exp(oldBeta), exp(-oldBeta),  exp(oldBeta - RobustSE*alphaz), exp(oldBeta + RobustSE*alphaz), RobustSE, RobustP)
+      output <- format(output, digits = 6, nsmall = 6)
+      colnames(output) <- c(" coef", " exp(coef)", " exp(-coef)", " lower .95", " upper .95", " se(coef)", " Pr(>|z|)")
+      Predictor_names <- read.csv("Global_Predictor_names.csv")
+      
+      rownames(output) <- Predictor_names$x[-(1:2)]
+      
+      write.csv(output, file = paste0("RobustResults_iter_", t-3, ".csv"))
     }
     
     if (!is.null(error_message)) {

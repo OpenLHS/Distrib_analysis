@@ -104,7 +104,7 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
     # Dik: list containing the index sets of subjects with observed events at time i
     # Wprime: total weight of the index sets of subjects with observed events at time i
     Dik <- vector("list", length(Dlist))
-    Wprime_list <- vector("list", length(Dlist)) # (!) À valider. Est-ce utiliser quelque part?
+    Wprime_list <- vector("list", length(Dlist)) 
     for (i in seq_along(Dlist)) {
       indices <- which(node_data$time == Dlist[i] & node_data$status == 1)
       if (length(indices) > 0) {
@@ -155,7 +155,7 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
     df[is.na(df)] <- 0
     
     # Wprimek
-    Wprimek <- rowSums(df) # (!) À valider que c'est utile.
+    Wprimek <- rowSums(df)
     
     # Convert Rik
     max_length <- max(sapply(Rik, function(x) if (is.null(x)) 0 else length(x)))
@@ -287,7 +287,6 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
   
   # Write in csv
   write.csv(sumWExp, file=paste0("sumWExp",k,"_output_", t+1,".csv"),row.names = FALSE,na="")
-  write.csv(sumWZqExp, file=paste0("sumExpZ",k,"_output_", t+1,".csv"),row.names = FALSE,na="") # (!) Should be: sumWExpZ. Needs to be removed here and changed on Coord side
   write.csv(sumWZqExp, file=paste0("sumWZqExp",k,"_output_", t+1,".csv"),row.names = FALSE,na="")
   
   # Write in csv for 3D matrix (a bit more complex than 2d)
@@ -333,7 +332,7 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
     sumInverseWexp <- matrix(0, nrow = nrow(sumWExpGlobal), ncol = ncol(sumWExpGlobal))
     sumXbarrr_WExp <- matrix(0, nrow = nrow(sumWExpGlobal), ncol = ncol(xbarri))
     
-    # Compute sum of individuals in rik' for each possible time: 1/SUM[exp(b*z)] & xbar_rr/[exp(b*z)] (!) might need to update formulas for whole section
+    # Compute sum of individuals in rik' for each possible time: W/SUM[W*exp(b*z)] & W*xbar_rr/[W*exp(b*z)] 
     for(i in 1:nrow(Rik_comp)){
       
       # Find row number associated with individuals in rik'
@@ -343,11 +342,11 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
       # Change line number for position in global time list
       global_row <- Ind_to_Global[individuals,2]
       
-      ### 1/exp(b*z)
-      sum_exp <- 0
+      # W/[W*exp(b*z)]
+      sum_w_wexp <- 0
       
-      ### xbar_rr/exp(b*z)
-      sum_xbarrr_exp <- 0
+      # W*xbar_rr/[W*exp(b*z)]
+      sum_wxbarrr_wexp <- 0
       
       # Only enter if there are subjects in current set
       if(length(global_row)>0)  {
@@ -357,16 +356,16 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
         weight_values <- matrix(0, nrow = length(global_row), ncol = 1)
         weight_values <- node_weights[individuals] 
         
-        inverse <- weight_values/sumWExp_Values # (!) maintenant, représente w/sum w*exp, qui est ce qu'on veut!
-        sum_exp <- sum(inverse)
+        inverse <- weight_values/sumWExp_Values 
+        sum_w_wexp <- sum(inverse)
         
         xbarrr_inverse  <- xbarri[global_row,]*inverse 
-        sum_xbarrr_exp <- colSums(xbarrr_inverse)
+        sum_wxbarrr_wexp <- colSums(xbarrr_inverse)
         
       }
       
-      sumInverseWexp[i,] <- sum_exp 
-      sumXbarrr_WExp[i,] <- sum_xbarrr_exp
+      sumInverseWexp[i,] <- sum_w_wexp 
+      sumXbarrr_WExp[i,] <- sum_wxbarrr_wexp
     }
     
     # write in csv
@@ -393,7 +392,7 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
     
     # 2nd term
     exp_oldb_z <- node_weights * exp(z_matrix%*%old_beta) 
-    mult_factor_xbar_exp <- read.csv(paste0("xbarri_inverseWExp_Global_output_", t-2, ".csv")) # (!) À Valider. Chacune des écritures est nécessaire
+    mult_factor_xbar_exp <- read.csv(paste0("xbarri_inverseWExp_Global_output_", t-2, ".csv")) 
     
     # Expand factor
     expanded_mult_factor_xbar_exp <- mult_factor_xbar_exp[Ind_to_Global[,2], ]
