@@ -6,7 +6,7 @@
 # Includes
 library("survival")
 
-nbBetas <- 3 # Input the number of betas
+nbBetas <- 7 # Input the number of betas
 K <- 2 # Imput the number of nodes
 
 # If you want to skip the automated working directory setting, input 1 here. 
