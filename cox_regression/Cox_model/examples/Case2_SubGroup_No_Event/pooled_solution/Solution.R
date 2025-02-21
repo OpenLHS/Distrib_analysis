@@ -1,22 +1,17 @@
-############### DISTRIBUTED COX MODEL ####################
-############### Local site code ###########################
+############### POOLED COX MODEL ####################
 
 ## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 ## Copyright: GRIIS / Université de Sherbrooke
 
-# Loading packages and setting up core variables --------------------------
-library("survival")          # Contains the core survival analysis routines 
+# Includes
+library("survival")
+
+nbBetas <- 3 # Input the number of betas
+K <- 2 # Imput the number of nodes
 
 # If you want to skip the automated working directory setting, input 1 here. 
 # If you do so, make sure the working directory is set correctly manualy.
 manualwd <- -1
-
-# If you want to override the node numbering based on filename, input 0 or a positive integer here
-manualk <- 3
-manualt <- -1
-
-# No modifications should be required below this point
-######################################################
 
 if (manualwd != 1) {
   
@@ -40,17 +35,27 @@ if (manualwd != 1) {
   print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
 }
 
-# Verifying if there is a coordination node output file present -- Otherwise initialize files
-if (!file.exists(paste0("Times_", manualk ,"_output.csv"))) {
-  source("Data_node_call_init_cox-reg.R")
-  data_call_init_cox_reg(manualwd, manualk)
-  
-  # If a coordination node output file exists -- Start a new iteration
-} else {
-  source("Data_node_call_iter_cox-reg.R")
-  data_call_iter_cox_reg(manualwd, manualk, manualt)
+### Code starts here
+
+
+# Read data
+data = data.frame()
+for(k in 1:K){
+  if(!file.exists(paste0("../distributed/Data_node_grouped_", k ,".csv"))){
+    warning("Attempt to find a file with grouped data failed and thus this will use ungrouped data. Be aware that this algorithm is based on WebDisco which is deemed non-confidential for ungrouped data.")
+    node_data <- read.csv(paste0("../distributed/Data_node_", k, ".csv"))
+  } else {
+    node_data <- read.csv(paste0("../distributed/Data_node_grouped_", k, ".csv"))
+  }
+  data <- rbind(data, node_data)
 }
+
+column_indices <- (3:(nbBetas + 2))
+formula <- as.formula(paste("Surv(time, status) ~", paste(paste0("data[,", column_indices, "]"), collapse = " + ")))
+res.cox <- coxph(formula, data, ties = "breslow")
+summary(res.cox)
 
 ## Remove all environment variables. 
 ## If you want to see the variable that were created, simply don't execute that line (and clear them manually after)
-rm(list = ls())
+#rm(list = ls())
+
