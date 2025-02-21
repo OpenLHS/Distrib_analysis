@@ -1,4 +1,4 @@
-# Case study 1: Single covariate is constant
+# Case study 2: Subgroup without recorded event
 
 # Load data
 data <- read.csv("Data_node_1.csv")
@@ -6,12 +6,12 @@ data <- read.csv("Data_node_1.csv")
 # Save dataframe as backup
 write.csv(data, file = "Backup_Data_node_1.csv", row.names = F)
 
-# Show table of the categorical variable X2
-table(data$X2)
+# Show table of the categorical variable X2 x status
+table(data$X2, data$status)
 
-# Convert all of X2 to a single value, but only for node 1
-data$X2 <- 0
-table(data$X2)
+# Convert all status of 1s of X2 to 0 (unobserved)
+data$status[data$X2==1] <- 0
+table(data$X2, data$status)
 
 # save datafame
 write.csv(data, file = "Data_node_1.csv", row.names = F)
@@ -20,10 +20,11 @@ write.csv(data, file = "Data_node_1.csv", row.names = F)
 
   # Node side
   source("Data_node_call_cox-reg_1.R") # Our warning: related to WD
+                                       # Warning: loglik converge before variable X2; coefficient may be infinite.
   source("Data_node_call_cox-reg_2.R") # Our warning: related to WD
 
   # Coord side
-  source("Coord_node_call_iter_cox-reg.R") # Warning: System is singular (since we have a constant covariate)
+  source("Coord_node_call_iter_cox-reg.R") # Issus no warning
 
   # Repeat for a few iterations
   iteration_to_do <- 3
@@ -49,7 +50,6 @@ iteration_to_do <- 3
   summary(res.cox)
   
 # In this case, values are the same.
-# Question is most likely: While we can estimate "something", are we using the appropriate model?
 
 rm(list = ls())
     
@@ -58,10 +58,10 @@ rm(list = ls())
 data <- read.csv("../distributed/Data_node_1.csv")
 
 # We do have a constant covariate
-table(data$X2)
+table(data$X2, data$status)
 
 # Usual cox regression R function
-res.cox <- coxph( Surv(time, status) ~ X1 + X2 + X3, data, ties = "breslow")
+res.cox <- coxph( Surv(time, status) ~ X1 + X2 + X3, data, ties = "breslow") # Warning: loglik converge before variable X2; coefficient may be infinite.
 summary(res.cox)
 
 # Issues no warning, but no estimation provided for constant covariate. 
@@ -77,4 +77,8 @@ res.cox2 <- coxph( Surv(time, status) ~ X1 + X3, data_without_X2, ties = "breslo
 summary(res.cox)
 summary(res.cox2)
 
-# Esimates are the same. As such, it seems that R drops all constant covariate, but doesn't issue a warning to the user. 
+# Estimates are NOT the same. 
+
+rm(list = ls())
+
+# Note: Perharps we should only drop the individuals of the group?
