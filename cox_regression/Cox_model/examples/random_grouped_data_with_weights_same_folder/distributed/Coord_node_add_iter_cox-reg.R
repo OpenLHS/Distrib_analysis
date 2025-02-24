@@ -172,10 +172,10 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
     # Iteration specific
     if(t>1){
       # Compute xbar ri (also known as \hat{a} in Collett)
-      xbarri <- sumWZqExpGlobal/do.call(cbind, replicate(nbBetas, sumWExpGlobal, simplify = FALSE))
+      zbarri <- sumWZqExpGlobal/do.call(cbind, replicate(nbBetas, sumWExpGlobal, simplify = FALSE))
       
       write.csv(sumWExpGlobal, file = paste0("sumWExpGlobal_output_", t-1, ".csv"), row.names = FALSE)
-      write.csv(as.data.frame(xbarri), file = paste0("xbarri_", t-1, ".csv"), quote = FALSE, row.names = FALSE)
+      write.csv(as.data.frame(zbarri), file = paste0("zbarri_", t-1, ".csv"), quote = FALSE, row.names = FALSE)
     }
     
     
@@ -183,7 +183,7 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
       # Sum over sites
       for(k in 1:K){
         # xbar ri / sum(exp(b*z)): global 
-        x_invWExp_k <- read.csv(paste0("xbarri_inverseWExp_", k, "_output_", t-2, ".csv"))
+        x_invWExp_k <- read.csv(paste0("zbarri_inverseWExp_", k, "_output_", t-2, ".csv"))
         if(k == 1){
           x_invWexpGlobal <- matrix(0, nrow = nrow(x_invWExp_k), ncol = ncol(x_invWExp_k))
         }
@@ -198,7 +198,7 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
       }
       
       # Write csv
-      write.csv(x_invWexpGlobal, file = paste0("xbarri_inverseWExp_Global_output_", t-2, ".csv"), row.names = FALSE) 
+      write.csv(x_invWexpGlobal, file = paste0("zbarri_inverseWExp_Global_output_", t-2, ".csv"), row.names = FALSE) 
       write.csv(invWExpGlobal, file = paste0("inverseWExp_Global_output_", t-2, ".csv"), row.names = FALSE)
     }
     

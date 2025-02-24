@@ -325,10 +325,10 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
     
     # Read data produced by coord 
     sumWExpGlobal <- read.csv(paste0("sumWExpGlobal_output_", t-1, ".csv"))
-    xbarri <- read.csv(paste0("xbarri_", t-1, ".csv"))
+    zbarri <- read.csv(paste0("zbarri_", t-1, ".csv"))
     
     sumInverseWexp <- matrix(0, nrow = nrow(sumWExpGlobal), ncol = ncol(sumWExpGlobal))
-    sumXbarrr_WExp <- matrix(0, nrow = nrow(sumWExpGlobal), ncol = ncol(xbarri))
+    sumXbarrr_WExp <- matrix(0, nrow = nrow(sumWExpGlobal), ncol = ncol(zbarri))
     
     # Compute sum of individuals in rik' for each possible time: W/SUM[W*exp(b*z)] & W*xbar_rr/[W*exp(b*z)] 
     for(i in 1:nrow(Rik_comp)){
@@ -357,7 +357,7 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
         inverse <- weight_values/sumWExp_Values 
         sum_w_wexp <- sum(inverse)
         
-        xbarrr_inverse  <- xbarri[global_row,]*inverse 
+        xbarrr_inverse  <- zbarri[global_row,]*inverse 
         sum_wxbarrr_wexp <- colSums(xbarrr_inverse)
         
       }
@@ -368,7 +368,7 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
     
     # write in csv
     write.csv(as.data.frame(sumInverseWexp), file = paste0("inverseWExp_", k, "_output_", t-1, ".csv"), row.names = F)
-    write.csv(as.data.frame(sumXbarrr_WExp), file = paste0("xbarri_inverseWExp_", k, "_output_", t-1, ".csv"), row.names = F)
+    write.csv(as.data.frame(sumXbarrr_WExp), file = paste0("zbarri_inverseWExp_", k, "_output_", t-1, ".csv"), row.names = F)
     
   }
   
@@ -379,7 +379,7 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
     Rik_index <- 1
     for(i in 1:nrow(node_data)){
       Rik_index <- find_Rik_index(i, Rik, Rik_index)
-      sch_res[i,] <- node_weights[i]*node_data$status[i]*(as.numeric(node_data[i,3:ncol(node_data)]) - as.numeric(xbarri[Rik_index,]))
+      sch_res[i,] <- node_weights[i]*node_data$status[i]*(as.numeric(node_data[i,3:ncol(node_data)]) - as.numeric(zbarri[Rik_index,]))
     }
     
     # Compute Score Residuals (See Collett chapter 4 for formula)
@@ -388,7 +388,7 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
     
     # 2nd term
     exp_oldb_z <- node_weights * exp(z_matrix%*%old_beta) 
-    mult_factor_xbar_exp <- read.csv(paste0("xbarri_inverseWExp_Global_output_", t-2, ".csv")) 
+    mult_factor_xbar_exp <- read.csv(paste0("zbarri_inverseWExp_Global_output_", t-2, ".csv")) 
     
     # Expand factor
     expanded_mult_factor_xbar_exp <- mult_factor_xbar_exp[Ind_to_Global[,2], ]
