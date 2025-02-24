@@ -104,11 +104,6 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
       sumWZqZrExpGlobal <- sumWZqZrExpGlobal + sumWZqZrExp
     }
     
-    # Calculate residuals related quantities -------------------------------
-    
-    # Compute xbar ri (also known as \hat{a} in Collett)
-    xbarri <- sumWZqExpGlobal/do.call(cbind, replicate(nbBetas, sumWExpGlobal, simplify = FALSE))
-    
     # Calculate first derivative -------------------------------------------
     WprimeGlobal <- as.matrix(read.csv("WprimeGlobal.csv"))
     sumWZrGlobal <- as.matrix(read.csv("sumWZrGlobal.csv"))
@@ -174,12 +169,15 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
     
     # Files and code for robust se -------------------------------------------
     
-    # Every iteration
-    write.csv(sumWExpGlobal, file = paste0("sumWExpGlobal_output_", t-1, ".csv"), row.names = FALSE)
-    write.csv(as.data.frame(xbarri), file = paste0("xbarri_", t-1, ".csv"), quote = FALSE, row.names = FALSE)
-    
-    
     # Iteration specific
+    if(t>1){
+      # Compute xbar ri (also known as \hat{a} in Collett)
+      xbarri <- sumWZqExpGlobal/do.call(cbind, replicate(nbBetas, sumWExpGlobal, simplify = FALSE))
+      
+      write.csv(sumWExpGlobal, file = paste0("sumWExpGlobal_output_", t-1, ".csv"), row.names = FALSE)
+      write.csv(as.data.frame(xbarri), file = paste0("xbarri_", t-1, ".csv"), quote = FALSE, row.names = FALSE)
+    }
+    
     
     if(t>2){ 
       # Sum over sites
