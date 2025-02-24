@@ -328,9 +328,9 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
     zbarri <- read.csv(paste0("zbarri_", t-1, ".csv"))
     
     sumInverseWexp <- matrix(0, nrow = nrow(sumWExpGlobal), ncol = ncol(sumWExpGlobal))
-    sumXbarrr_WExp <- matrix(0, nrow = nrow(sumWExpGlobal), ncol = ncol(zbarri))
+    sumzbarrr_WExp <- matrix(0, nrow = nrow(sumWExpGlobal), ncol = ncol(zbarri))
     
-    # Compute sum of individuals in rik' for each possible time: W/SUM[W*exp(b*z)] & W*xbar_rr/[W*exp(b*z)] 
+    # Compute sum of individuals in rik' for each possible time: W/SUM[W*exp(b*z)] & W*zbar_rr/[W*exp(b*z)] 
     for(i in 1:nrow(Rik_comp)){
       
       # Find row number associated with individuals in rik'
@@ -343,8 +343,8 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
       # W/[W*exp(b*z)]
       sum_w_wexp <- 0
       
-      # W*xbar_rr/[W*exp(b*z)]
-      sum_wxbarrr_wexp <- 0
+      # W*zbar_rr/[W*exp(b*z)]
+      sum_wzbarrr_wexp <- 0
       
       # Only enter if there are subjects in current set
       if(length(global_row)>0)  {
@@ -357,18 +357,18 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
         inverse <- weight_values/sumWExp_Values 
         sum_w_wexp <- sum(inverse)
         
-        xbarrr_inverse  <- zbarri[global_row,]*inverse 
-        sum_wxbarrr_wexp <- colSums(xbarrr_inverse)
+        zbarrr_inverse  <- zbarri[global_row,]*inverse 
+        sum_wzbarrr_wexp <- colSums(zbarrr_inverse)
         
       }
       
       sumInverseWexp[i,] <- sum_w_wexp 
-      sumXbarrr_WExp[i,] <- sum_wxbarrr_wexp
+      sumzbarrr_WExp[i,] <- sum_wzbarrr_wexp
     }
     
     # write in csv
     write.csv(as.data.frame(sumInverseWexp), file = paste0("inverseWExp_", k, "_output_", t-1, ".csv"), row.names = F)
-    write.csv(as.data.frame(sumXbarrr_WExp), file = paste0("zbarri_inverseWExp_", k, "_output_", t-1, ".csv"), row.names = F)
+    write.csv(as.data.frame(sumzbarrr_WExp), file = paste0("zbarri_inverseWExp_", k, "_output_", t-1, ".csv"), row.names = F)
     
   }
   
@@ -388,12 +388,12 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
     
     # 2nd term
     exp_oldb_z <- node_weights * exp(z_matrix%*%old_beta) 
-    mult_factor_xbar_exp <- read.csv(paste0("zbarri_inverseWExp_Global_output_", t-2, ".csv")) 
+    mult_factor_zbar_exp <- read.csv(paste0("zbarri_inverseWExp_Global_output_", t-2, ".csv")) 
     
     # Expand factor
-    expanded_mult_factor_xbar_exp <- mult_factor_xbar_exp[Ind_to_Global[,2], ]
+    expanded_mult_factor_zbar_exp <- mult_factor_zbar_exp[Ind_to_Global[,2], ]
 
-    second_term <- exp_oldb_z*expanded_mult_factor_xbar_exp
+    second_term <- exp_oldb_z*expanded_mult_factor_zbar_exp
     
     # 3rd term
     mult_factor_1_exp <- read.csv(paste0("inverseWExp_Global_output_", t-2, ".csv"))
