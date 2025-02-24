@@ -105,4 +105,4 @@ summary(res.cox)
 summary(res.cox3)
 
 # Results for X1 and X3 seems to be the same
-# This makes it seem like the warning might should be taken in to account, as it is not obvious what exactly we are estimating
+# This makes it seem like the warning should be taken in to account, as it is not obvious what exactly we are estimating
