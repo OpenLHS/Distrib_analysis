@@ -314,8 +314,6 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
   }
   
   if(t>1){
-    # Vert
-    
     # Create matrix that allows to switch between indiviaul row number and global row number
     Ind_to_Global <- matrix(0, nrow = nrow(node_data), ncol = 2) 
     
@@ -375,8 +373,6 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
   }
   
   if(t>2){
-    # Bleu
-    
     # Compute Schoenfeld Residuals (See Collett chapter 4 for formula)
     sch_res <- matrix(0, nrow = nrow(node_data), ncol = nbBetas)
     

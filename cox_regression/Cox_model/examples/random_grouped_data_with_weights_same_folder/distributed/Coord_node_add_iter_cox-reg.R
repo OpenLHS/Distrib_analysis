@@ -181,7 +181,7 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
     
     # Iteration specific
     
-    if(t>2){ # (!) À valider: Peut-on commencer plus tôt pour ce qui est des iterations specific?
+    if(t>2){ 
       # Sum over sites
       for(k in 1:K){
         # xbar ri / sum(exp(b*z)): global 
@@ -207,11 +207,9 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
     if(t>3){
       # Compute Robust SE
       RobustSE2 <- vector(mode = "numeric", length = nbBetas)
-#      DD <- matrix(0, nrow = nbBetas, ncol = nbBetas)
       for(i in 1:K){
         DDk <- as.vector(read.csv(paste0("DD", i, "_output_", t-3, ".csv"))[,1])
         RobustSE2 <- RobustSE2 + DDk
-#        DD <- DD + DDk
       }
  
       RobustSE <- sqrt(RobustSE2)
