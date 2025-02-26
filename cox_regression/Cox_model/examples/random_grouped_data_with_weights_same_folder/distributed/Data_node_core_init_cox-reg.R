@@ -48,7 +48,7 @@ data_init_cox_reg <- function(man_wd,nodeid) {
   
   # Should the data not be ordered by time, save old copy of data and a new one of the ordered data
   if(!all(old_data$time==node_data$time)){
-    write.csv(copy, file = paste0("Backup_Data_node_", k, ".csv"), row.names = F)
+    write.csv(old_data, file = paste0("Backup_Data_node_", k, ".csv"), row.names = F)
     write.csv(node_data, file = paste0("Data_node_", k, ".csv"), row.names = F)  
   }
 

@@ -42,6 +42,16 @@ data_init_cox_reg <- function(man_wd,nodeid) {
     node_data <- read.csv(paste0("Data_node_grouped_", k, ".csv"))
   }
   
+  # Makes sure the data is ordered properly
+  old_data <- node_data
+  node_data <- node_data[order(node_data$time),]
+  
+  # Should the data not be ordered by time, save old copy of data and a new one of the ordered data
+  if(!all(old_data$time==node_data$time)){
+    write.csv(old_data, file = paste0("Backup_Data_node_", k, ".csv"), row.names = F)
+    write.csv(node_data, file = paste0("Data_node_", k, ".csv"), row.names = F)  
+  }
+
   # Verifying if weights are available. 
   
   # Lists all the weight files provided by the user. There should be either none or 1.
