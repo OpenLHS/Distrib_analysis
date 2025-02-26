@@ -6,8 +6,8 @@
 # Includes
 library("survival")
 
-robust_flag <- T # Sets if we should estimate a robust variance or not
-nbBetas <- 3 # Input the number of betas
+robust_flag <- F # Sets if we should estimate a robust variance or not
+nbBetas <- 6 # Input the number of betas
 K <- 3 # Imput the number of nodes
 
 # If you want to skip the automated working directory setting, input 1 here. 
