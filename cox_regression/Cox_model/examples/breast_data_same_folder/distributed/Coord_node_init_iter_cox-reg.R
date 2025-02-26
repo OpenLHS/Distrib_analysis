@@ -39,8 +39,9 @@ coord_init_iter_cox_reg <- function(man_wd=-1) {
 
   # Calculate number of data nodes from files fitting the pattern in the working directory
   # This assumes unique event times outputs have a name like Times_[[:digit:]]+_output.csv
-  K=length(list.files(pattern="Times_[[:digit:]]+_output.csv"))
-
+  K=length(list.files(pattern="Times_[[:digit:]]+_output.csv")) 
+  
+  
   # Predictor verification
   k=1
   Pred_names <- read.csv(paste0("Predictor_names_" ,k, ".csv"))
@@ -97,8 +98,7 @@ coord_init_iter_cox_reg <- function(man_wd=-1) {
     error_message <<- paste("Warning: Initial beta estimate done with simple averaging method, as an error occured trying the inverse variance weighted initial estimator.\n", e$message)
     message("Warning: Initial beta estimate done with simple averaging method, as an error occured trying the inverse variance weighted initial estimator.\n", e$message)
     
-    # Find number of Betas (covariates)
-    # (!) we could do a check to see if all nodes have same number of betas
+    # Find number of Betas (covariates) and makes sure this number is the same across nodes
     nbBetas <- nrow(read.csv(paste0("Beta_local_1.csv")))
     
     # Beta is a weighted sum of local betas depending on the number of individuals in the sites

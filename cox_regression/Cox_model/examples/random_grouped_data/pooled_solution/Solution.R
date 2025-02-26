@@ -6,6 +6,7 @@
 # Includes
 library("survival")
 
+robust_flag <- T # Sets if we should estimate a robust variance or not
 nbBetas <- 3 # Input the number of betas
 K <- 3 # Imput the number of nodes
 
@@ -41,18 +42,25 @@ if (manualwd != 1) {
 # Read data
 data = data.frame()
 for(k in 1:K){
-  if(!file.exists(paste0("../distributed/Data_grouped_node_", k, "/Data_node_grouped_", k ,".csv"))){
+  if(!file.exists(paste0("../distributed/Data_node_grouped_", k ,".csv"))){
     warning("Attempt to find a file with grouped data failed and thus this will use ungrouped data. Be aware that this algorithm is based on WebDisco which is deemed non-confidential for ungrouped data.")
-    node_data <- read.csv(paste0("../distributed/Data_node_", k, "/Data_node_", k, ".csv"))
+    node_data <- read.csv(paste0("../distributed/Data_node_", k, ".csv"))
   } else {
-    node_data <- read.csv(paste0("../distributed/Data_grouped_node_", k, "/Data_node_grouped_", k, ".csv"))
+    node_data <- read.csv(paste0("../distributed/Data_node_grouped_", k, ".csv"))
   }
   data <- rbind(data, node_data)
 }
 
+# Verifying if weights are available. If not, use values of 1s as uniform weights.
+if (file.exists(paste0("Weights_pooled.csv"))) {
+  weights_pooled <- read.csv("Weights_pooled.csv")[,1]
+} else {
+  weights_pooled <- rep(1, nrow(data))
+}
+
 column_indices <- (3:(nbBetas + 2))
 formula <- as.formula(paste("Surv(time, status) ~", paste(paste0("data[,", column_indices, "]"), collapse = " + ")))
-res.cox <- coxph(formula, data, ties = "breslow")
+res.cox <- coxph(formula, data, ties = "breslow", weights = weights_pooled, robust = robust_flag) 
 summary(res.cox)
 
 ## Remove all environment variables. 
