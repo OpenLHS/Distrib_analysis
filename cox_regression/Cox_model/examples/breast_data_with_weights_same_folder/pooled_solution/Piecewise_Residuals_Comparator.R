@@ -9,14 +9,20 @@
 
 beta <- coef(res.cox)
 OrderedData <- data
-x_ordered<-as.matrix(OrderedData[ ,3:5])
+x_ordered<-as.matrix(OrderedData[ ,3:8])
 n<-nrow(OrderedData)
 Numerator1<-numeric(n);Numerator2<-  numeric(n);Numerator3<-  numeric(n);Denominator<-numeric(n)
-Num1<-  numeric(n);Num2<-  numeric(n);Num3<-  numeric(n);Den<-numeric(n)
+Num1<-  numeric(n);Num2<-  numeric(n);Num3<-  numeric(n)
+Numerator4<-numeric(n);Numerator5<-  numeric(n);Numerator6<-  numeric(n);Denominator<-numeric(n)
+Num4<-  numeric(n);Num5<-  numeric(n);Num6<-  numeric(n)
+Den<-numeric(n)
 for(j in 1:n) { 
   Numerator1[j] <- x_ordered[j,1]*exp( x_ordered[j,]%*%beta)        * weights_pooled[j] # (!) Probablement qu'il suffit de regarder tout les endroits où weights_pooled est présent et ajuster
   Numerator2[j] <- x_ordered[j,2]*exp( x_ordered[j,]%*%beta)        * weights_pooled[j] # justifiable avec l'
   Numerator3[j] <- x_ordered[j,3]*exp( x_ordered[j,]%*%beta)        * weights_pooled[j]
+  Numerator4[j] <- x_ordered[j,4]*exp( x_ordered[j,]%*%beta)        * weights_pooled[j] # (!) Probablement qu'il suffit de regarder tout les endroits où weights_pooled est présent et ajuster
+  Numerator5[j] <- x_ordered[j,5]*exp( x_ordered[j,]%*%beta)        * weights_pooled[j] # justifiable avec l'
+  Numerator6[j] <- x_ordered[j,6]*exp( x_ordered[j,]%*%beta)        * weights_pooled[j]
   Denominator[j]<-exp( x_ordered[j,] %*%beta)                       * weights_pooled[j] # justifiable avec l'
 }
 
@@ -26,6 +32,9 @@ for(j in 1:n) {
   Num1[j] <- sum(Numerator1[riskset])
   Num2[j]<- sum(Numerator2[riskset])
   Num3[j]<- sum(Numerator3[riskset])
+  Num4[j]<- sum(Numerator4[riskset])
+  Num5[j]<- sum(Numerator5[riskset])
+  Num6[j]<- sum(Numerator6[riskset])
   Den[j] <- sum(Denominator[riskset]) 
 }
 
@@ -34,7 +43,12 @@ Schoenfeld<-as.matrix(cbind( weights_pooled* # justifiable avec l' (et Collett c
                              weights_pooled*
                                (x_ordered[,2]-Num2/Den) , 
                              weights_pooled*
-                               (x_ordered[,3]-Num3/Den))  )
+                               (x_ordered[,3]-Num3/Den),
+                             (x_ordered[,4]-Num1/Den), 
+                             weights_pooled*
+                               (x_ordered[,5]-Num2/Den) , 
+                             weights_pooled*
+                               (x_ordered[,6]-Num3/Den))  )
 rP <- Schoenfeld
 rP[OrderedData$status==0,] <-  0 # Valider pour notre exemple à nous. Attention, il faut skipper les lignes de 0 pour comparer avec R
 
@@ -50,7 +64,8 @@ rP[rdm_index1:(rdm_index1+10),]-scho_dist[rdm_index1:(rdm_index1+10),]
 
 ##### SCORE residuals #####
 
-a_hat <- cbind(Num1/Den,Num2/Den,Num3/Den)
+a_hat <- cbind(Num1/Den,Num2/Den,Num3/Den,
+               Num4/Den,Num5/Den,Num6/Den)
 
 #head(a_hat)
 #head(xbarri)
@@ -60,9 +75,9 @@ delta <- OrderedData$status
 sum_risk <- Den
 exp_xb <- exp(as.matrix(x_ordered)%*%beta)
 
-Somme <- matrix(0, nrow = n, ncol = 3)
-Somme2 <- matrix(0, nrow = n, ncol = 3)
-Somme3 <- matrix(0, nrow = n, ncol = 3)
+Somme <- matrix(0, nrow = n, ncol = length(beta))
+Somme2 <- matrix(0, nrow = n, ncol = length(beta))
+Somme3 <- matrix(0, nrow = n, ncol = length(beta))
 Somme4 <- matrix(0, nrow = n, ncol = 1)
 
 W_Inv <- matrix(0, nrow = nrow(data), ncol = length(beta))
@@ -82,9 +97,9 @@ for(i in 1:n){
   thistime <- OrderedData$time[i]
   Indices <- which(thistime>=OrderedData$time & OrderedData$status==1)
   
-  Partial = matrix(0, nrow=nrow(data), ncol = 3)
-  second = matrix(0, nrow=nrow(data), ncol = 3)
-  third = matrix(0, nrow=nrow(data), ncol = 3)
+  Partial = matrix(0, nrow=nrow(data), ncol = length(beta))
+  second = matrix(0, nrow=nrow(data), ncol = length(beta))
+  third = matrix(0, nrow=nrow(data), ncol = length(beta))
   third_sans_x = matrix(0, nrow=nrow(data), ncol = 1)
   W_Inv = matrix(0, nrow=nrow(data), ncol = 1)
   for(r in Indices){
