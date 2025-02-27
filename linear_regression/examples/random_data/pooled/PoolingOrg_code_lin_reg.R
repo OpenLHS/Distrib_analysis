@@ -6,8 +6,16 @@
 
 # Importing data ----------------------------------------------------------
 
-# Extracts data from the CSV and creates R data frame
-pooled_data <- read.csv("Pooled_data.csv")
+# Modify this according to the number of data sites
+# Make sure the path to the csv files are functional
+data1 <- read.csv("Data_node_1.csv")
+data2 <- read.csv("Data_node_2.csv")
+
+# Pool data
+pooled_data <- rbind(data1, data2)
+
+# Remove missing values
+pooled_data <- pooled_data[complete.cases(pooled_data),]
 
 ## Code assumes a data frame where the first column is the outcome
 ## Creates a data frame with the outcome

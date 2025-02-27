@@ -12,7 +12,7 @@
 manualwd <- -1
 
 # If you want to override the node numbering based on filename, input 0 or a positive integer here
-manualk <- -1
+manualk <- 1
 
 # No modifications should be required below this point
 ###########################
