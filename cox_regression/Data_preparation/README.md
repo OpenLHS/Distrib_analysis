@@ -2,45 +2,61 @@
 
 ## Repository structure
 
-1. The core article is in the root directory: "Lu et al. - 2015 - WebDISCO: A Web Service for Distributed Cox Model.pdf."
-: This describes the background of the work and presents the method used.
+- Examples
 
-2. Cox_model
-: This folder contains generic code and examples of the distributed Cox model.
+- Generic_code
 
-3. Data_preparation
-: This folder contains instructions on how to prepare your data before running the code of the Cox model.
+#### List of examples
 
+- Average  
+Text
 
-## (!) Before using (!)
+#### Generic code
 
-- **The Cox model does not ensure data privacy by itself. The data must be aggregated first to ensure confidentiality. (See the folder Data_preparation) **
+Text
 
-- Make sure to adjust the number of files "Data_node_call_cox-reg_k.R" according to the number of nodes, and make sure to change the value of "manualk" to the node number.
+## Instructions to run the examples/algorithm
 
-- To start over, it is important to delete all "output" files.
+There are many ways to run R code. The proposed instructions here are focusing on using a graphical interface.
 
-- The code currently works only with complete data. Should that not be the case, the main algorithm will save a copy of your original data ("Backup_Data_Incomplete_k.csv") and will also save a new .csv file ("Data_node_k.csv") that contains all complete rows of the original data. As such, it will be as if you were running a complete case analysis.
+#### INSTALLING R and R STUDIO
 
+1. Go to the page : https://posit.co/download/rstudio-desktop/ and follow the instructions for your operating system
 
-## Data requirements
+#### INSTALLING THE REQUIRED PACKAGES
 
-- Data is expected to be saved in a .csv file.
+The algorithm currently requires the use of package(s) not present in the base installation. R should prompt you to download the packages automatically.
 
-- The code is written so that 0 = censored and 1 = event for the "status" variable. Make sure to follow this structure with your dataset.
+- dplyr : https://cran.r-project.org/web/packages/dplyr/index.html https://cran.r-project.org/web/packages/dplyr/dplyr.pdf
 
-- The first two columns of your Data file must be named "time" and "status" (order not important).
+Furthermore, the examples will be easier to explore and adapt/change if the package "this.path" is also available. Yet this is NOT required and you can safely ignore any warning about this is if you want to use the algorithm "as-is".
 
-- All other columns (predictor variables) must be in the same order and must share the same names across nodes.
+- this.path : https://cran.r-project.org/package=this.path https://cran.r-project.org/web/packages/this.path/this.path.pdf
 
-- Each level for categorical variables is expected to have been possible to sample across all nodes. Otherwise, said level should either be removed or merged with another level.
+If you work in an isolated environment, you might need to download them manually at the adress above and install them for your RStudio instance. While describing the process here is out of scope, a web search will yield resources like https://riptutorial.com/r/example/5556/install-package-from-local-source that can be helpful.
 
-- Categorical variables must be binarized before running this code. Binarized variables must use the values 0 or 1, where 1 indicates a success (or having the characteristic).
+#### INSTALLING AN EXAMPLE
 
-- (optional) Weights are expected to be saved in a separated .csv file.
+1. Unpack one of the example folders on one of your drives.
 
-Note: While it is not a requirement, the algorithm expects your data to be ordered by time. Should that not be the case, the main algorithm will save a copy of your original data ("Backup_Data_Unordered_k.csv") and will also save a new .csv file ("Data_node_k.csv") that is ordered by time.
+#### EXECUTING THE CODE
 
+*** Make sure R studio is not currently running and close it if it is.***  
+*** If you are not able to automatically set your working directory, manually set the variable manualwd = 1 in "Data_node_call_cox-reg_k.R" and  "Coord_node_call_iter_cox-reg.R".***
+
+1. In the file "data_node_call_precox_average.R", select all the code and execute it. A new file will be generated, which contains the original data with modified times.
+2. This data can now be used by a data node to participate into a privacy preserving Cox model.
+
+## Expected outputs
+
+#### Data node side
+
+| Initialization | files... |
+
+#### Coordination node side
+
+The coordination node should not use this feature.
 
 ### License: https://creativecommons.org/licenses/by-nc-sa/4.0/
+
 ### Copyright: GRIIS / Université de Sherbrooke
