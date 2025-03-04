@@ -2,16 +2,13 @@
 
 ## Repository structure
 
-1. The core article is in the root directory: "Lu et al. - 2015 - WebDISCO: A Web Service for Distributed Cox Model.pdf."
-
+1. The core article is in the root directory: "Lu et al. - 2015 - WebDISCO: A Web Service for Distributed Cox Model.pdf."  
 This describes the background of the work and presents the method used.
 
-2. Cox_model
-
+2. Cox_model  
 This folder contains generic code and examples of the distributed Cox model.
 
-3. Data_preparation
-
+3. Data_preparation  
 This folder contains instructions on how to prepare your data before running the code of the Cox model.
 
 
