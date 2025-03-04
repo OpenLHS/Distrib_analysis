@@ -3,18 +3,21 @@
 ## Repository structure
 
 1. The core article is in the root directory: "Lu et al. - 2015 - WebDISCO: A Web Service for Distributed Cox Model.pdf."
-: This describes the background of the work and presents the method used.
+
+This describes the background of the work and presents the method used.
 
 2. Cox_model
-: This folder contains generic code and examples of the distributed Cox model.
+
+This folder contains generic code and examples of the distributed Cox model.
 
 3. Data_preparation
-: This folder contains instructions on how to prepare your data before running the code of the Cox model.
+
+This folder contains instructions on how to prepare your data before running the code of the Cox model.
 
 
-## (!) Before using (!)
+## Before using
 
-- **The Cox model does not ensure data privacy by itself. The data must be aggregated first to ensure confidentiality. (See the folder Data_preparation) **
+- **The Cox model does not ensure data privacy by itself. The data must be aggregated first to ensure confidentiality. (See the folder Data_preparation)**
 
 - Make sure to adjust the number of files "Data_node_call_cox-reg_k.R" according to the number of nodes, and make sure to change the value of "manualk" to the node number.
 
@@ -22,6 +25,7 @@
 
 - The code currently works only with complete data. Should that not be the case, the main algorithm will save a copy of your original data ("Backup_Data_Incomplete_k.csv") and will also save a new .csv file ("Data_node_k.csv") that contains all complete rows of the original data. As such, it will be as if you were running a complete case analysis.
 
+- ***OF NOTE, this is PURELY to demonstrate the feasibility of distributed Cox models. The code here has NOT been optimised NOR made secure in a significant way. A thorough review NEEDS to be undertaken before using this code in any production/research project.***
 
 ## Data requirements
 
@@ -43,4 +47,5 @@ Note: While it is not a requirement, the algorithm expects your data to be order
 
 
 ### License: https://creativecommons.org/licenses/by-nc-sa/4.0/
+
 ### Copyright: GRIIS / Université de Sherbrooke

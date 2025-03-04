@@ -1,4 +1,4 @@
-# Distributed Cox model (WebDisco-based implementation) and data preparation
+# Data preparation
 
 ## Repository structure
 
