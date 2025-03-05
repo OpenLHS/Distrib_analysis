@@ -103,11 +103,11 @@ The file `Beta_t_output.csv` and `Results_iter_t.csv` will be generated. To cont
 
 #### Data node side
 
-| Initialization | files... |
+| Initialization | files... | Shared? |
 | ----------- | ----------- |
-| Iteration 0 | files... |
-| Iteration 1 | files... |
-| Iteration 2 | files... | 
+| Iteration 0 | `Beta_local_k.csv` <br> `N_node_k.csv` <br> `Predictor_names_k.csv` <br> `Times_k_output.csv` <br> `Vk_k.csv` | Yes <br> Yes <br> Yes <br> Yes <br> Yes |
+| Iteration 1 | files... | Y/N |
+| Iteration 2 | files... | Y/N |
 
 #### Coordination node side
 
