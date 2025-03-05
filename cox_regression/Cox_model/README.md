@@ -1,6 +1,10 @@
 # Distributed Cox model 
 
-Goal: mimics...
+This implementation of the Cox model mimics the following `R` calls: 
+- `coxph(formula, data, ties = “breslow”)`, whenever one checks `Results_iter_t.csv` and once convergence is attained
+- `coxph(formula, data, ties = “breslow”, weights, robust = TRUE)`, whenever one checks `RobustResults_t.csv` and once convergence is attained.
+
+As both implementation use the same base files even if different amounts of information is shared troughout the algorithm, this guide has been splitted in two sections to better help users.
 
 ## Repository structure
 
@@ -69,30 +73,32 @@ In the following procedure, `k` represents the number of the local node, and `t`
 Initialization:
 
 1. Run the local `R` file (`Data_node_call_cox-reg_k.R`) for each data node to compute local times and local beta estimates.  
-The files `Beta_local_k.csv`, `N_node_k.csv`, `Times_k_output.csv`, `Vk_k.csv` and `Predictor_names_1.csv` will be generated. All files must be sent to the coordination node.
+The files `Beta_local_k.csv`, `N_node_k.csv`, `Times_k_output.csv`, `Vk_k.csv` and `Predictor_names_k.csv` will be generated. All files must be sent to the coordination node.
 
 2. Run the coordination `R` file (`Coord_node_call_iter_cox-reg.R`) to compute global times and to initialise the values of beta.  
 The files `Beta_0_output.csv` and `Global_times_output.csv` will be generated. These files must be shared with the local nodes.  
 The file `Global_Predictor_names.csv` will also be generated if all nodes have the same data structure. It does not need to be shared with the local nodes.
 
-For the first iteration (labelled iteration `t=0`):
+For the first iteration (labelled iteration `t=0`), data node side:
 
 3. Run the local `R` file (`Data_node_call_cox-reg_k.R`) for each data node to compute local parameters and local aggregates used for derivatives.  
-The files `Rikk.csv`, `normDikk.csv`, `sumZrk.csv`, `sumExpx_output_t.csv`, `sumZqExpk_output_t.csv` and `sumZqZrExpk_output_t.csv` will be generated. All files but `Rikk.csv` must be sent to the coordination node.
+The files `Rik_compk.csv`, `Rikk.csv`, `sumWExpk_output_t.csv`, `sumWZqExpk_output_t.csv`, `sumWZqZrExpk_output_t.csv`, `sumWZrk.csv` and `Wprimek.csv` will be generated. All files but `Rik_compk.csv` and `Rikk.csv` must be sent to the coordination node.
+
+For the first iteration (labelled iteration `t=1`), coordinating node side:
 
 4. Run the coordination `R` file (`Coord_node_call_iter_cox-reg.R`) to compute global parameters, to compute first and second derivative and to update beta estimate.  
-The files `normDikGlobal.csv` and `sumZrGlobal.csv` will be generated. They should be kept at the coordination node.  
-The files `Beta_t_output.csv` and `Results_iter_t.csv` will be generated. To continue, the coordination node must share the file `Beta_t_output.csv` with the local nodes.
+The files `sumZrGlobal.csv` and `WprimeGlobal.csv` will be generated. They should be kept at the coordination node.  
+The files `Beta_t_output.csv`, `Fisher_t.csv` and `Results_iter_t.csv` will be generated. To continue, the coordination node must share all files but `Results_iter_t.csv` with the local nodes.
 
 Then, to perform other iterations:
 
 5. Run the local `R` file (`Data_node_call_cox-reg_k.R`) for each data node to compute local aggregates used for derivatives.  
-The files `sumExpk_output_t.csv`, `sumZqExpk_output_t.csv` and `sumZqZrExpk_output_t.csv` will be generated. All files must be sent to the coordination node.
+The files `sumWExpk_output_t.csv`, `sumWZqExpk_output_t.csv` and `sumWZqZrExpk_output_t.csv` will be generated. All files must be sent to the coordination node.
 
 6. Run the coordination `R` file (`Coord_node_call_iter_cox-reg.R`) to compute first and second derivative and to update beta estimate.  
-The file `Beta_t_output.csv` and `Results_iter_t.csv` will be generated. To continue, the coordination node must share `Beta_t_output.csv` with the local nodes.
+The file `Beta_t_output.csv`, `Fisher_t.csv` and `Results_iter_t.csv` will be generated. To continue, the coordination node must share all files but `Results_iter_t.csv` with the local nodes.
 
-7. (optional) Compare the results of the previous iteration with the current one to decide if another iteration is pertinent (return to step 5) or not.
+7. (optional) Compare the results of the previous iteration with the current one to decide if another iteration is pertinent (return to step `5`) or not.
 
 #### EXECUTING THE POOLED SOLUTION CODE
 
@@ -105,18 +111,113 @@ The file `Beta_t_output.csv` and `Results_iter_t.csv` will be generated. To cont
 
 ### Robust estimation
 
+There are many ways to run `R` code. The proposed instructions here are focusing on using a graphical interface.
+
+#### INSTALLING R and R STUDIO
+
+1. Go to the page : https://posit.co/download/rstudio-desktop/ and follow the instructions for your operating system
+
+#### INSTALLING THE REQUIRED PACKAGES
+
+The algorithm currently requires the use of package(s) not present in the base installation. `R` should prompt you to download the packages automatically.
+
+- [survival](https://cran.r-project.org/web/packages/survival/index.html)
+- [MASS](https://cran.r-project.org/web/packages/MASS/index.html)
+
+Furthermore, the examples will be easier to explore and adapt/change if the package `this.path` is also available. Yet this is NOT required and you can safely ignore any warning about this is if you want to use the algorithm "as-is".
+
+- [this.path](https://cran.r-project.org/package=this.path)
+
+If you work in an isolated environment, you might need to download them manually at the adress above and install them for your `RStudio` instance. While describing the process here is out of scope, a web search will yield resources like https://riptutorial.com/r/example/5556/install-package-from-local-source that can be helpful.
+
+#### INSTALLING AN EXAMPLE
+
+1. Unpack one of the example folders on one of your drives.
+
+#### EXECUTING THE DISTRIBUTED CODE
+
+***Make sure `R studio` is not currently running and close it if it is.***  
+***If you are not able to automatically set your working directory, manually set the variable `manualwd = 1` in `Data_node_call_cox-reg_k.R` and  `Coord_node_call_iter_cox-reg.R`.***
+
+In the following procedure, `k` represents the number of the local node, and `t` represents the iteration number.
+
+Initialization:
+
+1. Run the local `R` file (`Data_node_call_cox-reg_k.R`) for each data node to compute local times and local beta estimates.  
+The files `Beta_local_k.csv`, `N_node_k.csv`, `Times_k_output.csv`, `Vk_k.csv` and `Predictor_names_k.csv` will be generated. All files must be sent to the coordination node.
+
+2. Run the coordination `R` file (`Coord_node_call_iter_cox-reg.R`) to compute global times and to initialise the values of beta.  
+The files `Beta_0_output.csv` and `Global_times_output.csv` will be generated. These files must be shared with the local nodes.  
+The file `Global_Predictor_names.csv` will also be generated if all nodes have the same data structure. It does not need to be shared with the local nodes.
+
+For the first iteration (labelled iteration `t=0`), data node side:
+
+3. Run the local `R` file (`Data_node_call_cox-reg_k.R`) for each data node to compute local parameters and local aggregates used for derivatives.  
+The files `Rik_compk.csv`, `Rikk.csv`, `sumWExpk_output_t.csv`, `sumWZqExpk_output_t.csv`, `sumWZqZrExpk_output_t.csv`, `sumWZrk.csv` and `Wprimek.csv` will be generated. All files but `Rik_compk.csv` and `Rikk.csv` must be sent to the coordination node.
+
+For the first iteration (labelled iteration `t=1`), coordinating node side:
+
+4. Run the coordination `R` file (`Coord_node_call_iter_cox-reg.R`) to compute global parameters, to compute first and second derivative and to update beta estimate.  
+The files `sumZrGlobal.csv` and `WprimeGlobal.csv` will be generated. They should be kept at the coordination node.  
+The files `Beta_t_output.csv`, `Fisher_t.csv` and `Results_iter_t.csv` will be generated. To continue, the coordination node must share all files but `Results_iter_t.csv` with the local nodes.
+
+Then, to perform other iterations:
+
+5. Run the local `R` file (`Data_node_call_cox-reg_k.R`) for each data node to compute local aggregates used for derivatives.  
+The files `sumWExpk_output_t.csv`, `sumWZqExpk_output_t.csv` and `sumWZqZrExpk_output_t.csv` will be generated. All files must be sent to the coordination node.  
+In order to compute the robust variance estimator, additionnal files `inverseWExp_k_output_(t-2).csv`, `zbarri_inverseWExp_k_output_(t-2).csv` and `DDk_output_(t-3).csv` will be generated whenever `t-x` is greater than `0`. All files must be sent to the coordination node.
+
+6. Run the coordination `R` file (`Coord_node_call_iter_cox-reg.R`) to compute first and second derivative and to update beta estimate.  
+The file `Beta_t_output.csv`, `Fisher_t.csv` and `Results_iter_t.csv` will be generated. 
+In order to compute the robust variance estimator, additionnal files `sumWExpGlobal_output_(t-1).csv`, `zbarri_(t-1).csv`, `zbarri_inverseWExp_Global_output_(t-2).csv`, `inverseWExp_t_Global_output_(t-2).csv` and `RobustResults_iter_(t-3).csv` will be generated whenever `t-x` is greater than `0`. All files but `RobustResults_iter_(t-3).csv` must be sent to the local nodes.
+
+7. (optional) Compare the results of the previous iteration with the current one to decide if another iteration is pertinent (return to step `5`) or not.
+
+#### EXECUTING THE POOLED SOLUTION CODE
+
+***Make sure `R studio` is not currently running and close it if it is.***
+
+1.	Navigate to the folder `pooled_solution`.
+2.	Open the file `Solution.R`. It should then appear in `R`.
+3.	Select all the code and click `run`.
+4.	The results will be available in the console.
+
 ## Expected outputs
 
 ### Classic estimation
 
-Mimics...
+This implementation of the Cox model mimics the following `R` call: 
+- `coxph(formula, data, ties = “breslow”)`, whenever one checks `Results_iter_t.csv` and once convergence is attained.
 
 #### Data node side
 
 | Step | Files created | Shared? |
 | ----------- | ----------- | ----------- |
 | Initialization | `Beta_local_k.csv` <br> `N_node_k.csv` <br> `Predictor_names_k.csv` <br> `Times_k_output.csv` <br> `Vk_k.csv` | Yes <br> Yes <br> Yes <br> Yes <br> Yes |
-| Iteration `0` | `Rik_comp_k.csv` <br> `Rikk.csv` <br> `sumWExpk_output0.csv` <br> `sumZqExpk_output_0.csv` <br> `sumZqZrExpk_output_0.csv` <br> `sumWZrk.csv` <br> `Wprimek.csv `| Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N |
+| Iteration `0` | `Rik_comp_k.csv` <br> `Rikk.csv` <br> `sumWExpk_output0.csv` <br> `sumWZqExpk_output_0.csv` <br> `sumWZqZrExpk_output_0.csv` <br> `sumWZrk.csv` <br> `Wprimek.csv `| Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N |
+| Iteration `1` | `sumWExpk_output1.csv` <br> `sumWZqExpk_output_1.csv` <br> `sumWZqZrExpk_output_1.csv` | Y/N <br> Y/N <br> Y/N|
+| Iteration `t` | `sumWExpk_output(t).csv` <br> `sumWZqExpk_output_(t).csv` <br> `sumWZqZrExpk_output_(t).csv` | Y/N <br> Y/N <br> Y/N|
+
+#### Coordination node side
+
+| Step | Files created | Shared? |
+| ----------- | ----------- | ----------- |
+| Initialization  | `Beta_0_output.csv` <br> `Global_Predictor_names.csv` <br> `Global_times_output.csv` | Yes <br> No <br> Yes |
+| Iteration `1` | `Beta_1_output.csv` <br> `Fisher_1.csv` <br> `Results_iter_1.csv` <br> `sumZrGlobal.csv` <br> `WprimeGlobal.csv` | Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N |
+| Iteration `t` | `Beta_(t)_output.csv` <br> `Fisher_(t).csv` <br> `Results_iter_(t).csv` | Y/N <br> Y/N <br> Y/N |  
+
+
+### Robust estimation
+
+This implementation of the Cox model mimics the following `R` call: 
+- `coxph(formula, data, ties = “breslow”, weights, robust = TRUE)`, whenever one checks `RobustResults_t.csv` and once convergence is attained.
+
+#### Data node side
+
+| Step | Files created | Shared? |
+| ----------- | ----------- | ----------- |
+| Initialization | `Beta_local_k.csv` <br> `N_node_k.csv` <br> `Predictor_names_k.csv` <br> `Times_k_output.csv` <br> `Vk_k.csv` | Yes <br> Yes <br> Yes <br> Yes <br> Yes |
+| Iteration `0` | `Rik_comp_k.csv` <br> `Rikk.csv` <br> `sumWExpk_output0.csv` <br> `sumWZqExpk_output_0.csv` <br> `sumWZqZrExpk_output_0.csv` <br> `sumWZrk.csv` <br> `Wprimek.csv `| Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N |
 | Iteration `1` | `sumWExpk_output1.csv` <br> `sumWZqExpk_output_1.csv` <br> `sumWZqZrExpk_output_1.csv` | Y/N <br> Y/N <br> Y/N|
 | Iteration `2` | `sumWExpk_output2.csv` <br> `sumWZqExpk_output_2.csv` <br> `sumWZqZrExpk_output_2.csv` | Y/N <br> Y/N <br> Y/N|
 | Iteration `3` | `sumWExpk_output3.csv` <br> `sumWZqExpk_output_3.csv` <br> `sumWZqZrExpk_output_3.csv` <br> `inverseWExp_k_output_1.csv` <br> `zbarri_inverseWExp_k_output_1.csv` | Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N |
@@ -134,14 +235,6 @@ Mimics...
 | Iteration `4` | `Beta_4_output.csv` <br> `Fisher_4.csv` <br> `Results_iter_4.csv` <br> `sumWExpGlobal_output_3.csv` <br> `zbarri_3.csv` <br> `zbarri_inverseWExp_Global_output_2.csv` <br> `inverseWExp_t_Global_output_2.csv` <br> `RobustResults_iter_1.csv` | Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N |
 | Iteration `t` | `Beta_(t)_output.csv` <br> `Fisher_(t).csv` <br> `Results_iter_(t).csv` <br> `sumWExpGlobal_output_(t-1).csv` <br> `zbarri_(t-1).csv` <br> `zbarri_inverseWExp_Global_output_(t-2).csv` <br> `inverseWExp_t_Global_output_(t-2).csv` <br> `RobustResults_iter_(t-3).csv` | Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N |
 
-
-### Robust estimation
-
-Mimics...
-
-#### Data node side
-
-#### Coordination node side
 
 ### License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
