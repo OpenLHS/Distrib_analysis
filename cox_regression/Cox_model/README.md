@@ -1,7 +1,7 @@
 # Distributed Cox model 
 
 This implementation of the Cox model mimics the following `R` calls: 
-- `coxph(formula, data, ties = “breslow”)`, whenever one checks `Results_iter_t.csv` and once convergence is attained
+- `coxph(formula, data, ties = “breslow”)`, whenever one checks `Results_iter_t.csv` and once convergence is attained.
 - `coxph(formula, data, ties = “breslow”, weights, robust = TRUE)`, whenever one checks `RobustResults_t.csv` and once convergence is attained.
 
 As both implementation use the same base files even if different amounts of information is shared troughout the algorithm, this guide has been splitted in two sections to better help users.
@@ -16,7 +16,7 @@ The examples folder contains a few examples. Each example folder is self-contain
 - Generic_code  
 The generic_code folder contains examplar `R` code files pertaining to the distributed approach and its pooled comparator. Please read the code and its comments in the `R` file as files may require edition before being used.
 
-#### List of examples
+### List of examples
 
 - `random_data`, and `random_data_same_folder` are based on the same example (whereas `random_grouped_data`, `random_grouped_data_same_folder` and `random_grouped_data_with_weights_same_folder` are based on the same example where the data was aggregated).  
 	- The first one has the files separated in different folders to better mimic a distributed environment. To run, you need to copy the results across folders, which clarifies what is sent where.  
@@ -31,22 +31,20 @@ The generic_code folder contains examplar `R` code files pertaining to the distr
 
 - * Optional : if you want to try to generate new test datasets, the file `cox_data_generation.R` might be useful.*
 
-#### Generic code
+### Generic code
 
 The files in this folder can be used to support an example of distributed survival analysis with a Cox model.  
 Assuming a data structure similar to the data nodes `.csv` files in the example folder, this code can be used to execute a data node operation or a coordination node operation for a Cox model.
 
-## Instructions to run the examples/algorithm
-
-### Classic estimation
+## Instructions to run the examples/algorithm (classic estimation)
 
 There are many ways to run `R` code. The proposed instructions here are focusing on using a graphical interface.
 
-#### INSTALLING R and R STUDIO
+### INSTALLING R and R STUDIO
 
 1. Go to the page : https://posit.co/download/rstudio-desktop/ and follow the instructions for your operating system
 
-#### INSTALLING THE REQUIRED PACKAGES
+### INSTALLING THE REQUIRED PACKAGES
 
 The algorithm currently requires the use of package(s) not present in the base installation. `R` should prompt you to download the packages automatically.
 
@@ -59,11 +57,11 @@ Furthermore, the examples will be easier to explore and adapt/change if the pack
 
 If you work in an isolated environment, you might need to download them manually at the adress above and install them for your `RStudio` instance. While describing the process here is out of scope, a web search will yield resources like https://riptutorial.com/r/example/5556/install-package-from-local-source that can be helpful.
 
-#### INSTALLING AN EXAMPLE
+### INSTALLING AN EXAMPLE
 
 1. Unpack one of the example folders on one of your drives.
 
-#### EXECUTING THE DISTRIBUTED CODE
+### EXECUTING THE DISTRIBUTED CODE
 
 ***Make sure `R studio` is not currently running and close it if it is.***  
 ***If you are not able to automatically set your working directory, manually set the variable `manualwd = 1` in `Data_node_call_cox-reg_k.R` and  `Coord_node_call_iter_cox-reg.R`.***
@@ -100,7 +98,7 @@ The file `Beta_t_output.csv`, `Fisher_t.csv` and `Results_iter_t.csv` will be ge
 
 7. (optional) Compare the results of the previous iteration with the current one to decide if another iteration is pertinent (return to step `5`) or not.
 
-#### EXECUTING THE POOLED SOLUTION CODE
+### EXECUTING THE POOLED SOLUTION CODE
 
 ***Make sure `R studio` is not currently running and close it if it is.***
 
@@ -109,15 +107,15 @@ The file `Beta_t_output.csv`, `Fisher_t.csv` and `Results_iter_t.csv` will be ge
 3.	Select all the code and click `run`.
 4.	The results will be available in the console.
 
-### Robust estimation
+## Instructions to run the examples/algorithm (robust estimation)
 
 There are many ways to run `R` code. The proposed instructions here are focusing on using a graphical interface.
 
-#### INSTALLING R and R STUDIO
+### INSTALLING R and R STUDIO
 
 1. Go to the page : https://posit.co/download/rstudio-desktop/ and follow the instructions for your operating system
 
-#### INSTALLING THE REQUIRED PACKAGES
+### INSTALLING THE REQUIRED PACKAGES
 
 The algorithm currently requires the use of package(s) not present in the base installation. `R` should prompt you to download the packages automatically.
 
@@ -130,11 +128,11 @@ Furthermore, the examples will be easier to explore and adapt/change if the pack
 
 If you work in an isolated environment, you might need to download them manually at the adress above and install them for your `RStudio` instance. While describing the process here is out of scope, a web search will yield resources like https://riptutorial.com/r/example/5556/install-package-from-local-source that can be helpful.
 
-#### INSTALLING AN EXAMPLE
+### INSTALLING AN EXAMPLE
 
 1. Unpack one of the example folders on one of your drives.
 
-#### EXECUTING THE DISTRIBUTED CODE
+### EXECUTING THE DISTRIBUTED CODE
 
 ***Make sure `R studio` is not currently running and close it if it is.***  
 ***If you are not able to automatically set your working directory, manually set the variable `manualwd = 1` in `Data_node_call_cox-reg_k.R` and  `Coord_node_call_iter_cox-reg.R`.***
@@ -173,7 +171,7 @@ In order to compute the robust variance estimator, additionnal files `sumWExpGlo
 
 7. (optional) Compare the results of the previous iteration with the current one to decide if another iteration is pertinent (return to step `5`) or not.
 
-#### EXECUTING THE POOLED SOLUTION CODE
+### EXECUTING THE POOLED SOLUTION CODE
 
 ***Make sure `R studio` is not currently running and close it if it is.***
 
@@ -182,14 +180,12 @@ In order to compute the robust variance estimator, additionnal files `sumWExpGlo
 3.	Select all the code and click `run`.
 4.	The results will be available in the console.
 
-## Expected outputs
-
-### Classic estimation
+## Expected outputs (classic estimation)
 
 This implementation of the Cox model mimics the following `R` call: 
 - `coxph(formula, data, ties = “breslow”)`, whenever one checks `Results_iter_t.csv` and once convergence is attained.
 
-#### Data node side
+### Data node side
 
 | Step | Files created | Shared? |
 | ----------- | ----------- | ----------- |
@@ -198,7 +194,7 @@ This implementation of the Cox model mimics the following `R` call:
 | Iteration `1` | `sumWExpk_output1.csv` <br> `sumWZqExpk_output_1.csv` <br> `sumWZqZrExpk_output_1.csv` | Y/N <br> Y/N <br> Y/N|
 | Iteration `t` | `sumWExpk_output(t).csv` <br> `sumWZqExpk_output_(t).csv` <br> `sumWZqZrExpk_output_(t).csv` | Y/N <br> Y/N <br> Y/N|
 
-#### Coordination node side
+### Coordination node side
 
 | Step | Files created | Shared? |
 | ----------- | ----------- | ----------- |
@@ -207,12 +203,12 @@ This implementation of the Cox model mimics the following `R` call:
 | Iteration `t` | `Beta_(t)_output.csv` <br> `Fisher_(t).csv` <br> `Results_iter_(t).csv` | Y/N <br> Y/N <br> Y/N |  
 
 
-### Robust estimation
+## Expected outputs (robust estimation)
 
 This implementation of the Cox model mimics the following `R` call: 
 - `coxph(formula, data, ties = “breslow”, weights, robust = TRUE)`, whenever one checks `RobustResults_t.csv` and once convergence is attained.
 
-#### Data node side
+### Data node side
 
 | Step | Files created | Shared? |
 | ----------- | ----------- | ----------- |
@@ -224,7 +220,7 @@ This implementation of the Cox model mimics the following `R` call:
 | Iteration `4` | `sumWExpk_output4.csv` <br> `sumWZqExpk_output_4.csv` <br> `sumWZqZrExpk_output_4.csv` <br> `inverseWExp_k_output_2.csv` <br> `zbarri_inverseWExp_k_output_2.csv` <br> `DDk_output_1` | Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N |
 | Iteration `t` | `sumWExpk_output(t).csv` <br> `sumWZqExpk_output_(t).csv` <br> `sumWZqZrExpk_output_(t).csv` <br> `inverseWExp_k_output_(t-2).csv` <br> `zbarri_inverseWExp_k_output_(t-2).csv` <br> `DDk_output_(t-3)` | Y/N <br> Y/N <br> Y/N <br> Y/N  |
 
-#### Coordination node side
+### Coordination node side
 
 | Step | Files created | Shared? |
 | ----------- | ----------- | ----------- |
