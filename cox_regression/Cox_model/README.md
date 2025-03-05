@@ -42,12 +42,12 @@ There are many ways to run `R` code. The proposed instructions here are focusing
 
 The algorithm currently requires the use of package(s) not present in the base installation. `R` should prompt you to download the packages automatically.
 
-- [survival](https://cran.r-project.org/web/packages/survival/index.html https://cran.r-project.org/web/packages/survival/survival.pdf)
-- [MASS](https://cran.r-project.org/web/packages/MASS/index.html https://cran.r-project.org/web/packages/MASS/MASS.pdf)
+- [survival](https://cran.r-project.org/web/packages/survival/index.html)
+- [MASS](https://cran.r-project.org/web/packages/MASS/index.html)
 
 Furthermore, the examples will be easier to explore and adapt/change if the package `this.path` is also available. Yet this is NOT required and you can safely ignore any warning about this is if you want to use the algorithm "as-is".
 
-- [this.path](https://cran.r-project.org/package=this.path https://cran.r-project.org/web/packages/this.path/this.path.pdf)
+- [this.path](https://cran.r-project.org/package=this.path)
 
 If you work in an isolated environment, you might need to download them manually at the adress above and install them for your `RStudio` instance. While describing the process here is out of scope, a web search will yield resources like https://riptutorial.com/r/example/5556/install-package-from-local-source that can be helpful.
 
