@@ -37,9 +37,11 @@ data_init_cox_reg <- function(man_wd,nodeid) {
   # Read data
   if(!file.exists(paste0("Data_node_grouped_", k ,".csv"))){
     warning("Attempt to find a file with grouped data failed and thus this will use ungrouped data. Be aware that this algorithm is based on WebDisco which is deemed non-confidential for ungrouped data.")
-    node_data <- read.csv(paste0("Data_node_", k, ".csv"))
+    filehandle <- paste0("Data_node_")
+    node_data <- read.csv(paste0(filehandle, k, ".csv"))
   } else {
-    node_data <- read.csv(paste0("Data_node_grouped_", k, ".csv"))
+    filehandle <- paste0("Data_node_grouped_")
+    node_data <- read.csv(paste0(filehandle, k, ".csv"))
   }
   
   # Makes sure the data is ordered properly
@@ -48,8 +50,8 @@ data_init_cox_reg <- function(man_wd,nodeid) {
   
   # Should the data not be ordered by time, save old copy of data and a new one of the ordered data
   if(!all(old_data$time==node_data$time)){
-    write.csv(old_data, file = paste0("Backup_Data_node_", k, ".csv"), row.names = F)
-    write.csv(node_data, file = paste0("Data_node_", k, ".csv"), row.names = F)  
+    write.csv(old_data, file = paste0("Backup_", filehandle, "Unordered_", k, ".csv"), row.names = F)
+    write.csv(node_data, file = paste0(filehandle, k, ".csv"), row.names = F)  
   }
 
   # Verifying if weights are available. 
