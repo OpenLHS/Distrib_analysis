@@ -57,8 +57,8 @@ If you work in an isolated environment, you might need to download them manually
 
 #### EXECUTING THE DISTRIBUTED CODE
 
-*** Make sure `R studio` is not currently running and close it if it is.***  
-*** If you are not able to automatically set your working directory, manually set the variable `manualwd = 1` in `Data_node_call_cox-reg_k.R` and  `Coord_node_call_iter_cox-reg.R`.***
+***Make sure `R studio` is not currently running and close it if it is.***  
+***If you are not able to automatically set your working directory, manually set the variable `manualwd = 1` in `Data_node_call_cox-reg_k.R` and  `Coord_node_call_iter_cox-reg.R`.***
 
 In the following procedure, `k` represents the number of the local node, and `t` represents the iteration number.
 
@@ -92,7 +92,7 @@ The file `Beta_t_output.csv` and `Results_iter_t.csv` will be generated. To cont
 
 #### EXECUTING THE POOLED SOLUTION CODE
 
-*** Make sure `R studio` is not currently running and close it if it is.***
+***Make sure `R studio` is not currently running and close it if it is.***
 
 1.	Navigate to the folder `pooled_solution`.
 2.	Open the file `Solution.R`. It should then appear in `R`.

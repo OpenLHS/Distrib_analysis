@@ -44,8 +44,8 @@ If you work in an isolated environment, you might need to download them manually
 
 #### EXECUTING THE CODE
 
-*** Make sure `R studio` is not currently running and close it if it is.***  
-*** If you are not able to automatically set your working directory, manually set the variable `manualwd = 1` in `Data_node_call_cox-reg_k.R` and  `Coord_node_call_iter_cox-reg.R`.***
+***Make sure `R studio` is not currently running and close it if it is.***  
+***If you are not able to automatically set your working directory, manually set the variable `manualwd = 1` in `Data_node_call_cox-reg_k.R` and  `Coord_node_call_iter_cox-reg.R`.***
 
 1. In the file `data_node_call_precox_average.R`, select all the code and execute it. A new file will be generated, which contains the original data with modified times.
 2. This data can now be used by a data node to participate into a privacy preserving Cox model.
