@@ -1,5 +1,7 @@
 # Distributed Cox model 
 
+Goal: mimics...
+
 ## Repository structure
 
 - The core article is in the root directory: "Lu et al. - 2015 - WebDISCO: A Web Service for Distributed Cox Model.pdf."  This describes the background of the work and presents the method used.
@@ -31,6 +33,8 @@ The files in this folder can be used to support an example of distributed surviv
 Assuming a data structure similar to the data nodes `.csv` files in the example folder, this code can be used to execute a data node operation or a coordination node operation for a Cox model.
 
 ## Instructions to run the examples/algorithm
+
+### Classic estimation
 
 There are many ways to run `R` code. The proposed instructions here are focusing on using a graphical interface.
 
@@ -99,23 +103,45 @@ The file `Beta_t_output.csv` and `Results_iter_t.csv` will be generated. To cont
 3.	Select all the code and click `run`.
 4.	The results will be available in the console.
 
+### Robust estimation
+
 ## Expected outputs
+
+### Classic estimation
+
+Mimics...
 
 #### Data node side
 
-| Initialization | files... | Shared? |
+| Step | Files created | Shared? |
 | ----------- | ----------- | ----------- |
-| Iteration 0 | `Beta_local_k.csv` <br> `N_node_k.csv` <br> `Predictor_names_k.csv` <br> `Times_k_output.csv` <br> `Vk_k.csv` | Yes <br> Yes <br> Yes <br> Yes <br> Yes |
-| Iteration 1 | files... | Y/N |
-| Iteration 2 | files... | Y/N |
+| Initialization | `Beta_local_k.csv` <br> `N_node_k.csv` <br> `Predictor_names_k.csv` <br> `Times_k_output.csv` <br> `Vk_k.csv` | Yes <br> Yes <br> Yes <br> Yes <br> Yes |
+| Iteration `0` | `Rik_comp_k.csv` <br> `Rikk.csv` <br> `sumWExpk_output0.csv` <br> `sumZqExpk_output_0.csv` <br> `sumZqZrExpk_output_0.csv` <br> `sumWZrk.csv` <br> `Wprimek.csv `| Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N |
+| Iteration `1` | `sumWExpk_output1.csv` <br> `sumWZqExpk_output_1.csv` <br> `sumWZqZrExpk_output_1.csv` | Y/N <br> Y/N <br> Y/N|
+| Iteration `2` | `sumWExpk_output2.csv` <br> `sumWZqExpk_output_2.csv` <br> `sumWZqZrExpk_output_2.csv` | Y/N <br> Y/N <br> Y/N|
+| Iteration `3` | `sumWExpk_output3.csv` <br> `sumWZqExpk_output_3.csv` <br> `sumWZqZrExpk_output_3.csv` <br> `inverseWExp_k_output_1.csv` <br> `zbarri_inverseWExp_k_output_1.csv` | Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N |
+| Iteration `4` | `sumWExpk_output4.csv` <br> `sumWZqExpk_output_4.csv` <br> `sumWZqZrExpk_output_4.csv` <br> `inverseWExp_k_output_2.csv` <br> `zbarri_inverseWExp_k_output_2.csv` <br> `DDk_output_1` | Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N |
+| Iteration `t` | `sumWExpk_output(t).csv` <br> `sumWZqExpk_output_(t).csv` <br> `sumWZqZrExpk_output_(t).csv` <br> `inverseWExp_k_output_(t-2).csv` <br> `zbarri_inverseWExp_k_output_(t-2).csv` <br> `DDk_output_(t-3)` | Y/N <br> Y/N <br> Y/N <br> Y/N  |
 
 #### Coordination node side
 
-| Initialization | files... |
-| ----------- | ----------- |
-| Iteration 1 | files... |
-| Iteration 2 | files... | 
+| Step | Files created | Shared? |
+| ----------- | ----------- | ----------- |
+| Initialization  | `Beta_0_output.csv` <br> `Global_Predictor_names.csv` <br> `Global_times_output.csv` | Yes <br> No <br> Yes |
+| Iteration `1` | `Beta_1_output.csv` <br> `Fisher_1.csv` <br> `Results_iter_1.csv` <br> `sumZrGlobal.csv` <br> `WprimeGlobal.csv` | Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N |
+| Iteration `2` | `Beta_2_output.csv` <br> `Fisher_2.csv` <br> `Results_iter_2.csv` <br> `sumWExpGlobal_output_1.csv` <br> `zbarri_1.csv` | Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N|
+| Iteration `3` | `Beta_3_output.csv` <br> `Fisher_3.csv` <br> `Results_iter_3.csv` <br> `sumWExpGlobal_output_2.csv` <br> `zbarri_2.csv` <br> `zbarri_inverseWExp_Global_output_1.csv` <br> `inverseWExp_t_Global_output_1.csv` | Y/N  <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N |
+| Iteration `4` | `Beta_4_output.csv` <br> `Fisher_4.csv` <br> `Results_iter_4.csv` <br> `sumWExpGlobal_output_3.csv` <br> `zbarri_3.csv` <br> `zbarri_inverseWExp_Global_output_2.csv` <br> `inverseWExp_t_Global_output_2.csv` <br> `RobustResults_iter_1.csv` | Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N |
+| Iteration `t` | `Beta_(t)_output.csv` <br> `Fisher_(t).csv` <br> `Results_iter_(t).csv` <br> `sumWExpGlobal_output_(t-1).csv` <br> `zbarri_(t-1).csv` <br> `zbarri_inverseWExp_Global_output_(t-2).csv` <br> `inverseWExp_t_Global_output_(t-2).csv` <br> `RobustResults_iter_(t-3).csv` | Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N |
 
+
+### Robust estimation
+
+Mimics...
+
+#### Data node side
+
+#### Coordination node side
 
 ### License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
