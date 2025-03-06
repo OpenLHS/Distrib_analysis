@@ -53,7 +53,7 @@ for(k in 1:K){
   if(file.exists(paste0("Weights_node_", k, ".csv"))){
     node_weights <- read.csv(paste0("Weights_node_", k, ".csv"))
   } else{
-    node_weights <- rep(1, nrow(node_data))
+    node_weights <- as.data.frame(rep(1, nrow(node_data)))
   }
   
   data <- rbind(data, node_data)
