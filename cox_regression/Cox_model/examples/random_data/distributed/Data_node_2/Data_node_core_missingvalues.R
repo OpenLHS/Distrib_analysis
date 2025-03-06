@@ -48,6 +48,7 @@ missing_value_handler <- function(man_wd=-1,nodeid=-1) {
 	}
 	
 	# Verifying if weights are available. 
+	Uniform_weights <- FALSE
 	
 	# Lists all the weight files provided by the user. There should be either none or 1.
 	Userwlist <- list.files(pattern=paste0("Weights_node_", k, ".csv"))
@@ -93,6 +94,7 @@ missing_value_handler <- function(man_wd=-1,nodeid=-1) {
 	} else { 
 	  n <- nrow(node_data)
 	  node_weights <- rep(1, n)
+	  Uniform_weights <- TRUE
 	}
 	
 	# Create a single dataset out of node_data et node_weights
@@ -114,13 +116,16 @@ missing_value_handler <- function(man_wd=-1,nodeid=-1) {
 	  new_node_data <- node_data_and_weights[, -(ncol(node_data_and_weights))]
 	  new_node_weights <- as.data.frame(node_data_and_weights[, (ncol(node_data_and_weights))])
 	  
-	  # Keep old data and old weights as backup
+	  # Save old and new file for data
 	  write.csv(old_data, file = paste0("Backup_", filehandle, "Incomplete_", k, ".csv"), row.names = FALSE)
-	  write.csv(old_weights, file = paste0("Backup_Weights_node_Incomplete_", k, ".csv"), row.names = FALSE)
-	 
-	  # Save new data and new weights without missing values
 	  write.csv(new_node_data, file = paste0(filehandle, k, ".csv"), row.names = FALSE)
-	  write.csv(new_node_weights, file = paste0("Weights_node_", k, ".csv"), row.names = FALSE)
+	 
+	  # Save old and new file for weights, unless we have uniform weights
+	  if(!Uniform_weights){
+	    write.csv(old_weights, file = paste0("Backup_Weights_node_Incomplete_", k, ".csv"), row.names = FALSE)
+	    write.csv(new_node_weights, file = paste0("Weights_node_", k, ".csv"), row.names = FALSE)  
+	  }
+	  
 	}
 	
 	## Remove all environment variables. 

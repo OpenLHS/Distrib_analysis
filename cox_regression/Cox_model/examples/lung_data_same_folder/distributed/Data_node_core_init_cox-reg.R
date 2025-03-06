@@ -49,7 +49,8 @@ data_init_cox_reg <- function(man_wd,nodeid) {
   }
   
   # Verifying if weights are available. 
-
+  Uniform_weights <- FALSE
+  
   # Lists all the weight files provided by the user. There should be either none or 1.
   Userwlist <- list.files(pattern=paste0("Weights_node_", k, ".csv"))
   nbUserwfiles <- length(Userwlist)
@@ -94,6 +95,7 @@ data_init_cox_reg <- function(man_wd,nodeid) {
   } else { 
     n <- nrow(node_data)
     node_weights <- rep(1, n)
+    Uniform_weights <- TRUE
   }
   
   # Makes sure the data is ordered properly
@@ -111,9 +113,11 @@ data_init_cox_reg <- function(man_wd,nodeid) {
     old_weights <- node_weights
     node_weights <- as.data.frame(ordered_data_and_weights$node_weights)
     
-    # Save old and new file for weights
-    write.csv(old_weights, file = paste0("Backup_Weights_node_Unordered_", k, ".csv"), row.names = FALSE)
-    write.csv(node_weights, file = paste0("Weights_node_", k, ".csv"), row.names = FALSE)
+    # Save old and new file for weights, unless we have uniform weights
+    if(!Uniform_weights){
+      write.csv(old_weights, file = paste0("Backup_Weights_node_Unordered_", k, ".csv"), row.names = FALSE)
+      write.csv(node_weights, file = paste0("Weights_node_", k, ".csv"), row.names = FALSE)  
+    }
     
     # Save old and new file for data
     write.csv(old_data, file = paste0("Backup_", filehandle, "Unordered_", k, ".csv"), row.names = FALSE)
