@@ -6,6 +6,10 @@ This implementation of the Cox model mimics the following `R` calls:
 
 As both implementation use the same base files even if different amounts of information is shared troughout the algorithm, this guide has been splitted in two sections to better help users.
 
+## Table of contents
+
+1. [Repository structure](#repository_structure)
+
 ## Repository structure
 
 - The core article is in the root directory: "Lu et al. - 2015 - WebDISCO: A Web Service for Distributed Cox Model.pdf."  This describes the background of the work and presents the method used.
@@ -33,7 +37,7 @@ The generic_code folder contains examplar `R` code files pertaining to the distr
 
 ### Generic code
 
-The files in this folder can be used to support an example of distributed survival analysis with a Cox model.  
+The files in this folder can be used to execute a distributed cox regression analysis.
 Assuming a data structure similar to the data nodes `.csv` files in the example folder, this code can be used to execute a data node operation or a coordination node operation for a Cox model.
 
 ## Instructions to run the examples/algorithm (classic estimation)
@@ -51,7 +55,7 @@ The algorithm currently requires the use of package(s) not present in the base i
 - [survival](https://cran.r-project.org/web/packages/survival/index.html)
 - [MASS](https://cran.r-project.org/web/packages/MASS/index.html)
 
-Furthermore, the examples will be easier to explore and adapt/change if the package `this.path` is also available. Yet this is NOT required and you can safely ignore any warning about this is if you want to use the algorithm "as-is".
+Furthermore, the examples will be easier to explore and adapt/change if the package `this.path` is also available. Yet this is NOT required and you can safely ignore any warning about this is if you want to use the algorithm "as-is". Should you choose not to use this package, you will then need to manually set your working directory in your `R` instance.
 
 - [this.path](https://cran.r-project.org/package=this.path)
 
@@ -64,7 +68,7 @@ If you work in an isolated environment, you might need to download them manually
 ### EXECUTING THE DISTRIBUTED CODE
 
 ***Make sure `R studio` is not currently running and close it if it is.***  
-***If you are not able to automatically set your working directory, manually set the variable `manualwd = 1` in `Data_node_call_cox-reg_k.R` and  `Coord_node_call_iter_cox-reg.R`.***
+***If you are not able to automatically set your working directory (for example, if you do not have access to `this.path`), manually set the variable `manualwd = 1` in `Data_node_call_cox-reg_k.R` and  `Coord_node_call_iter_cox-reg.R`.***
 
 In the following procedure, `k` represents the number of the local node, and `t` represents the iteration number.
 
