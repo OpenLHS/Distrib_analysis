@@ -11,32 +11,43 @@ As both implementation use the same base files even if different amounts of info
 1. [Repository structure](#repository-structure)
 
 	a. [List of examples](#list-of-examples)
+	
 	b. [Generic code](#generic-code)
 
 2. [Instructions to run the examples/algorithm (classic estimation)](#instructions-to-run-the-examplesalgorithm-classic-estimation)
 
 	a. [Installing R and R Studio](#installing-r-and-r-studio)
+	
 	b. [Installing the required packages](#installing-the-required-packages)
+	
 	c. [Installing an example](#installing-an-example)
+	
 	d. [Executing the distributed code](#executing-the-distributed-code)
+	
 	e. [Executing the pooled solution code](#executing-the-pooled-solution-code)
 	
 3. [Instructions to run the examples/algorithm (robust estimation)](#instructions-to-run-the-examplesalgorithm-robust-estimation)
 
 	a. [Installing R and R Studio](#installing-r-and-r-studio-1)
+	
 	b. [Installing the required packages](#installing-the-required-packages-1)
+	
 	c. [Installing an example](#installing-an-example-1)
+	
 	d. [Executing the distributed code](#executing-the-distributed-code-1)
+	
 	e. [Executing the pooled solution code](#executing-the-pooled-solution-code-1)
 	
 4. [Expected outputs (classic estimation)](#expected-outputs-classic-estimation)
 
 	a. [Data node side](#data-node-side)
+	
 	b. [Coordination node side](#coordination-node-side)
 	
 5. [Expected outputs (robust estimation)](#expected-outputs-robust-estimation)
 
 	a. [Data node side](#data-node-side-1)
+	
 	b. [Coordination node side](#coordination-node-side-1)
 
 6. [License](#license-httpscreativecommonsorglicensesby-nc-sa40)
