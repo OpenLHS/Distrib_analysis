@@ -115,7 +115,7 @@ missing_value_handler <- function(man_wd=-1,nodeid=-1) {
 	  new_node_weights <- as.data.frame(node_data_and_weights[, (ncol(node_data_and_weights))])
 	  
 	  # Keep old data and old weights as backup
-	  write.csv(old_node_data, file = paste0("Backup_", filehandle, "Incomplete_", k, ".csv"), row.names = FALSE)
+	  write.csv(old_data, file = paste0("Backup_", filehandle, "Incomplete_", k, ".csv"), row.names = FALSE)
 	  write.csv(old_weights, file = paste0("Backup_Weights_node_Incomplete_", k, ".csv"), row.names = FALSE)
 	 
 	  # Save new data and new weights without missing values
