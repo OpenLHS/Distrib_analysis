@@ -34,6 +34,10 @@ data_init_cox_reg <- function(man_wd,nodeid) {
     print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
   }
   
+  # Handles missing values, if any
+  source("Data_node_core_missingvalues.R")
+  missing_value_handler(man_wd = manualwd, nodeid = k)
+  
   # Read data
   if(!file.exists(paste0("Data_node_grouped_", k ,".csv"))){
     warning("Attempt to find a file with grouped data failed and thus this will use ungrouped data. Be aware that this algorithm is based on WebDisco which is deemed non-confidential for ungrouped data.")
@@ -44,18 +48,8 @@ data_init_cox_reg <- function(man_wd,nodeid) {
     node_data <- read.csv(paste0(filehandle, k, ".csv"))
   }
   
-  # Makes sure the data is ordered properly
-  old_data <- node_data
-  node_data <- node_data[order(node_data$time),]
-  
-  # Should the data not be ordered by time, save old copy of data and a new one of the ordered data
-  if(!all(old_data$time==node_data$time)){
-    write.csv(old_data, file = paste0("Backup_", filehandle, "Unordered_", k, ".csv"), row.names = F)
-    write.csv(node_data, file = paste0(filehandle, k, ".csv"), row.names = F)  
-  }
-
   # Verifying if weights are available. 
-  
+
   # Lists all the weight files provided by the user. There should be either none or 1.
   Userwlist <- list.files(pattern=paste0("Weights_node_", k, ".csv"))
   nbUserwfiles <- length(Userwlist)
@@ -89,7 +83,7 @@ data_init_cox_reg <- function(man_wd,nodeid) {
   } else if(length(IPWfilelist)>0) { 
     filename <- IPWfilelist[[1]]
     lastunders <- max(unlist(gregexpr("_",filename)))
-    lastdot <- max(unlist(gregexpr(".", filename, fixed = T)))
+    lastdot <- max(unlist(gregexpr(".", filename, fixed = TRUE)))
     autoiter <- strtoi(substring(filename,lastunders+1,lastdot-1))
     
     iter_weights <- autoiter
@@ -102,9 +96,29 @@ data_init_cox_reg <- function(man_wd,nodeid) {
     node_weights <- rep(1, n)
   }
   
-  # Method isn't yet available for missing data
-  if(any(is.na.data.frame(node_data))){
-    stop("At least one NA was found in the data. \n The algorithm currently works only with complete data.")
+  # Makes sure the data is ordered properly
+  old_data <- node_data
+  node_data <- node_data[order(node_data$time),]
+  
+  # Should the data not be ordered by time, save old copy of data and a new one of the ordered data. Make sure to do the same with weights
+  if(!all(old_data$time==node_data$time)){
+    warning("Data file was not ordered based on the time variable. As such, the whole dataset and the weights were reordered. Original data was saved in backup files.")
+    
+    # Joint dataset to reorder the weights properly
+    unordered_data_and_weights <- cbind(old_data, node_weights)
+    ordered_data_and_weights <- unordered_data_and_weights[order(unordered_data_and_weights$time),]
+    
+    old_weights <- node_weights
+    node_weights <- as.data.frame(ordered_data_and_weights$node_weights)
+    
+    # Save old and new file for weights
+    write.csv(old_weights, file = paste0("Backup_Weights_node_Unordered_", k, ".csv"), row.names = FALSE)
+    write.csv(node_weights, file = paste0("Weights_node_", k, ".csv"), row.names = FALSE)
+    
+    # Save old and new file for data
+    write.csv(old_data, file = paste0("Backup_", filehandle, "Unordered_", k, ".csv"), row.names = FALSE)
+    write.csv(node_data, file = paste0(filehandle, k, ".csv"), row.names = FALSE)  
+    Reordering = TRUE
   }
   
   # Makes sure the status variable is properly coded as 0s and 1s.
