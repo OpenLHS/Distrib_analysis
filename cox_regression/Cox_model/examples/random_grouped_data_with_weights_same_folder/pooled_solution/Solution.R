@@ -61,7 +61,7 @@ for(k in 1:K){
 }
 
 # Remove missing values, if any
-data_and_weights <- cbind(data, weights_pooled)
+data_and_weights <- cbind(data, weights_pooled[,1])
 data_and_weights <- data_and_weights[complete.cases(data_and_weights),]
 data <- data_and_weights[, -(ncol(data_and_weights))]
 weights_pooled <- data_and_weights[, ncol(data_and_weights)]
