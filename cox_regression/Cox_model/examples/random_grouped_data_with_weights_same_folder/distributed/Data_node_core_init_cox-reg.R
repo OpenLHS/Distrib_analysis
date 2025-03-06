@@ -118,7 +118,10 @@ data_init_cox_reg <- function(man_wd,nodeid) {
     # Save old and new file for data
     write.csv(old_data, file = paste0("Backup_", filehandle, "Unordered_", k, ".csv"), row.names = FALSE)
     write.csv(node_data, file = paste0(filehandle, k, ".csv"), row.names = FALSE)  
-    Reordering = TRUE
+    
+    # Transform weights as numeric object
+    node_weights <- node_weights[,1]
+    
   }
   
   # Makes sure the status variable is properly coded as 0s and 1s.
