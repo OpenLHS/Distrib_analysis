@@ -238,17 +238,17 @@ This implementation of the Cox model mimics the following `R` call:
 | Step | Files created | Shared? |
 | ----------- | ----------- | ----------- |
 | Initialization | `Beta_local_k.csv` <br> `N_node_k.csv` <br> `Predictor_names_k.csv` <br> `Times_k_output.csv` <br> `Vk_k.csv` | Yes <br> Yes <br> Yes <br> Yes <br> Yes |
-| Iteration `0` | `Rik_comp_k.csv` <br> `Rikk.csv` <br> `sumWExpk_output0.csv` <br> `sumWZqExpk_output_0.csv` <br> `sumWZqZrExpk_output_0.csv` <br> `sumWZrk.csv` <br> `Wprimek.csv `| Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N |
-| Iteration `1` | `sumWExpk_output1.csv` <br> `sumWZqExpk_output_1.csv` <br> `sumWZqZrExpk_output_1.csv` | Y/N <br> Y/N <br> Y/N|
-| Iteration `t` | `sumWExpk_output(t).csv` <br> `sumWZqExpk_output_(t).csv` <br> `sumWZqZrExpk_output_(t).csv` | Y/N <br> Y/N <br> Y/N|
+| Iteration `0` | `Rik_comp_k.csv` <br> `Rikk.csv` <br> `sumWExpk_output0.csv` <br> `sumWZqExpk_output_0.csv` <br> `sumWZqZrExpk_output_0.csv` <br> `sumWZrk.csv` <br> `Wprimek.csv `| No <br> No <br> Yes <br> Yes <br> Yes <br> Yes <br> Yes |
+| Iteration `1` | `sumWExpk_output1.csv` <br> `sumWZqExpk_output_1.csv` <br> `sumWZqZrExpk_output_1.csv` | Yes <br> Yes <br> Yes|
+| Iteration `t` | `sumWExpk_output(t).csv` <br> `sumWZqExpk_output_(t).csv` <br> `sumWZqZrExpk_output_(t).csv` | Yes <br> Yes <br> Yes|
 
 ### Coordination node side
 
 | Step | Files created | Shared? |
 | ----------- | ----------- | ----------- |
 | Initialization  | `Beta_0_output.csv` <br> `Global_Predictor_names.csv` <br> `Global_times_output.csv` | Yes <br> No <br> Yes |
-| Iteration `1` | `Beta_1_output.csv` <br> `Fisher_1.csv` <br> `Results_iter_1.csv` <br> `sumZrGlobal.csv` <br> `WprimeGlobal.csv` | Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N |
-| Iteration `t` | `Beta_(t)_output.csv` <br> `Fisher_(t).csv` <br> `Results_iter_(t).csv` | Y/N <br> Y/N <br> Y/N |  
+| Iteration `1` | `Beta_1_output.csv` <br> `Fisher_1.csv` <br> `Results_iter_1.csv` <br> `sumWZrGlobal.csv` <br> `WprimeGlobal.csv` | Yes <br> No <br> Does not apply <br> Yes <br> Yes |
+| Iteration `t` | `Beta_(t)_output.csv` <br> `Fisher_(t).csv` <br> `Results_iter_(t).csv` | Yes <br> No <br> Does not apply |  
 
 
 ## Expected outputs (robust estimation)
@@ -261,23 +261,23 @@ This implementation of the Cox model mimics the following `R` call:
 | Step | Files created | Shared? |
 | ----------- | ----------- | ----------- |
 | Initialization | `Beta_local_k.csv` <br> `N_node_k.csv` <br> `Predictor_names_k.csv` <br> `Times_k_output.csv` <br> `Vk_k.csv` | Yes <br> Yes <br> Yes <br> Yes <br> Yes |
-| Iteration `0` | `Rik_comp_k.csv` <br> `Rikk.csv` <br> `sumWExpk_output0.csv` <br> `sumWZqExpk_output_0.csv` <br> `sumWZqZrExpk_output_0.csv` <br> `sumWZrk.csv` <br> `Wprimek.csv `| Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N |
-| Iteration `1` | `sumWExpk_output1.csv` <br> `sumWZqExpk_output_1.csv` <br> `sumWZqZrExpk_output_1.csv` | Y/N <br> Y/N <br> Y/N|
-| Iteration `2` | `sumWExpk_output2.csv` <br> `sumWZqExpk_output_2.csv` <br> `sumWZqZrExpk_output_2.csv` | Y/N <br> Y/N <br> Y/N|
-| Iteration `3` | `sumWExpk_output3.csv` <br> `sumWZqExpk_output_3.csv` <br> `sumWZqZrExpk_output_3.csv` <br> `inverseWExp_k_output_1.csv` <br> `zbarri_inverseWExp_k_output_1.csv` | Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N |
-| Iteration `4` | `sumWExpk_output4.csv` <br> `sumWZqExpk_output_4.csv` <br> `sumWZqZrExpk_output_4.csv` <br> `inverseWExp_k_output_2.csv` <br> `zbarri_inverseWExp_k_output_2.csv` <br> `DDk_output_1` | Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N |
-| Iteration `t` | `sumWExpk_output(t).csv` <br> `sumWZqExpk_output_(t).csv` <br> `sumWZqZrExpk_output_(t).csv` <br> `inverseWExp_k_output_(t-2).csv` <br> `zbarri_inverseWExp_k_output_(t-2).csv` <br> `DDk_output_(t-3)` | Y/N <br> Y/N <br> Y/N <br> Y/N  |
+| Iteration `0` | `Rik_comp_k.csv` <br> `Rikk.csv` <br> `sumWExpk_output0.csv` <br> `sumWZqExpk_output_0.csv` <br> `sumWZqZrExpk_output_0.csv` <br> `sumWZrk.csv` <br> `Wprimek.csv `| No <br> No <br> Yes <br> Yes <br> Yes <br> Yes <br> Yes |
+| Iteration `1` | `sumWExpk_output1.csv` <br> `sumWZqExpk_output_1.csv` <br> `sumWZqZrExpk_output_1.csv` | Yes <br> Yes <br> Yes|
+| Iteration `2` | `sumWExpk_output2.csv` <br> `sumWZqExpk_output_2.csv` <br> `sumWZqZrExpk_output_2.csv` | Yes <br> Yes <br> Yes|
+| Iteration `3` | `sumWExpk_output3.csv` <br> `sumWZqExpk_output_3.csv` <br> `sumWZqZrExpk_output_3.csv` <br> `inverseWExp_k_output_1.csv` <br> `zbarri_inverseWExp_k_output_1.csv` | Yes <br> Yes <br> Yes <br> Yes <br> Yes |
+| Iteration `4` | `sumWExpk_output4.csv` <br> `sumWZqExpk_output_4.csv` <br> `sumWZqZrExpk_output_4.csv` <br> `inverseWExp_k_output_2.csv` <br> `zbarri_inverseWExp_k_output_2.csv` <br> `DDk_output_1` | Yes <br> Yes <br> Yes <br> Yes <br> Yes <br> Yes |
+| Iteration `t` | `sumWExpk_output(t).csv` <br> `sumWZqExpk_output_(t).csv` <br> `sumWZqZrExpk_output_(t).csv` <br> `inverseWExp_k_output_(t-2).csv` <br> `zbarri_inverseWExp_k_output_(t-2).csv` <br> `DDk_output_(t-3)` | Yes <br> Yes <br> Yes <br> Yes <br> Yes <br> Yes  |
 
 ### Coordination node side
 
 | Step | Files created | Shared? |
 | ----------- | ----------- | ----------- |
 | Initialization  | `Beta_0_output.csv` <br> `Global_Predictor_names.csv` <br> `Global_times_output.csv` | Yes <br> No <br> Yes |
-| Iteration `1` | `Beta_1_output.csv` <br> `Fisher_1.csv` <br> `Results_iter_1.csv` <br> `sumZrGlobal.csv` <br> `WprimeGlobal.csv` | Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N |
-| Iteration `2` | `Beta_2_output.csv` <br> `Fisher_2.csv` <br> `Results_iter_2.csv` <br> `sumWExpGlobal_output_1.csv` <br> `zbarri_1.csv` | Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N|
-| Iteration `3` | `Beta_3_output.csv` <br> `Fisher_3.csv` <br> `Results_iter_3.csv` <br> `sumWExpGlobal_output_2.csv` <br> `zbarri_2.csv` <br> `zbarri_inverseWExp_Global_output_1.csv` <br> `inverseWExp_t_Global_output_1.csv` | Y/N  <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N |
-| Iteration `4` | `Beta_4_output.csv` <br> `Fisher_4.csv` <br> `Results_iter_4.csv` <br> `sumWExpGlobal_output_3.csv` <br> `zbarri_3.csv` <br> `zbarri_inverseWExp_Global_output_2.csv` <br> `inverseWExp_t_Global_output_2.csv` <br> `RobustResults_iter_1.csv` | Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N |
-| Iteration `t` | `Beta_(t)_output.csv` <br> `Fisher_(t).csv` <br> `Results_iter_(t).csv` <br> `sumWExpGlobal_output_(t-1).csv` <br> `zbarri_(t-1).csv` <br> `zbarri_inverseWExp_Global_output_(t-2).csv` <br> `inverseWExp_t_Global_output_(t-2).csv` <br> `RobustResults_iter_(t-3).csv` | Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N <br> Y/N |
+| Iteration `1` | `Beta_1_output.csv` <br> `Fisher_1.csv` <br> `Results_iter_1.csv` <br> `sumWZrGlobal.csv` <br> `WprimeGlobal.csv` | Yes <br> Yes <br> Does not apply <br> No <br> No |
+| Iteration `2` | `Beta_2_output.csv` <br> `Fisher_2.csv` <br> `Results_iter_2.csv` <br> `sumWExpGlobal_output_1.csv` <br> `zbarri_1.csv` | Yes <br> Yes <br> Does not apply <br> Yes <br> Yes|
+| Iteration `3` | `Beta_3_output.csv` <br> `Fisher_3.csv` <br> `Results_iter_3.csv` <br> `sumWExpGlobal_output_2.csv` <br> `zbarri_2.csv` <br> `zbarri_inverseWExp_Global_output_1.csv` <br> `inverseWExp_t_Global_output_1.csv` | Yes  <br> Yes <br> Does not apply <br> Yes <br> Yes <br> Yes |
+| Iteration `4` | `Beta_4_output.csv` <br> `Fisher_4.csv` <br> `Results_iter_4.csv` <br> `sumWExpGlobal_output_3.csv` <br> `zbarri_3.csv` <br> `zbarri_inverseWExp_Global_output_2.csv` <br> `inverseWExp_t_Global_output_2.csv` <br> `RobustResults_iter_1.csv` | Yes <br> Yes <br> Does not apply <br> Yes <br> Yes <br> Yes <br> Yes <br> Does not apply |
+| Iteration `t` | `Beta_(t)_output.csv` <br> `Fisher_(t).csv` <br> `Results_iter_(t).csv` <br> `sumWExpGlobal_output_(t-1).csv` <br> `zbarri_(t-1).csv` <br> `zbarri_inverseWExp_Global_output_(t-2).csv` <br> `inverseWExp_t_Global_output_(t-2).csv` <br> `RobustResults_iter_(t-3).csv` | Yes <br> Yes <br> Does not apply <br> Yes <br> Yes <br> Yes <br> Yes <br> Does not apply |
 
 
 ### License: https://creativecommons.org/licenses/by-nc-sa/4.0/
