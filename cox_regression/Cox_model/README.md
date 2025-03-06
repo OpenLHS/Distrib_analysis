@@ -88,11 +88,11 @@ Assuming a data structure similar to the data nodes `.csv` files in the example 
 
 There are many ways to run `R` code. The proposed instructions here are focusing on using a graphical interface.
 
-### INSTALLING R and R STUDIO
+### Installing R and R Studio
 
 1. Go to the page : https://posit.co/download/rstudio-desktop/ and follow the instructions for your operating system
 
-### INSTALLING THE REQUIRED PACKAGES
+### Installing the required packages
 
 The algorithm currently requires the use of package(s) not present in the base installation. `R` should prompt you to download the packages automatically.
 
@@ -105,11 +105,11 @@ Furthermore, the examples will be easier to explore and adapt/change if the pack
 
 If you work in an isolated environment, you might need to download them manually at the adress above and install them for your `RStudio` instance. While describing the process here is out of scope, a web search will yield resources like https://riptutorial.com/r/example/5556/install-package-from-local-source that can be helpful.
 
-### INSTALLING AN EXAMPLE
+### Installing an example
 
 1. Unpack one of the example folders on one of your drives.
 
-### EXECUTING THE DISTRIBUTED CODE
+### Executing the distributed code
 
 ***Make sure `R studio` is not currently running and close it if it is.***  
 ***If you are not able to automatically set your working directory (for example, if you do not have access to `this.path`), manually set the variable `manualwd = 1` in `Data_node_call_cox-reg_k.R` and  `Coord_node_call_iter_cox-reg.R`.***
@@ -146,7 +146,7 @@ The file `Beta_t_output.csv`, `Fisher_t.csv` and `Results_iter_t.csv` will be ge
 
 7. (optional) Compare the results of the previous iteration with the current one to decide if another iteration is pertinent (return to step `5`) or not.
 
-### EXECUTING THE POOLED SOLUTION CODE
+### Executing the pooled solution code
 
 ***Make sure `R studio` is not currently running and close it if it is.***
 
@@ -159,11 +159,11 @@ The file `Beta_t_output.csv`, `Fisher_t.csv` and `Results_iter_t.csv` will be ge
 
 There are many ways to run `R` code. The proposed instructions here are focusing on using a graphical interface.
 
-### INSTALLING R and R STUDIO
+### Installing R and R Studio
 
 1. Go to the page : https://posit.co/download/rstudio-desktop/ and follow the instructions for your operating system
 
-### INSTALLING THE REQUIRED PACKAGES
+### Installing the required packages
 
 The algorithm currently requires the use of package(s) not present in the base installation. `R` should prompt you to download the packages automatically.
 
@@ -176,11 +176,11 @@ Furthermore, the examples will be easier to explore and adapt/change if the pack
 
 If you work in an isolated environment, you might need to download them manually at the adress above and install them for your `RStudio` instance. While describing the process here is out of scope, a web search will yield resources like https://riptutorial.com/r/example/5556/install-package-from-local-source that can be helpful.
 
-### INSTALLING AN EXAMPLE
+### Installing an example
 
 1. Unpack one of the example folders on one of your drives.
 
-### EXECUTING THE DISTRIBUTED CODE
+### Executing the distributed code
 
 ***Make sure `R studio` is not currently running and close it if it is.***  
 ***If you are not able to automatically set your working directory, manually set the variable `manualwd = 1` in `Data_node_call_cox-reg_k.R` and  `Coord_node_call_iter_cox-reg.R`.***
@@ -219,7 +219,7 @@ In order to compute the robust variance estimator, additionnal files `sumWExpGlo
 
 7. (optional) Compare the results of the previous iteration with the current one to decide if another iteration is pertinent (return to step `5`) or not.
 
-### EXECUTING THE POOLED SOLUTION CODE
+### Executing the pooled solution code
 
 ***Make sure `R studio` is not currently running and close it if it is.***
 
