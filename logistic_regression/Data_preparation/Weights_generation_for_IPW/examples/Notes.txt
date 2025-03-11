@@ -13,8 +13,7 @@ The first one has the files separated in different folders to better mimic a dis
 
 The second example is based on the same dataset, but if you simply want to look at the output, everything is happening in the same folder, without the need to copy files across.
 
-Usecase: linear regression (y = re75) and logistic regression (y = ???)
-
+Usecase: linear regression and logistic regression 
 
 
 Breast_data and Breast_data_same_folder are based on the same example. They both use the "Breast Cancer Dataset" from Royston and Altman (2013). 
