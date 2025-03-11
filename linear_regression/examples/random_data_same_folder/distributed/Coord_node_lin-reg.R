@@ -53,44 +53,40 @@ for(k in 2:K){
 p <- nrow(Pred_names) 
 
 # Create data structures to load the data node outputs
-all_local_xtWx <- array(0, dim=c(p+1,p+1, K))
-all_local_xtWy <- matrix(0, nrow=p+1, ncol=K)
-all_local_ytWy <- rep(0,K)
-all_local_n <- rep(0,K)
+all_local_xtx <- array(0, dim=c(p+1,p+1, K))
+all_local_xty <- matrix(0, nrow=p+1, ncol=K)
+all_local_yty <- rep(0,K)
 
 # Loading output from all nodes in previously created data structures
 for (k in 1:K) {
   output_k <- read.csv(paste0("Node", k, "_output.csv"))
-  all_local_xtWx[,,k] <- invvec(output_k[,1])
-  all_local_xtWy[,k] <- output_k[1:(p+1),3]
-  all_local_ytWy[k] <- output_k[1,2]
-  all_local_n[k] <- output_k[1,4]
-  
+  all_local_xtx[,,k] <- invvec(output_k[,1])
+  all_local_xty[,k] <- output_k[1:(p+1),3]
+  all_local_yty[k] <- output_k[1,2]
 }
 
 # Aggregate of local statistics for linear regression model estimates -------
 
-xtWy <- as.matrix(rowSums(all_local_xtWy))
-ytWy <- sum(all_local_ytWy)
-xtWx <- rowSums(all_local_xtWx,dims=2)
-xtWx_inverse <- solve(xtWx)
-n <- sum(all_local_n)
+xty <- as.matrix(rowSums(all_local_xty))
+yty <- sum(all_local_yty)
+xtx <- rowSums(all_local_xtx,dims=2)
+xtx_inverse <- solve(xtx)
 
 # Coefficient estimates in linear regression model-------------------------
 
 #Calculating estimates and Variance matrix
 
-beta <- xtWx_inverse%*%xtWy
-varbeta <- (1/(n-p-1))*drop((ytWy-((t(beta))%*%xtWy))) * xtWx_inverse 
+beta <- xtx_inverse%*%xty
+varbeta <- (1/(xtx[1,1]-p-1))*drop((yty-((t(beta))%*%xty))) * xtx_inverse
 
 #Calculating CI bounds, here based on 0.05
 
-upper <- beta + qt(p=.05/2, df=n-p-1, lower.tail=FALSE)*sqrt(diag(varbeta))
-lower <- beta - qt(p=.05/2, df=n-p-1, lower.tail=FALSE)*sqrt(diag(varbeta))
+upper <- beta + qt(p=.05/2, df=xtx[1,1]-p-1, lower.tail=FALSE)*sqrt(diag(varbeta))
+lower <- beta - qt(p=.05/2, df=xtx[1,1]-p-1, lower.tail=FALSE)*sqrt(diag(varbeta))
 
 # Summary and output ------------------------------------------------------
 ## Binding all the results together
-output <- setNames(data.frame(beta,lower,upper, row.names = c("Intercept",Pred_names$x)), c("Beta", "Lower", "Upper"))
+output <- setNames(data.frame(beta,upper,lower, row.names = c("Intercept",Pred_names$x)), c("Beta", "Upper", "Lower"))
 
 ## Producing the CSV file containing the final outputs
 write.csv(output, file="CoordNode_results_distributed_lin_reg.csv")
