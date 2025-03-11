@@ -44,7 +44,7 @@ if (manualwd != 1) {
 if (!file.exists(paste0("Times_", manualk ,"_output.csv"))) {
   source("Data_node_call_init_cox-reg.R")
   data_call_init_cox_reg(manualwd, manualk)
-  
+    
   # If a coordination node output file exists -- Start a new iteration
 } else {
   source("Data_node_call_iter_cox-reg.R")

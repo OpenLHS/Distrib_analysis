@@ -10,7 +10,7 @@ library(MASS)                # Functions for matrix manipulation (ginv)
 
 # If you want to skip the automated working directory setting, input 1 here. 
 # If you do so, make sure the working directory is set correctly manualy.
-manualwd <- -1 
+manualwd <- -1
 
 if (manualwd != 1) {
   
@@ -41,8 +41,7 @@ error_message <- NULL
 
 # Calculate number of data nodes from files fitting the pattern in the working directory
 # This assumes unique event times outputs have a name like Times_[[:digit:]]+_output.csv
-K=length(list.files(pattern="Times_[[:digit:]]+_output.csv")) 
-
+K=length(list.files(pattern="Times_[[:digit:]]+_output.csv"))
 
 # First step: initialization of times and betas
 if (!file.exists("Global_times_output.csv")) {
