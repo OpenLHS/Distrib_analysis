@@ -10,4 +10,3 @@
 
 - Categorical variables must be binarized before running this code. Binarized variables must use the values 0 or 1, where 1 indicates a success (or having the characteristic).
 
-- (optional) Weights are expected to be saved in a .csv file.
