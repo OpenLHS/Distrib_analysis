@@ -163,7 +163,7 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
     
     rownames(output) <- Predictor_names$x[-(1:2)]
     
-    # Wrt the output to a CSV file
+    # Write the output to a CSV file
     write.csv(output, file = paste0("Results_iter_", t, ".csv"), quote = FALSE, row.names = TRUE)
     
     
