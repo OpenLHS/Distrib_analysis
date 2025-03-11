@@ -1,8 +1,8 @@
 # Distrib_analysis
-Distributed analysis example using R
+Distributed analysis examples and code using R
 
 ## Background and details
-The origin and fundementals can be found in this paper : https://www.medrxiv.org/content/10.1101/2023.12.21.23300389v1
+The origin and fundamentals can be found in this paper : https://medinform.jmir.org/2025/1/e71249
 
 ## Contact information
 * Pr Félix Camirand-Lemyre : Felix.Camirand.Lemyre@usherbrooke.ca

@@ -42,6 +42,10 @@ data_lin_reg <- function(man_wd=-1,nodeid=-1) {
 	}
 	# Importing data ----------------------------------------------------------
 
+	# Handles missing values, if any
+	source("Data_node_core_missingvalues.R")
+	missing_value_handler(man_wd = manualwd, nodeid = k)
+	
 	## Expecting data file name like Data_node_1 where 1 is the variable k above
 	## Construct file name according to node data, assumes default parameters, like header and separator
 	## This assumes a file with name like Node[[:digit:]]+_data.csv

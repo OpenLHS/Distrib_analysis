@@ -1,0 +1,10 @@
+:::::: IMPORTANT NOTES BEFORE USING ::::::
+
+- You may need to duplicate or rename the file "Data_node_call_log_reg.R" to "Data_node_call_log_reg_k.R" where k is the node number. Otherwise, each node will need to change the value of "manualk" to their node number.
+
+- To start over, it is important to delete all "output" files.
+
+- The code currently works only with complete data (incomplete data with NA values might not make the code crash, but will cause calculation errors). 
+
+- The "Data Requirements.txt" file which should be read thoroughly before running any code.
+

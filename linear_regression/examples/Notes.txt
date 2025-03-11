@@ -18,4 +18,8 @@ The second example is based on the same dataset, but if you simply want to look 
 
 
 
+The third example is based on the same dataset, but has some missing values. It shows how the complete case analysis will be done and how original data will be kept.
+
+
+
 newborn_data_same_folder is yet another example.

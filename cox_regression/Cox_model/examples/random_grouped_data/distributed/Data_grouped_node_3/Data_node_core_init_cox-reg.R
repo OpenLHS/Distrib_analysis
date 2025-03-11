@@ -48,8 +48,9 @@ data_init_cox_reg <- function(man_wd,nodeid) {
   }
   
   # Makes sure the status variable is properly coded as 0s and 1s.
-  if(any(unique(node_data$status) %in% c(0,1))){
+  if(!all(unique(node_data$status) %in% c(0,1))){
     stop("The status variable contains values that are different from 0 and 1, which isn't allowed.")
+  }
   
   # Get event times, write in csv
   event_times <- unique(node_data$time[node_data$status == 1])

@@ -9,3 +9,5 @@
 - Each level for categorical variables is expected to have been possible to sample across all nodes. Otherwise, said level should either be removed or merged with another level.
 
 - Categorical variables must be binarized before running this code. Binarized variables must use the values 0 or 1, where 1 indicates a success (or having the characteristic).
+
+- (optional) Weights are expected to be saved in a .csv file.
