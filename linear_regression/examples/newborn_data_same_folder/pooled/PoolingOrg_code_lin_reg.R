@@ -6,7 +6,7 @@
 
 # Importing data ----------------------------------------------------------
 
-K <- 2 # Imput the number of nodes
+K <- 2 # Input the number of nodes
 
 # Extracts data and weights from the CSVs and creates R data frames
 pooled_data = data.frame()
