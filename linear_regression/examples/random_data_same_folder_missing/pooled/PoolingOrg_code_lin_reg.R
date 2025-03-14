@@ -6,16 +6,32 @@
 
 # Importing data ----------------------------------------------------------
 
-# Modify this according to the number of data sites
-# Make sure the path to the csv files are functional
-data1 <- read.csv("Data_node_1.csv")
-data2 <- read.csv("Data_node_2.csv")
+K <- 2 # Imput the number of nodes
 
-# Pool data
-pooled_data <- rbind(data1, data2)
+# Extracts data and weights from the CSVs and creates R data frames
+pooled_data = data.frame()
+weights_pooled = data.frame()
 
-# Remove missing values
-pooled_data <- pooled_data[complete.cases(pooled_data),]
+for(k in 1:K){
+  # Data
+  node_data <- read.csv(paste0("Data_node_", k, ".csv"))
+  
+  # Weights, if provided
+  if(file.exists(paste0("Weights_node_", k, ".csv"))){
+    node_weights <- read.csv(paste0("Weights_node_", k, ".csv"))
+  } else{
+    node_weights <- as.data.frame(rep(1, nrow(node_data)))
+  }
+  
+  pooled_data <- rbind(pooled_data, node_data)
+  weights_pooled <- rbind(weights_pooled, node_weights)
+}
+
+# Remove missing values, if any
+data_and_weights <- cbind(pooled_data, weights_pooled[,1])
+data_and_weights <- data_and_weights[complete.cases(data_and_weights),]
+pooled_data <- data_and_weights[, -(ncol(data_and_weights))]
+weights_pooled <- data_and_weights[, ncol(data_and_weights)]
 
 ## Code assumes a data frame where the first column is the outcome
 ## Creates a data frame with the outcome
@@ -28,31 +44,39 @@ intercept <- rep(1,nrow(pooled_data))
 ## joins the intercepts and the predictors
 intercept_pred <- data.frame(intercept,predictors)
 
-# Summary statistics for the coefficient estimates in linear regression model----
+## Code assumes the weights are in the first column
+## Weights will be used in a diagonal matrix
+W <- diag(weights_pooled)
 
-xtx <- t(as.matrix(intercept_pred))%*%as.matrix(intercept_pred)
-xtx_inverse <- solve(xtx)
-yty <- t(as.matrix(outcome))%*%as.matrix(outcome)
-xty <- t(as.matrix(intercept_pred))%*%as.matrix(outcome)
+# Summary statistics for the coefficient estimates in linear regression model---
 
-# Coefficient estimates in linear regression model-------------------------
+xtWx <- t(as.matrix(intercept_pred))%*%W%*%as.matrix(intercept_pred)
+xtWx_inverse <- solve(xtWx)
+ytWy <- t(as.matrix(outcome))%*%W%*%as.matrix(outcome)
+xtWy <- t(as.matrix(intercept_pred))%*%W%*%as.matrix(outcome)
+
+# Coefficient estimates in linear regression model------------------------------
 
 # Coefficients and Variance matrix
 
-beta <- xtx_inverse%*%xty
-varbeta <- (1/(nrow(pooled_data)-ncol(intercept_pred)))*drop((yty-((t(beta))%*%xty))) * xtx_inverse
+beta <- xtWx_inverse%*%xtWy
+varbeta <- (1/(nrow(pooled_data)-ncol(intercept_pred)))* as.numeric((ytWy - t(beta)%*%xtWy)) * xtWx_inverse
 
 # Confidence interval with alpha=0.05
 
 upper <- beta + qt(p=.05/2, df=nrow(pooled_data)-ncol(intercept_pred), lower.tail=FALSE)*sqrt(diag(varbeta))
 lower <- beta - qt(p=.05/2, df=nrow(pooled_data)-ncol(intercept_pred), lower.tail=FALSE)*sqrt(diag(varbeta))
 
-# Summary and outputs ----------------------------------------------------
+# Summary and outputs ----------------------------------------------------------
 
-output <- setNames(data.frame(beta,upper,lower, row.names = c("Intercept",paste0("Pred", c(1:ncol(predictors))))), c("Beta", "Upper", "Lower"))
+output <- setNames(data.frame(beta,lower,upper, row.names = c("Intercept",paste0("Pred", c(1:ncol(predictors))))), c("Beta", "Lower", "Upper"))
 
 ## Producing the CSV file containing the final outputs
 write.csv(output, file="PoolingOrg_results_centralised_lin_reg.csv")
+
+# Printing pooled models
+print("Pooled linear regression results:")
+print(output)
 
 ## Remove all environment variables. 
 ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)
