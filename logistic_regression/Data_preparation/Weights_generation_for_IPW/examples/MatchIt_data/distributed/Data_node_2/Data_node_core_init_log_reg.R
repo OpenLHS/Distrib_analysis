@@ -18,7 +18,7 @@ data_init_log_reg <- function(man_wd,nodeid,man_thresh) {
   
 if (manualwd != 1) {
     
-    # Set working directory automatically
+  # Set working directory automatically
   
   # this.path package is available
   if (require(this.path)) {
@@ -38,6 +38,10 @@ if (manualwd != 1) {
   print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
 }
   
+  # Handles missing values, if any
+  source("Data_node_core_missingvalues.R")
+  missing_value_handler(man_wd = manualwd, nodeid = k)
+  
   # Expecting data file name like Data_node_1.csv where 1 is the variable k above
   # Construct file name according to node data
   # Assumes default parameters, like header and separator
@@ -50,11 +54,6 @@ if (manualwd != 1) {
       node_weights <- rep(1, n)
   }
   
-  # Method isn't yet available for missing data
-  if(any(is.na.data.frame(node_data))){
-    stop("At least one NA was found in the data. \n The algorithm currently works only with complete data.")
-  }
-
   # Makes sure the outcome variable is properly coded as 0s and 1s.
   if(!all(unique(node_data$out1) %in% c(0,1))){
     stop("The outcome variable (out1) contains values that are different from 0 and 1, which isn't allowed.")

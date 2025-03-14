@@ -28,7 +28,7 @@ if (require(this.path)) {
 }
 
 # Pooling data for comparison with pooled model
-data_pooled <- rbind(read.csv(paste0("Data_node_1.csv")),
+pooled_data <- rbind(read.csv(paste0("Data_node_1.csv")),
                      read.csv(paste0("Data_node_2.csv")),
                      read.csv(paste0("Data_node_3.csv")))
 
@@ -36,18 +36,24 @@ data_pooled <- rbind(read.csv(paste0("Data_node_1.csv")),
 if (file.exists(paste0("Weights_pooled.csv"))) {
   weights_pooled <- read.csv("Weights_pooled.csv")[,1]
 } else {
-  weights_pooled <- rep(1, nrow(data_pooled))
+  weights_pooled <- rep(1, nrow(pooled_data))
 }
+
+# Remove missing values, if any
+data_and_weights <- cbind(pooled_data, weights_pooled[,1])
+data_and_weights <- data_and_weights[complete.cases(data_and_weights),]
+pooled_data <- data_and_weights[, -(ncol(data_and_weights))]
+weights_pooled <- data_and_weights[, ncol(data_and_weights)]
 
 # Fitting and printing pooled model
 print("Pooled logistic regression results:")
-fit <- glm(Tx ~ ., data=data_pooled, family="binomial", weights = weights_pooled)
+fit <- glm(Tx ~ ., data=pooled_data, family="binomial", weights = weights_pooled)
 print(summary(fit)$coefficients)
 print("Confidence intervals")
 print(confint.default(fit))
 
 # Predicted probabilities
-predprop <- predict(fit, data_pooled, type="response")
+predprop <- predict(fit, pooled_data, type="response")
 
 # Printing predicted probabilities after threshold
 predprop[predprop<manualthresh] = manualthresh
