@@ -4,6 +4,24 @@ This algorithm allows one to group data using the `time` variable of a Cox regre
 
 ## Table of contents
 
+1. [Repository structure](#repository-structure)
+
+	a. [List of examples](#list-of-examples)
+	
+	b. [Generic code](#generic-code)
+
+2. [Instructions to run the examples/algorithm classic estimation)](#instructions-to-run-the-examplesalgorithm-classic-estimation)
+
+	a. [Installing R and R Studio](#installing-r-and-r-studio)
+	
+	b. [Installing the required packages](#installing-the-required-packages)
+	
+	c. [Installing an example](#installing-an-example)
+	
+	d. [Executing the distributed code](#executing-the-distributed-code)
+	
+	e. [Executing the pooled solution code](#executing-the-pooled-solution-code)
+
 ## Repository structure
 
 - Examples  
