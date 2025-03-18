@@ -85,7 +85,7 @@ if (manualt >= 0) {
     for (fl in coordouputfileslist){
       outputfname <- fl
       underspositions <- unlist(gregexpr("_",outputfname))
-      lastundersf <- max(underspositions) #(!) N'est plus necessaire
+      lastundersf <- max(underspositions) 
       beforelastundersf <- underspositions[length(underspositions)-1]
       beforebeforelastundersf <- underspositions[length(underspositions)-2]
       iterfl <- strtoi(substring(outputfname,beforebeforelastundersf+1,beforelastundersf-1)) 

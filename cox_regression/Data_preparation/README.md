@@ -1,5 +1,37 @@
 # Data preparation
 
+This algorithm allows one to group data using the `time` variable of a Cox regression.
+
+## Table of contents
+
+1. [Repository structure](#repository-structure)
+
+	a. [List of examples](#list-of-examples)
+	
+	b. [Generic code](#generic-code)
+
+2. [Instructions to run the examples/algorithm classic estimation)](#instructions-to-run-the-examplesalgorithm-classic-estimation)
+
+	a. [Installing R and R Studio](#installing-r-and-r-studio)
+	
+	b. [Installing the required packages](#installing-the-required-packages)
+	
+	c. [Installing an example](#installing-an-example)
+	
+	d. [Executing the distributed code](#executing-the-distributed-code)
+	
+	e. [Executing the pooled solution code](#executing-the-pooled-solution-code)
+	
+3. [Expected outputs](#expected-outputs)
+
+	a. [Data node side](#data-node-side)
+	
+	b. [Coordination node side](#coordination-node-side)
+
+4. [License](#license-httpscreativecommonsorglicensesby-nc-sa40)
+
+5. [Copyright](#copyright-griis--université-de-sherbrooke)
+
 ## Repository structure
 
 - Examples  
@@ -8,12 +40,12 @@ The examples folder contains a few examples. Each example folder is self-contain
 - Generic_code  
 The generic_code folder contains examplar `R` code files pertaining to the distributed approach and its pooled comparator. Please read the code and its comments in the `R` file as files may require edition before being used.
 
-#### List of examples
+### List of examples
 
 - Average  
 Orders the data by time and averages the time values across a specified number of individuals.
 
-#### Generic code
+### Generic code
 
 The files in this folder can be used to support an example of aggregating the times of a dataset.  
 Assuming a data structure similar to the data nodes `.csv` files in the example folder, this code can be used to execute a data node operation or a coordination node operation for a Cox model.
@@ -22,27 +54,27 @@ Assuming a data structure similar to the data nodes `.csv` files in the example 
 
 There are many ways to run `R` code. The proposed instructions here are focusing on using a graphical interface.
 
-#### INSTALLING R and R STUDIO
+### Installing R and R Studion
 
 1. Go to the page : https://posit.co/download/rstudio-desktop/ and follow the instructions for your operating system
 
-#### INSTALLING THE REQUIRED PACKAGES
+### Installing the required packages
 
 The algorithm currently requires the use of package(s) not present in the base installation. R should prompt you to download the packages automatically.
 
 - [dplyr](https://cran.r-project.org/web/packages/dplyr/index.html)
 
-Furthermore, the examples will be easier to explore and adapt/change if the package `this.path` is also available. Yet this is NOT required and you can safely ignore any warning about this is if you want to use the algorithm "as-is".
+Furthermore, the examples will be easier to explore and adapt/change if the package `this.path` is also available. Yet this is NOT required and you can safely ignore any warning about this is if you want to use the algorithm "as-is". Should you choose not to use this package, you will need to manually set your working sirectory in your `R` instance.
 
 - [this.path](https://cran.r-project.org/package=this.path)
 
 If you work in an isolated environment, you might need to download them manually at the adress above and install them for your `RStudio` instance. While describing the process here is out of scope, a web search will yield resources like https://riptutorial.com/r/example/5556/install-package-from-local-source that can be helpful.
 
-#### INSTALLING AN EXAMPLE
+### Installing an example
 
 1. Unpack one of the example folders on one of your drives.
 
-#### EXECUTING THE CODE
+### Executing the code 
 
 ***Make sure `R studio` is not currently running and close it if it is.***  
 ***If you are not able to automatically set your working directory, manually set the variable `manualwd = 1` in `Data_node_call_cox-reg_k.R` and  `Coord_node_call_iter_cox-reg.R`.***
@@ -52,11 +84,13 @@ If you work in an isolated environment, you might need to download them manually
 
 ## Expected outputs
 
-#### Data node side
+### Data node side
 
-| Initialization | files... |
+| Step | Files created |
+| ----------- | ----------- | 
+| Data preparation | `Data_node_grouped_k.csv` |
 
-#### Coordination node side
+### Coordination node side
 
 The coordination node should not use this feature.
 
