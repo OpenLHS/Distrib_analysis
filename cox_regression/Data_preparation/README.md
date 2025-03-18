@@ -21,6 +21,16 @@ This algorithm allows one to group data using the `time` variable of a Cox regre
 	d. [Executing the distributed code](#executing-the-distributed-code)
 	
 	e. [Executing the pooled solution code](#executing-the-pooled-solution-code)
+	
+3. [Expected outputs](#expected-outputs)
+
+	a. [Data node side](#data-node-side)
+	
+	b. [Coordination node side](#coordination-node-side)
+
+4. [License](#license-httpscreativecommonsorglicensesby-nc-sa40)
+
+5. [Copyright](#copyright-griis--université-de-sherbrooke)
 
 ## Repository structure
 
