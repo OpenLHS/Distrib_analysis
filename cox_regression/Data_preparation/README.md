@@ -30,7 +30,7 @@ There are many ways to run `R` code. The proposed instructions here are focusing
 
 1. Go to the page : https://posit.co/download/rstudio-desktop/ and follow the instructions for your operating system
 
-### INSTALLING THE REQUIRED PACKAGES
+### Installing the required packages
 
 The algorithm currently requires the use of package(s) not present in the base installation. R should prompt you to download the packages automatically.
 
