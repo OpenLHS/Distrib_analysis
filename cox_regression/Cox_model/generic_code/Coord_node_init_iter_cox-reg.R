@@ -39,20 +39,36 @@ coord_init_iter_cox_reg <- function(man_wd=-1) {
 
   # Calculate number of data nodes from files fitting the pattern in the working directory
   # This assumes unique event times outputs have a name like Times_[[:digit:]]+_output.csv
-  K=length(list.files(pattern="Times_[[:digit:]]+_output.csv")) 
+  K <- length(list.files(pattern="Times_[[:digit:]]+_output.csv")) 
+  p <- 0
+  k <- 1
   
+  # Compares local settings to ensure all data nodes are 1) aligned and 2) expect the same kind of estimation
+  Settings <- read.csv(paste0("Local_Settings_", k, ".csv"))
+  Pred_names <- Settings[,1]
+  Robust <- Settings[1,2]
   
-  # Predictor verification
-  k=1
-  Pred_names <- read.csv(paste0("Predictor_names_" ,k, ".csv"))
   for(k in 2:K){
-    Same_names <- read.csv(paste0("Predictor_names_" ,k, ".csv"))
-      
-    if(!all(Pred_names[-(1:2),]==Same_names[-(1:2),])){
+    OtherSettings <- read.csv(paste0("Local_Settings_", k, ".csv"))
+    Same_names <- OtherSettings[,1]
+    Same_Robust <- OtherSettings[1,2]
+    
+    # Do all nodes use the same predictors?
+    if(!all(Pred_names==Same_names)){
       stop("Node data files seems to have different column structure which may yield wrong results. \n Make sure each node uses the same variable names and the same order in the data file before running this algorithm.")
-      }
+    }
+    # Do all nodes expect the same kind of estimation?
+    if(Robust!=Same_Robust){
+      stop("Node data files seems to use different values for the robust estimation flag.\n Make sure all nodes expect the same kind of estimation before running this algorithm.")
+    }
   }
-  write.csv(Pred_names, file = "Global_Predictor_names.csv", row.names = FALSE)
+
+  # Exporting global settings
+  length(Robust) <- length(Pred_names)
+  globalinfo <- cbind(Pred_names, Robust)
+  colnames(globalinfo)[1] <- "Predictor_names"
+  colnames(globalinfo)[2] <- "Robust_Flag"
+  write.csv(globalinfo, file="Global_Settings.csv", row.names = FALSE)
   
   # Time initialization -----------------------------------------------------
   # Read local times from all sites

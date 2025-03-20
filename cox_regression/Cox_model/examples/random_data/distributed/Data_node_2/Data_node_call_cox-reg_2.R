@@ -9,7 +9,7 @@ library("survival")          # Contains the core survival analysis routines
 
 # For "classic" variance estimation, set this flag to FALSE
 # For "robust" variance estimation, set this flag to TRUE
-RobustVarianceFlag <- TRUE
+RobustVarianceFlag <- FALSE
 
 # If you want to skip the automated working directory setting, input 1 here. 
 # If you do so, make sure the working directory is set correctly manualy.
