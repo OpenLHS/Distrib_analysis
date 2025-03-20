@@ -159,75 +159,80 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
     output <- cbind(beta, exp(beta), exp(-beta),  exp(beta - se), exp(beta + se), sqrt(var), p_vals)
     output <- format(output, digits = 6, nsmall = 6)
     colnames(output) <- c(" coef", " exp(coef)", " exp(-coef)", " lower .95", " upper .95", " se(coef)", " Pr(>|z|)")
-    Predictor_names <- read.csv("Global_Predictor_names.csv")
+    Predictor_names <- read.csv("Global_Settings.csv")[,1]
+    Robust <- read.csv("Global_Settings.csv")[1,2]
     
-    rownames(output) <- Predictor_names$x[-(1:2)]
+    rownames(output) <- Predictor_names[-(1:2)]
     
     # Write the output to a CSV file
     write.csv(output, file = paste0("Results_iter_", t, ".csv"), quote = FALSE, row.names = TRUE)
-    write.csv(fisher_info, file = paste0("Fisher_", t, ".csv"), quote = FALSE, row.names = FALSE)
+    if(Robust){
+      write.csv(fisher_info, file = paste0("Fisher_", t, ".csv"), quote = FALSE, row.names = FALSE)  
+    }
+    
     
     # Files and code for robust se -------------------------------------------
-    
-    # Iteration specific
-    if(t>1){
-      # Compute zbar ri (also known as \hat{a} in Collett)
-      zbarri <- sumWZqExpGlobal/do.call(cbind, replicate(nbBetas, sumWExpGlobal, simplify = FALSE))
-      
-      write.csv(sumWExpGlobal, file = paste0("sumWExpGlobal_output_", t-1, ".csv"), row.names = FALSE)
-      write.csv(as.data.frame(zbarri), file = paste0("zbarri_", t-1, ".csv"), quote = FALSE, row.names = FALSE)
-    }
-    
-    
-    if(t>2){ 
-      # Sum over sites
-      for(k in 1:K){
-        # zbar ri / sum(exp(b*z)): global 
-        x_invWExp_k <- read.csv(paste0("zbarri_inverseWExp_", k, "_output_", t-2, ".csv"))
-        if(k == 1){
-          x_invWexpGlobal <- matrix(0, nrow = nrow(x_invWExp_k), ncol = ncol(x_invWExp_k))
-        }
-        x_invWexpGlobal <- x_invWexpGlobal + x_invWExp_k
+    if(Robust){
+      # Iteration specific
+      if(t>1){
+        # Compute zbar ri (also known as \hat{a} in Collett)
+        zbarri <- sumWZqExpGlobal/do.call(cbind, replicate(nbBetas, sumWExpGlobal, simplify = FALSE))
         
-        # 1 / sum(exp(b*z)): global
-        invWExp_k <- read.csv(paste0("inverseWExp_", k, "_output_", t-2, ".csv"))
-        if(k == 1){
-          invWExpGlobal <- matrix(0, nrow = nrow(invWExp_k), ncol = ncol(invWExp_k))
+        write.csv(sumWExpGlobal, file = paste0("sumWExpGlobal_output_", t-1, ".csv"), row.names = FALSE)
+        write.csv(as.data.frame(zbarri), file = paste0("zbarri_", t-1, ".csv"), quote = FALSE, row.names = FALSE)
+      }
+      
+      
+      if(t>2){ 
+        # Sum over sites
+        for(k in 1:K){
+          # zbar ri / sum(exp(b*z)): global 
+          x_invWExp_k <- read.csv(paste0("zbarri_inverseWExp_", k, "_output_", t-2, ".csv"))
+          if(k == 1){
+            x_invWexpGlobal <- matrix(0, nrow = nrow(x_invWExp_k), ncol = ncol(x_invWExp_k))
+          }
+          x_invWexpGlobal <- x_invWexpGlobal + x_invWExp_k
+          
+          # 1 / sum(exp(b*z)): global
+          invWExp_k <- read.csv(paste0("inverseWExp_", k, "_output_", t-2, ".csv"))
+          if(k == 1){
+            invWExpGlobal <- matrix(0, nrow = nrow(invWExp_k), ncol = ncol(invWExp_k))
+          }
+          invWExpGlobal <- invWExpGlobal + invWExp_k
         }
-        invWExpGlobal <- invWExpGlobal + invWExp_k
+        
+        # Write csv
+        write.csv(x_invWexpGlobal, file = paste0("zbarri_inverseWExp_Global_output_", t-2, ".csv"), row.names = FALSE) 
+        write.csv(invWExpGlobal, file = paste0("inverseWExp_Global_output_", t-2, ".csv"), row.names = FALSE)
       }
       
-      # Write csv
-      write.csv(x_invWexpGlobal, file = paste0("zbarri_inverseWExp_Global_output_", t-2, ".csv"), row.names = FALSE) 
-      write.csv(invWExpGlobal, file = paste0("inverseWExp_Global_output_", t-2, ".csv"), row.names = FALSE)
-    }
-    
-    if(t>3){
-      # Compute Robust SE
-      RobustSE2 <- vector(mode = "numeric", length = nbBetas)
-      for(i in 1:K){
-        DDk <- as.vector(read.csv(paste0("DD", i, "_output_", t-3, ".csv"))[,1])
-        RobustSE2 <- RobustSE2 + DDk
+      if(t>3){
+        # Compute Robust SE
+        RobustSE2 <- vector(mode = "numeric", length = nbBetas)
+        for(i in 1:K){
+          DDk <- as.vector(read.csv(paste0("DD", i, "_output_", t-3, ".csv"))[,1])
+          RobustSE2 <- RobustSE2 + DDk
+        }
+   
+        RobustSE <- sqrt(RobustSE2)
+             
+        # Create output
+        oldBeta <- read.csv(paste0("Beta_", t-3, "_output.csv"))
+        Robustz <- abs(oldBeta/RobustSE)
+        RobustP <- 2*(1-pnorm(Robustz$x))
+        
+        alphaz <- abs(qnorm(alpha/2))
+        
+        # Exporting final results
+        output <- cbind(oldBeta, exp(oldBeta), exp(-oldBeta),  exp(oldBeta - RobustSE*alphaz), exp(oldBeta + RobustSE*alphaz), RobustSE, RobustP)
+        output <- format(output, digits = 6, nsmall = 6)
+        colnames(output) <- c(" coef", " exp(coef)", " exp(-coef)", " lower .95", " upper .95", " se(coef)", " Pr(>|z|)")
+        Predictor_names <- read.csv("Global_Settings.csv")[,1]
+        
+        rownames(output) <- Predictor_names[-(1:2)]
+        
+        write.csv(output, file = paste0("RobustResults_iter_", t-3, ".csv"))
       }
- 
-      RobustSE <- sqrt(RobustSE2)
-           
-      # Create output
-      oldBeta <- read.csv(paste0("Beta_", t-3, "_output.csv"))
-      Robustz <- abs(oldBeta/RobustSE)
-      RobustP <- 2*(1-pnorm(Robustz$x))
-      
-      alphaz <- abs(qnorm(alpha/2))
-      
-      # Exporting final results
-      output <- cbind(oldBeta, exp(oldBeta), exp(-oldBeta),  exp(oldBeta - RobustSE*alphaz), exp(oldBeta + RobustSE*alphaz), RobustSE, RobustP)
-      output <- format(output, digits = 6, nsmall = 6)
-      colnames(output) <- c(" coef", " exp(coef)", " exp(-coef)", " lower .95", " upper .95", " se(coef)", " Pr(>|z|)")
-      Predictor_names <- read.csv("Global_Predictor_names.csv")
-      
-      rownames(output) <- Predictor_names$x[-(1:2)]
-      
-      write.csv(output, file = paste0("RobustResults_iter_", t-3, ".csv"))
     }
     
     if (!is.null(error_message)) {
