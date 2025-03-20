@@ -7,11 +7,12 @@
 # Loading packages and setting up core variables --------------------------
 library("survival")
 
-data_call_iter_cox_reg <- function(man_wd=-1, man_nodeid=-1, man_t=-1) {
+data_call_iter_cox_reg <- function(man_wd=-1, man_nodeid=-1, man_t=-1, robflag=FALSE) {
   
   manualwd <- man_wd
   manualk <- man_nodeid
   manualt <- man_t 
+  Robust <- robflag
 
   if (manualwd != 1) {
     
@@ -77,7 +78,7 @@ data_call_iter_cox_reg <- function(man_wd=-1, man_nodeid=-1, man_t=-1) {
   # Verifying that a valid node number and sequence numbers could be allocated manually or automatically
   if (k >= 0 & t >= 0) {
     source("Data_node_core_iter_cox-reg.R")
-    data_iter_cox_reg(manualwd,k,t)
+    data_iter_cox_reg(manualwd,k,t,Robust)
   } else {
     stop("Node numbering was not set properly")
   }

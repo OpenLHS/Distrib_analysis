@@ -7,10 +7,11 @@
 # Loading packages and setting up core variables --------------------------
 library("survival")
 
-data_call_init_cox_reg <- function(man_wd=-1,man_nodeid=-1) {
+data_call_init_cox_reg <- function(man_wd=-1,man_nodeid=-1, robflag=FALSE) {
   
   manualwd <- man_wd
   manualk <- man_nodeid
+  Robust <- robflag
   
   if (manualwd != 1) {
     
@@ -64,7 +65,7 @@ data_call_init_cox_reg <- function(man_wd=-1,man_nodeid=-1) {
   # Verifying that a valid node number could be allocated manually or automatically
   if(k >= 0){
     source("Data_node_core_init_cox-reg.R")
-    data_init_cox_reg(manualwd, k)
+    data_init_cox_reg(manualwd, k, Robust)
   } else {
     stop("Node numbering was not set properly")
   }

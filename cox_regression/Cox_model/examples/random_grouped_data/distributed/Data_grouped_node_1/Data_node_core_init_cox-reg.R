@@ -7,10 +7,11 @@
 # Loading packages and setting up core variables --------------------------
 library("survival")
 
-data_init_cox_reg <- function(man_wd,nodeid) {
+data_init_cox_reg <- function(man_wd,nodeid, robflag) {
   
   manualwd <- man_wd
   k <- nodeid
+  Robust <- robflag
   
   if (manualwd != 1) {
     
@@ -146,15 +147,19 @@ data_init_cox_reg <- function(man_wd,nodeid) {
   res.cox <- coxph(formula, node_data, ties = "breslow", weights = node_weights)
   write.csv(coef(res.cox), file=paste0("Beta_local_",k,".csv"),row.names = FALSE,na="0")
   
-  # Write variables names
-  write.csv(colnames(node_data), file=paste0("Predictor_names_", k, ".csv"), row.names = FALSE)
-  
   # Get variance-covariance matrix
   Vk <- vcov(res.cox)
   write.csv(Vk, file=paste0("Vk_",k,".csv"),row.names = FALSE,na="")
   
   # Get number of data for beta initialization
   write.csv(nrow(node_data), file=paste0("N_node_",k,".csv"),row.names = FALSE,na="0")
+  
+  # Export local settings
+  length(Robust) <- length(colnames(node_data))
+  localinfo <- cbind(colnames(node_data), Robust)
+  colnames(localinfo)[1] <- "Predictor_names"
+  colnames(localinfo)[2] <- "Robust_Flag"
+  write.csv(localinfo, file=paste0("Local_Settings_", k, ".csv"), row.names = FALSE)
   
   ## Remove all environment variables. 
   ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)

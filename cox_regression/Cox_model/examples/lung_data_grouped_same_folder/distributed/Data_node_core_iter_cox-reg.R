@@ -7,11 +7,12 @@
 # Loading packages and setting up core variables --------------------------
 library("survival")
 
-data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
+data_iter_cox_reg <- function(man_wd, nodeid, iterationseq, robflag) {
   
   manualwd <- man_wd
   k <- nodeid
-  t <- iterationseq 
+  t <- iterationseq
+  Robust <- robflag
   
   if (manualwd != 1) {
     
@@ -296,124 +297,125 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq) {
   write.csv(combined_matrix, file = paste0("sumWZqZrExp",k,"_output_", t+1,".csv"), row.names = FALSE)
   
   # Files and code for robust se -------------------------------------------
-  
-  # Function to find which risk set to use
-  find_Rik_index <- function(Individual, RiskSet, LastIndex = 1){
-    
-    Ind_Lost <- F
-    index <- LastIndex
-    for(ind in LastIndex:nrow(RiskSet)){
-      Ind_Lost <- !(Individual %in% RiskSet[ind,])
-      if(Ind_Lost){
-        break
-      }
-      index <- ind
-    }
-    
-    return(index)
-  }
-  
-  if(t>1){
-    # Create matrix that allows to switch between indiviaul row number and global row number
-    Ind_to_Global <- matrix(0, nrow = nrow(node_data), ncol = 2) 
-    
-    Index <- 1 
-    for(i in 1:nrow(Ind_to_Global)){
-      Index <- find_Rik_index(i, Rik, Index)
-      Ind_to_Global[i,] <- c(i, Index)
-    }
-    
-    # Read data produced by coord 
-    sumWExpGlobal <- read.csv(paste0("sumWExpGlobal_output_", t-1, ".csv"))
-    zbarri <- read.csv(paste0("zbarri_", t-1, ".csv"))
-    
-    sumInverseWexp <- matrix(0, nrow = nrow(sumWExpGlobal), ncol = ncol(sumWExpGlobal))
-    sumzbarrr_WExp <- matrix(0, nrow = nrow(sumWExpGlobal), ncol = ncol(zbarri))
-    
-    # Compute sum of individuals in rik' for each possible time: W/SUM[W*exp(b*z)] & W*zbar_rr/[W*exp(b*z)] 
-    for(i in 1:nrow(Rik_comp)){
+  if(Robust){
+    # Function to find which risk set to use
+    find_Rik_index <- function(Individual, RiskSet, LastIndex = 1){
       
-      # Find row number associated with individuals in rik'
-      individuals <- as.numeric(Rik_comp[i,])
-      individuals <- individuals[!is.na(individuals)]
-      
-      # Change line number for position in global time list
-      global_row <- Ind_to_Global[individuals,2]
-      
-      # W/[W*exp(b*z)]
-      sum_w_wexp <- 0
-      
-      # W*zbar_rr/[W*exp(b*z)]
-      sum_wzbarrr_wexp <- 0
-      
-      # Only enter if there are subjects in current set
-      if(length(global_row)>0)  {
-        sumWExp_Values <- matrix(0, nrow = length(global_row), ncol = 1)
-        sumWExp_Values <- sumWExpGlobal[global_row, 1] 
-        
-        weight_values <- matrix(0, nrow = length(global_row), ncol = 1)
-        weight_values <- node_weights[individuals] 
-        
-        inverse <- weight_values/sumWExp_Values 
-        sum_w_wexp <- sum(inverse)
-        
-        zbarrr_inverse  <- zbarri[global_row,]*inverse 
-        sum_wzbarrr_wexp <- colSums(zbarrr_inverse)
-        
+      Ind_Lost <- F
+      index <- LastIndex
+      for(ind in LastIndex:nrow(RiskSet)){
+        Ind_Lost <- !(Individual %in% RiskSet[ind,])
+        if(Ind_Lost){
+          break
+        }
+        index <- ind
       }
       
-      sumInverseWexp[i,] <- sum_w_wexp 
-      sumzbarrr_WExp[i,] <- sum_wzbarrr_wexp
+      return(index)
     }
     
-    # write in csv
-    write.csv(as.data.frame(sumInverseWexp), file = paste0("inverseWExp_", k, "_output_", t-1, ".csv"), row.names = F)
-    write.csv(as.data.frame(sumzbarrr_WExp), file = paste0("zbarri_inverseWExp_", k, "_output_", t-1, ".csv"), row.names = F)
+    if(t>1){
+      # Create matrix that allows to switch between indiviaul row number and global row number
+      Ind_to_Global <- matrix(0, nrow = nrow(node_data), ncol = 2) 
+      
+      Index <- 1 
+      for(i in 1:nrow(Ind_to_Global)){
+        Index <- find_Rik_index(i, Rik, Index)
+        Ind_to_Global[i,] <- c(i, Index)
+      }
+      
+      # Read data produced by coord 
+      sumWExpGlobal <- read.csv(paste0("sumWExpGlobal_output_", t-1, ".csv"))
+      zbarri <- read.csv(paste0("zbarri_", t-1, ".csv"))
+      
+      sumInverseWexp <- matrix(0, nrow = nrow(sumWExpGlobal), ncol = ncol(sumWExpGlobal))
+      sumzbarrr_WExp <- matrix(0, nrow = nrow(sumWExpGlobal), ncol = ncol(zbarri))
+      
+      # Compute sum of individuals in rik' for each possible time: W/SUM[W*exp(b*z)] & W*zbar_rr/[W*exp(b*z)] 
+      for(i in 1:nrow(Rik_comp)){
+        
+        # Find row number associated with individuals in rik'
+        individuals <- as.numeric(Rik_comp[i,])
+        individuals <- individuals[!is.na(individuals)]
+        
+        # Change line number for position in global time list
+        global_row <- Ind_to_Global[individuals,2]
+        
+        # W/[W*exp(b*z)]
+        sum_w_wexp <- 0
+        
+        # W*zbar_rr/[W*exp(b*z)]
+        sum_wzbarrr_wexp <- 0
+        
+        # Only enter if there are subjects in current set
+        if(length(global_row)>0)  {
+          sumWExp_Values <- matrix(0, nrow = length(global_row), ncol = 1)
+          sumWExp_Values <- sumWExpGlobal[global_row, 1] 
+          
+          weight_values <- matrix(0, nrow = length(global_row), ncol = 1)
+          weight_values <- node_weights[individuals] 
+          
+          inverse <- weight_values/sumWExp_Values 
+          sum_w_wexp <- sum(inverse)
+          
+          zbarrr_inverse  <- zbarri[global_row,]*inverse 
+          sum_wzbarrr_wexp <- colSums(zbarrr_inverse)
+          
+        }
+        
+        sumInverseWexp[i,] <- sum_w_wexp 
+        sumzbarrr_WExp[i,] <- sum_wzbarrr_wexp
+      }
+      
+      # write in csv
+      write.csv(as.data.frame(sumInverseWexp), file = paste0("inverseWExp_", k, "_output_", t-1, ".csv"), row.names = F)
+      write.csv(as.data.frame(sumzbarrr_WExp), file = paste0("zbarri_inverseWExp_", k, "_output_", t-1, ".csv"), row.names = F)
+      
+    }
     
-  }
+    if(t>2){
+      # Compute Schoenfeld Residuals (See Collett chapter 4 for formula)
+      sch_res <- matrix(0, nrow = nrow(node_data), ncol = nbBetas)
+      
+      Rik_index <- 1
+      for(i in 1:nrow(node_data)){
+        Rik_index <- find_Rik_index(i, Rik, Rik_index)
+        sch_res[i,] <- node_weights[i]*node_data$status[i]*(as.numeric(node_data[i,3:ncol(node_data)]) - as.numeric(zbarri[Rik_index,]))
+      }
+      
+      # Compute Score Residuals (See Collett chapter 4 for formula)
+      old_beta <- read.csv(paste0("Beta_", t-2, "_output.csv"))[,1]
+      z_matrix <- as.matrix(node_data[, 3:ncol(node_data)])
+      
+      # 2nd term
+      exp_oldb_z <- node_weights * exp(z_matrix%*%old_beta) 
+      mult_factor_zbar_exp <- read.csv(paste0("zbarri_inverseWExp_Global_output_", t-2, ".csv")) 
+      
+      # Expand factor
+      expanded_mult_factor_zbar_exp <- mult_factor_zbar_exp[Ind_to_Global[,2], ]
   
-  if(t>2){
-    # Compute Schoenfeld Residuals (See Collett chapter 4 for formula)
-    sch_res <- matrix(0, nrow = nrow(node_data), ncol = nbBetas)
-    
-    Rik_index <- 1
-    for(i in 1:nrow(node_data)){
-      Rik_index <- find_Rik_index(i, Rik, Rik_index)
-      sch_res[i,] <- node_weights[i]*node_data$status[i]*(as.numeric(node_data[i,3:ncol(node_data)]) - as.numeric(zbarri[Rik_index,]))
+      second_term <- exp_oldb_z*expanded_mult_factor_zbar_exp
+      
+      # 3rd term
+      mult_factor_1_exp <- read.csv(paste0("inverseWExp_Global_output_", t-2, ".csv"))
+      
+      # Expand factor 
+      expanded_mult_factor_1_exp <- mult_factor_1_exp[Ind_to_Global[,2], ]
+      third_term <- exp_oldb_z[,1] * z_matrix * expanded_mult_factor_1_exp 
+      
+      sco_res <- sch_res + second_term - third_term 
+      
+      # Load Fisher's info from coord
+      fisher_info <- read.csv(file = paste0("Fisher_", t-2, ".csv"))
+      
+      # Compute partial robust se (See Modeling Survival Data: Extending the Cox Model)
+      Dk <- as.matrix(sco_res)%*%as.matrix(fisher_info)
+      DDk <- t(Dk) %*% Dk
+      
+      # Write csv: Only the diagonal is sent to the Coord node
+      write.csv(diag(DDk), file = paste0("DD", k, "_output_", t-2, ".csv"), row.names = FALSE, na="")
+      
     }
-    
-    # Compute Score Residuals (See Collett chapter 4 for formula)
-    old_beta <- read.csv(paste0("Beta_", t-2, "_output.csv"))[,1]
-    z_matrix <- as.matrix(node_data[, 3:ncol(node_data)])
-    
-    # 2nd term
-    exp_oldb_z <- node_weights * exp(z_matrix%*%old_beta) 
-    mult_factor_zbar_exp <- read.csv(paste0("zbarri_inverseWExp_Global_output_", t-2, ".csv")) 
-    
-    # Expand factor
-    expanded_mult_factor_zbar_exp <- mult_factor_zbar_exp[Ind_to_Global[,2], ]
-
-    second_term <- exp_oldb_z*expanded_mult_factor_zbar_exp
-    
-    # 3rd term
-    mult_factor_1_exp <- read.csv(paste0("inverseWExp_Global_output_", t-2, ".csv"))
-    
-    # Expand factor 
-    expanded_mult_factor_1_exp <- mult_factor_1_exp[Ind_to_Global[,2], ]
-    third_term <- exp_oldb_z[,1] * z_matrix * expanded_mult_factor_1_exp 
-    
-    sco_res <- sch_res + second_term - third_term 
-    
-    # Load Fisher's info from coord
-    fisher_info <- read.csv(file = paste0("Fisher_", t-2, ".csv"))
-    
-    # Compute partial robust se (See Modeling Survival Data: Extending the Cox Model)
-    Dk <- as.matrix(sco_res)%*%as.matrix(fisher_info)
-    DDk <- t(Dk) %*% Dk
-    
-    # Write csv: Only the diagonal is sent to the Coord node
-    write.csv(diag(DDk), file = paste0("DD", k, "_output_", t-2, ".csv"), row.names = FALSE, na="")
-    
   }
   
   ## Remove all environment variables. 

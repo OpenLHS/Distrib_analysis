@@ -7,6 +7,10 @@
 # Loading packages and setting up core variables --------------------------
 library("survival")          # Contains the core survival analysis routines 
 
+# For "classic" variance estimation, set this flag to FALSE
+# For "robust" variance estimation, set this flag to TRUE
+RobustVarianceFlag <- FALSE
+
 # If you want to skip the automated working directory setting, input 1 here. 
 # If you do so, make sure the working directory is set correctly manualy.
 manualwd <- -1
@@ -43,12 +47,12 @@ if (manualwd != 1) {
 # Verifying if there is a coordination node output file present -- Otherwise initialize files
 if (!file.exists(paste0("Times_", manualk ,"_output.csv"))) {
   source("Data_node_call_init_cox-reg.R")
-  data_call_init_cox_reg(manualwd, manualk)
+  data_call_init_cox_reg(manualwd, manualk, RobustVarianceFlag)
   
   # If a coordination node output file exists -- Start a new iteration
 } else {
   source("Data_node_call_iter_cox-reg.R")
-  data_call_iter_cox_reg(manualwd, manualk, manualt)
+  data_call_iter_cox_reg(manualwd, manualk, manualt, RobustVarianceFlag)
 }
 
 ## Remove all environment variables. 
