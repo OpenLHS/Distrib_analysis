@@ -41,22 +41,18 @@ missing_value_handler <- function(man_wd=-1,nodeid=-1,expath="") {
   
   # Read data
   if(!file.exists(paste0(examplefilepath, "Data_node_grouped_", k ,".csv"))){
-    filehandle <- paste0(examplefilepath,"Data_node_")
-    node_data <- read.csv(paste0(filehandle, k, ".csv"))
+    filehandle <- paste0("Data_node_")
+    node_data <- read.csv(paste0(examplefilepath, filehandle, k, ".csv"))
   } else {
-    filehandle <- paste0(examplefilepath, "Data_node_grouped_")
-    node_data <- read.csv(paste0(filehandle, k, ".csv"))
+    filehandle <- paste0("Data_node_grouped_")
+    node_data <- read.csv(paste0(examplefilepath, filehandle, k, ".csv"))
   }
   
   # Verifying if weights are available. 
   n <- nrow(node_data)
-  Uniform_weights = TRUE
   source("Data_node_core_weights.R")
   weights_handler(man_wd = manualwd, nodeid = k, expath = examplefilepath, nbrow = n)
   node_weights <- read.csv(paste0(examplefilepath, "Weights_node_", k, ".csv"))
-  if(any(node_weights!=1)){
-    Uniform_weights = FALSE
-  }
   
   # Create a single dataset out of node_data et node_weights
   node_data_and_weights <- cbind(node_data, node_weights)
@@ -79,13 +75,12 @@ missing_value_handler <- function(man_wd=-1,nodeid=-1,expath="") {
     
     # Save old and new file for data
     write.csv(old_data, file = paste0(examplefilepath, "Backup_", filehandle, "Incomplete_", k, ".csv"), row.names = FALSE)
-    write.csv(new_node_data, file = paste0(filehandle, k, ".csv"), row.names = FALSE)
+    write.csv(new_node_data, file = paste0(examplefilepath, filehandle, k, ".csv"), row.names = FALSE)
     
-    # Save old and new file for weights, unless we have uniform weights
-    if(!Uniform_weights){
-      write.csv(old_weights, file = paste0(examplefilepath, "Backup_Weights_node_Incomplete_", k, ".csv"), row.names = FALSE)
-      write.csv(new_node_weights, file = paste0(examplefilepath, "Weights_node_", k, ".csv"), row.names = FALSE)  
-    }
+    # Save old and new file for weights
+    write.csv(old_weights, file = paste0(examplefilepath, "Backup_Weights_node_Incomplete_", k, ".csv"), row.names = FALSE)
+    write.csv(new_node_weights, file = paste0(examplefilepath, "Weights_node_", k, ".csv"), row.names = FALSE)  
+    
     
   }
   
