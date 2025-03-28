@@ -16,6 +16,7 @@ setwd(this.dir())
 source("../../../generic_code/example_handler/Data_node_call_lin-reg_ex.R")
 linear_regression_example_datanode_handler(nodeid = 1, expath = examplefilepath)
 linear_regression_example_datanode_handler(nodeid = 2, expath = examplefilepath)
+linear_regression_example_datanode_handler(nodeid = 3, expath = examplefilepath)
 
 # Run coordination node code
 setwd(this.dir())
