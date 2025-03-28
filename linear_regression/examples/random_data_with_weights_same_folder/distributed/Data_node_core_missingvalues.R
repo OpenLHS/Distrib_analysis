@@ -48,53 +48,11 @@ missing_value_handler <- function(man_wd=-1,nodeid=-1) {
   }
   
   # Verifying if weights are available. 
-  Uniform_weights <- FALSE
-  
-  # Lists all the weight files provided by the user. There should be either none or 1.
-  Userwlist <- list.files(pattern=paste0("Weights_node_", k, ".csv"))
-  nbUserwfiles <- length(Userwlist)
-  # Assumes there is at most one weight file provided by the user found
-  if (nbUserwfiles > 1){
-    stop("There is more than one IPW file in this folder, the weights cannot be automatically identified")
-  }
-  
-  # Lists all the IPW files conforming the the pattern below. There should be either none or 1.
-  IPWfilelist <- list.files(pattern=paste0("IPW_node_", k, "_iter_[[:digit:]]+.csv"))
-  nbIPWfiles <- length(IPWfilelist)
-  # Assumes there is at most one IPW file found
-  if (nbIPWfiles > 1) {
-    stop("There is more than one IPW file in this folder, the weights cannot be automatically identified")
-  } 
-  
-  # Number of files related to weights
-  nbWeightfiles <- nbUserwfiles + nbIPWfiles
-  
-  # Assumes there is at most one type of weight file found
-  if (nbWeightfiles > 1){
-    stop("There is nore than one type of weight files in this folder, the weights cannot be automatically identified.")
-  }
-  
-  # Find which weights should be used, if any.  
-  # First case checked is for weights provided by the user      
-  if (file.exists(paste0("Weights_node_", k, ".csv"))) { 
-    node_weights <- read.csv(paste0("Weights_node_", k, ".csv"))[,1]
-    
-    # Second case is for IPW/ITPW
-  } else if(length(IPWfilelist)>0) { 
-    filename <- IPWfilelist[[1]]
-    lastunders <- max(unlist(gregexpr("_",filename)))
-    lastdot <- max(unlist(gregexpr(".", filename, fixed = TRUE)))
-    autoiter <- strtoi(substring(filename,lastunders+1,lastdot-1))
-    
-    iter_weights <- autoiter
-    
-    node_weights <- read.csv(paste0("IPW_node_", k, "_iter_", iter_weights ,".csv"))$IPW
-    
-    # Last case is when no weights are provided. Uses uniform weights
-  } else { 
-    n <- nrow(node_data)
-    node_weights <- rep(1, n)
-    Uniform_weights <- TRUE
+  Uniform_weights = TRUE
+  source("Data_node_core_loadweights.R")
+  node_weights <- load_weights_handler(man_wd = manualwd, nodeid = k)
+  if(any(node_weights!=1)){
+    Uniform_weights = FALSE
   }
   
   # Create a single dataset out of node_data et node_weights
