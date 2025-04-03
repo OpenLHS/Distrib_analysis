@@ -44,12 +44,12 @@ coord_init_iter_cox_reg <- function(man_wd=-1) {
   k <- 1
   
   # Compares local settings to ensure all data nodes are 1) aligned and 2) expect the same kind of estimation
-  Settings <- read.csv(paste0("Local_Settings_", k, ".csv"))
+  Settings <- read.csv(file = paste0("Local_Settings_", k, ".csv"), stringsAsFactors = FALSE)
   Pred_names <- Settings[,1]
   Robust <- Settings[1,2]
   
   for(k in 2:K){
-    OtherSettings <- read.csv(paste0("Local_Settings_", k, ".csv"))
+    OtherSettings <- read.csv(file = paste0("Local_Settings_", k, ".csv"), stringsAsFactors = FALSE)
     Same_names <- OtherSettings[,1]
     Same_Robust <- OtherSettings[1,2]
     
