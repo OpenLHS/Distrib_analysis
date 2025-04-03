@@ -159,8 +159,8 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1){
     output <- cbind(beta, exp(beta), exp(-beta),  exp(beta - se), exp(beta + se), sqrt(var), p_vals)
     output <- format(output, digits = 6, nsmall = 6)
     colnames(output) <- c(" coef", " exp(coef)", " exp(-coef)", " lower .95", " upper .95", " se(coef)", " Pr(>|z|)")
-    Predictor_names <- read.csv("Global_Settings.csv")[,1]
-    Robust <- read.csv("Global_Settings.csv")[1,2]
+    Predictor_names <- read.csv(file = "Global_Settings.csv", stringsAsFactors = FALSE)[,1]
+    Robust <- read.csv(file = "Global_Settings.csv", stringsAsFactors = FALSE)[1,2]
     
     rownames(output) <- Predictor_names[-(1:2)]
     
