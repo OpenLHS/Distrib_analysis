@@ -180,9 +180,9 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq, robflag) {
   
   # Read data needed to compute next value of betak
   beta <-  read.csv(paste0("Beta_", t, "_output.csv"))
-  Rik <- read.csv(paste0("Rik", k, ".csv"), header = FALSE, blank.lines.skip = FALSE)
+  Rik <- read.csv(paste0("Rik", k, ".csv"), header = FALSE, blank.lines.skip = FALSE, stringsAsFactors = FALSE)
   Rik <- Rik[-1, ]
-  Rik_comp <- read.csv(paste0("Rik_comp", k, ".csv"), header = FALSE, blank.lines.skip = FALSE)
+  Rik_comp <- read.csv(paste0("Rik_comp", k, ".csv"), header = FALSE, blank.lines.skip = FALSE, stringsAsFactors = FALSE)
   Rik_comp <- Rik_comp[-1, ]
   
   # Verifying if weights are available. 
