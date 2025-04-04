@@ -7,11 +7,12 @@
 # Loading packages and setting up core variables --------------------------
 library("survival")
 
-data_init_cox_reg <- function(man_wd,nodeid, robflag) {
+data_init_cox_reg <- function(man_wd, nodeid, robflag, expath) {
   
   manualwd <- man_wd
   k <- nodeid
   Robust <- robflag
+  examplefilepath <- expath
   
   if (manualwd != 1) {
     
@@ -37,66 +38,28 @@ data_init_cox_reg <- function(man_wd,nodeid, robflag) {
   
   # Handles missing values, if any
   source("Data_node_core_missingvalues.R")
-  missing_value_handler(man_wd = manualwd, nodeid = k)
+  missing_value_handler(man_wd = manualwd, nodeid = k, expath = examplefilepath)
   
   # Read data
-  if(!file.exists(paste0("Data_node_grouped_", k ,".csv"))){
+  if(!file.exists(paste0(examplefilepath, "Data_node_grouped_", k ,".csv"))){
     warning("Attempt to find a file with grouped data failed and thus this will use ungrouped data. Be aware that this algorithm is based on WebDisco which is deemed non-confidential for ungrouped data.")
     filehandle <- paste0("Data_node_")
-    node_data <- read.csv(paste0(filehandle, k, ".csv"))
+    node_data <- read.csv(paste0(examplefilepath, filehandle, k, ".csv"))
   } else {
     filehandle <- paste0("Data_node_grouped_")
-    node_data <- read.csv(paste0(filehandle, k, ".csv"))
+    node_data <- read.csv(paste0(examplefilepath, filehandle, k, ".csv"))
   }
+  
+  # Compute n
+  n = nrow(node_data)
   
   # Verifying if weights are available. 
-  Uniform_weights <- FALSE
-  
-  # Lists all the weight files provided by the user. There should be either none or 1.
-  Userwlist <- list.files(pattern=paste0("Weights_node_", k, ".csv"))
-  nbUserwfiles <- length(Userwlist)
-  # Assumes there is at most one weight file provided by the user found
-  if (nbUserwfiles > 1){
-    stop("There is more than one IPW file in this folder, the weights cannot be automatically identified")
-  }
-  
-  # Lists all the IPW files conforming the the pattern below. There should be either none or 1.
-  IPWfilelist <- list.files(pattern=paste0("IPW_node_", k, "_iter_[[:digit:]]+.csv"))
-  nbIPWfiles <- length(IPWfilelist)
-  # Assumes there is at most one IPW file found
-  if (nbIPWfiles > 1) {
-    stop("There is more than one IPW file in this folder, the weights cannot be automatically identified")
-  } 
-  
-  # Number of files related to weights
-  nbWeightfiles <- nbUserwfiles + nbIPWfiles
-  
-  # Assumes there is at most one type of weight file found
-  if (nbWeightfiles > 1){
-    stop("There is nore than one type of weight files in this folder, the weights cannot be automatically identified.")
-  }
-  
-  # Find which weights should be used, if any.  
-  # First case checked is for weights provided by the user      
-  if (file.exists(paste0("Weights_node_", k, ".csv"))) { 
-    node_weights <- read.csv(paste0("Weights_node_", k, ".csv"))[,1]
-    
-    # Second case is for IPW/ITPW
-  } else if(length(IPWfilelist)>0) { 
-    filename <- IPWfilelist[[1]]
-    lastunders <- max(unlist(gregexpr("_",filename)))
-    lastdot <- max(unlist(gregexpr(".", filename, fixed = TRUE)))
-    autoiter <- strtoi(substring(filename,lastunders+1,lastdot-1))
-    
-    iter_weights <- autoiter
-    
-    node_weights <- read.csv(paste0("IPW_node_", k, "_iter_", iter_weights ,".csv"))$IPW
-    
-    # Last case is when no weights are provided. Uses uniform weights
-  } else { 
-    n <- nrow(node_data)
-    node_weights <- rep(1, n)
-    Uniform_weights <- TRUE
+  Uniform_weights <- TRUE
+  source("Data_node_core_weights.R") 
+  weights_handler(man_wd = manualwd, nodeid = k, expath = examplefilepath, nbrow = n)
+  node_weights <- read.csv(paste0(examplefilepath, "Weights_node_", k, ".csv"))[,1]
+  if(any(node_weights!=1)){
+    Uniform_weights <- FALSE
   }
   
   # Makes sure the data is ordered properly
@@ -116,13 +79,13 @@ data_init_cox_reg <- function(man_wd,nodeid, robflag) {
     
     # Save old and new file for weights, unless we have uniform weights
     if(!Uniform_weights){
-      write.csv(old_weights, file = paste0("Backup_Weights_node_Unordered_", k, ".csv"), row.names = FALSE)
-      write.csv(node_weights, file = paste0("Weights_node_", k, ".csv"), row.names = FALSE)  
+      write.csv(old_weights, file = paste0(examplefilepath, "Backup_Weights_node_Unordered_", k, ".csv"), row.names = FALSE)
+      write.csv(node_weights, file = paste0(examplefilepath, "Weights_node_", k, ".csv"), row.names = FALSE)  
     }
     
     # Save old and new file for data
-    write.csv(old_data, file = paste0("Backup_", filehandle, "Unordered_", k, ".csv"), row.names = FALSE)
-    write.csv(node_data, file = paste0(filehandle, k, ".csv"), row.names = FALSE)  
+    write.csv(old_data, file = paste0(examplefilepath, "Backup_", filehandle, "Unordered_", k, ".csv"), row.names = FALSE)
+    write.csv(node_data, file = paste0(examplefilepath, filehandle, k, ".csv"), row.names = FALSE)  
     
     # Transform weights as numeric object
     node_weights <- node_weights[,1]
@@ -136,7 +99,7 @@ data_init_cox_reg <- function(man_wd,nodeid, robflag) {
   
   # Get event times, write in csv
   event_times <- unique(node_data$time[node_data$status == 1])
-  write.csv(event_times, file=paste0("Times_",k,"_output.csv"),row.names = FALSE,na="")
+  write.csv(event_times, file=paste0(examplefilepath, "Times_",k,"_output.csv"),row.names = FALSE,na="")
   
   # Find number of Betas (covariates)
   nbBetas <- dim(node_data)[2]-2
@@ -145,21 +108,21 @@ data_init_cox_reg <- function(man_wd,nodeid, robflag) {
   column_indices <- (3:(nbBetas + 2))
   formula <- as.formula(paste("Surv(time, status) ~", paste(paste0("node_data[,", column_indices, "]"), collapse = " + ")))
   res.cox <- coxph(formula, node_data, ties = "breslow", weights = node_weights)
-  write.csv(coef(res.cox), file=paste0("Beta_local_",k,".csv"),row.names = FALSE,na="0")
+  write.csv(coef(res.cox), file=paste0(examplefilepath, "Beta_local_",k,".csv"),row.names = FALSE,na="0")
   
   # Get variance-covariance matrix
   Vk <- vcov(res.cox)
-  write.csv(Vk, file=paste0("Vk_",k,".csv"),row.names = FALSE,na="")
+  write.csv(Vk, file=paste0(examplefilepath, "Vk_",k,".csv"),row.names = FALSE,na="")
   
   # Get number of data for beta initialization
-  write.csv(nrow(node_data), file=paste0("N_node_",k,".csv"),row.names = FALSE,na="0")
+  write.csv(nrow(node_data), file=paste0(examplefilepath, "N_node_",k,".csv"),row.names = FALSE,na="0")
   
   # Export local settings
   length(Robust) <- length(colnames(node_data))
   localinfo <- cbind(colnames(node_data), Robust)
   colnames(localinfo)[1] <- "Predictor_names"
   colnames(localinfo)[2] <- "Robust_Flag"
-  write.csv(localinfo, file=paste0("Local_Settings_", k, ".csv"), row.names = FALSE)
+  write.csv(localinfo, file=paste0(examplefilepath, "Local_Settings_", k, ".csv"), row.names = FALSE)
   
   ## Remove all environment variables. 
   ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)
