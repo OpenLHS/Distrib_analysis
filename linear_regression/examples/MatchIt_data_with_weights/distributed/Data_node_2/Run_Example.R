@@ -12,7 +12,7 @@ setwd(this.dir())
 examplefilepath <- paste0(getwd(), "/")
 
 # Run data node code
-source("../../../../generic_code/example_handler/Data_node_call_lin-reg_ex.R")
+source("../../../example_handler/Data_node_call_lin-reg_ex.R")
 linear_regression_example_datanode_handler(nodeid = 2, expath = examplefilepath)
 
 ## Remove all environment variables. 

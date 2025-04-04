@@ -66,7 +66,7 @@ linear_regression_example_datanode_handler <- function(man_wd=-1, nodeid=-1, exp
   
   # Verifying that a valid node number could be allocated manually or automatically
   if (k >= 0) {
-    source("../Data_node_core_lin-reg.R")
+    source("../../generic_code/Data_node_core_lin-reg.R")
     data_lin_reg(manualwd,k,examplefilepath)
   } else {
     stop("Node numbering was not set properly")

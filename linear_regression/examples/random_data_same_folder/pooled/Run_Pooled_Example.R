@@ -16,7 +16,7 @@ examplefilepath <- paste0(getwd(), "/")
 
 # Run pooled code
 setwd(this.dir())
-source("../../../generic_code/example_handler/PoolingOrg_code_lin-reg_ex.R")
+source("../../example_handler/PoolingOrg_code_lin-reg_ex.R")
 linear_regression_example_pooled_handler(expath = examplefilepath, nnodes = K)
 
 ## Remove all environment variables. 
