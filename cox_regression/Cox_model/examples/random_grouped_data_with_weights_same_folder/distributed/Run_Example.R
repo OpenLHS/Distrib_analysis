@@ -11,7 +11,7 @@ nb_iter <- 8
 
 # For "classic" variance estimation, set this flag to FALSE
 # For "robust" variance estimation, set this flag to TRUE
-RobustVarianceFlag <- FALSE
+RobustVarianceFlag <- TRUE
 
 # No modifications should be required below this point
 ###################################################### 

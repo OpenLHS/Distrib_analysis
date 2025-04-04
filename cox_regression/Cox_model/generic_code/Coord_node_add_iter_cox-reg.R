@@ -229,7 +229,7 @@ coord_call_add_iter_cox_reg <- function(man_wd=-1, man_t=-1, expath=""){
         output <- cbind(oldBeta, exp(oldBeta), exp(-oldBeta),  exp(oldBeta - RobustSE*alphaz), exp(oldBeta + RobustSE*alphaz), RobustSE, RobustP)
         output <- format(output, digits = 6, nsmall = 6)
         colnames(output) <- c(" coef", " exp(coef)", " exp(-coef)", " lower .95", " upper .95", " se(coef)", " Pr(>|z|)")
-        Predictor_names <- read.csv(examplefilepath, "Global_Settings.csv")[,1]
+        Predictor_names <- read.csv(paste0(examplefilepath, "Global_Settings.csv"))[,1]
         
         rownames(output) <- Predictor_names[-(1:2)]
         
