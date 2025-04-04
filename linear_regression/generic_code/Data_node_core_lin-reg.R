@@ -10,10 +10,11 @@
 # This is required for the analysis to take place
 library(ks)
 
-data_lin_reg <- function(man_wd=-1,nodeid=-1) {
+data_lin_reg <- function(man_wd=-1,nodeid=-1,expath="") {
 	
 	manualwd <- man_wd
 	k <- nodeid
+	examplefilepath <- expath
 
 	if (k<0){
 		stop
@@ -44,65 +45,18 @@ data_lin_reg <- function(man_wd=-1,nodeid=-1) {
 
 	# Handles missing values, if any
 	source("Data_node_core_missingvalues.R")
-	missing_value_handler(man_wd = manualwd, nodeid = k)
+	missing_value_handler(man_wd = manualwd, nodeid = k, expath = examplefilepath)
 	
 	## Expecting data file name like Data_node_1 where 1 is the variable k above
 	## Construct file name according to node data, assumes default parameters, like header and separator
 	## This assumes a file with name like Node[[:digit:]]+_data.csv
-	node_data <- read.csv(paste0("Data_node_", k, ".csv"))
+	node_data <- read.csv(paste0(examplefilepath, "Data_node_", k, ".csv"))
 	n <- nrow(node_data)
 
 	# Verifying if weights are available. 
-	
-	# Lists all the weight files provided by the user. There should be either none or 1.
-	Userwlist <- list.files(pattern=paste0("Weights_node_", k, ".csv"))
-	nbUserwfiles <- length(Userwlist)
-	# Assumes there is at most one weight file provided by the user found
-	if (nbUserwfiles > 1){
-	  stop("There is more than one IPW file in this folder, the weights cannot be automatically identified")
-	}
-	
-	# Lists all the IPW files conforming the the pattern below. There should be either none or 1.
-	IPWfilelist <- list.files(pattern=paste0("IPW_node_", k, "_iter_[[:digit:]]+.csv"))
-	nbIPWfiles <- length(IPWfilelist)
-	# Assumes there is at most one IPW file found
-	if (nbIPWfiles > 1) {
-	  stop("There is more than one IPW file in this folder, the weights cannot be automatically identified")
-	} 
-	
-	# Number of files related to weights
-	nbWeightfiles <- nbUserwfiles + nbIPWfiles
-	
-	# Assumes there is at most one type of weight file found
-	if (nbWeightfiles > 1){
-	  stop("There is nore than one type of weight files in this folder, the weights cannot be automatically identified.")
-	}
-	
-	# Find which weights should be used, if any.  
-	# First case checked is for weights provided by the user      
-	if (file.exists(paste0("Weights_node_", k, ".csv"))) { 
-	  node_weights <- read.csv(paste0("Weights_node_", k, ".csv"))[,1]
-	  
-	  # Second case is for IPW/ITPW
-	} else if(length(IPWfilelist)>0) { 
-	  filename <- IPWfilelist[[1]]
-	  lastunders <- max(unlist(gregexpr("_",filename)))
-	  lastdot <- max(unlist(gregexpr(".", filename, fixed = T)))
-	  autoiter <- strtoi(substring(filename,lastunders+1,lastdot-1))
-	  
-	  iter_weights <- autoiter
-	  
-	  node_weights <- read.csv(paste0("IPW_node_", k, "_iter_", iter_weights ,".csv"))$IPW
-	  
-	  # Last case is when no weights are provided. Uses uniform weights
-	} else { 
-	  node_weights <- rep(1, n)
-	}
-	
-	# Method isn't yet available for missing data
-	if(any(is.na.data.frame(node_data))){
-	  stop("At least one NA was found in the data. \n The algorithm currently works only with complete data.")
-	}
+	source("Data_node_core_weights.R") 
+	weights_handler(man_wd = manualwd, nodeid = k, expath = examplefilepath, nbrow = n)
+	node_weights <- read.csv(paste0(examplefilepath, "Weights_node_", k, ".csv"))[,1]
 	
 	## Code assumes a data frame where the first column is the outcome
 	## Creates a data frame with the outcome
@@ -137,10 +91,10 @@ data_lin_reg <- function(man_wd=-1,nodeid=-1) {
 	outputs <- cbind(xtWx,ytWy,xtWy, n)
 
 	## Producing the CSV file containing the output that will be used by the coordinating node to calculate the final result
-	write.csv(outputs, file=paste0("Node",k,"_output.csv"),row.names = FALSE,na="")
+	write.csv(outputs, file=paste0(examplefilepath, "Node",k,"_output.csv"),row.names = FALSE,na="")
 
 	# Write variables names
-	write.csv(colnames(node_data)[-1], file=paste0("Predictor_names_", k, ".csv"), row.names = FALSE)
+	write.csv(colnames(node_data)[-1], file=paste0(examplefilepath, "Predictor_names_", k, ".csv"), row.names = FALSE)
 	
 	## Remove all environment variables. 
 	## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)
