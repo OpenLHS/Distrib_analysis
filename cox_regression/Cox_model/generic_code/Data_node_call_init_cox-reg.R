@@ -7,11 +7,12 @@
 # Loading packages and setting up core variables --------------------------
 library("survival")
 
-data_call_init_cox_reg <- function(man_wd=-1,man_nodeid=-1, robflag=FALSE) {
+data_call_init_cox_reg <- function(man_wd=-1,man_nodeid=-1, robflag=FALSE, expath="") {
   
   manualwd <- man_wd
   manualk <- man_nodeid
   Robust <- robflag
+  examplefilepath <- expath
   
   if (manualwd != 1) {
     
@@ -43,8 +44,8 @@ data_call_init_cox_reg <- function(man_wd=-1,man_nodeid=-1, robflag=FALSE) {
     # If there is no valid override number, there will be an attempt to extract the node number from the data file name
   } else {
     # List all the data files conforming one of the patterns below. There should be only 1
-    datafileslist <- list.files(pattern="Data_node_[[:digit:]]+.csv")
-    datafileslist <- append(datafileslist, list.files(pattern="Data_node_grouped_[[:digit:]]+.csv"))
+    datafileslist <- list.files(path = examplefilepath ,pattern="Data_node_[[:digit:]]+.csv")
+    datafileslist <- append(datafileslist, list.files(path = examplefilepath, pattern="Data_node_grouped_[[:digit:]]+.csv"))
     
     # Assuming there is only one data file found
     if (length(datafileslist) == 1) {
@@ -65,7 +66,7 @@ data_call_init_cox_reg <- function(man_wd=-1,man_nodeid=-1, robflag=FALSE) {
   # Verifying that a valid node number could be allocated manually or automatically
   if(k >= 0){
     source("Data_node_core_init_cox-reg.R")
-    data_init_cox_reg(manualwd, k, Robust)
+    data_init_cox_reg(manualwd, k, Robust, examplefilepath)
   } else {
     stop("Node numbering was not set properly")
   }

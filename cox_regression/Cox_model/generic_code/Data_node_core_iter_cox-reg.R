@@ -7,12 +7,13 @@
 # Loading packages and setting up core variables --------------------------
 library("survival")
 
-data_iter_cox_reg <- function(man_wd, nodeid, iterationseq, robflag) {
+data_iter_cox_reg <- function(man_wd, nodeid, iterationseq, robflag, expath) {
   
   manualwd <- man_wd
   k <- nodeid
   t <- iterationseq
   Robust <- robflag
+  examplefilepath <- expath
   
   if (manualwd != 1) {
     
@@ -37,60 +38,20 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq, robflag) {
   }
   
   # Read data
-  if(!file.exists(paste0("Data_node_grouped_", k ,".csv"))){
+  if(!file.exists(paste0(examplefilepath, "Data_node_grouped_", k ,".csv"))){
     warning("Attempt to find a file with grouped data failed and thus this will use ungrouped data. Be aware that this algorithm is based on WebDisco which is deemed non-confidential for ungrouped data.")
-    node_data <- read.csv(paste0("Data_node_", k, ".csv"))
+    node_data <- read.csv(paste0(examplefilepath, "Data_node_", k, ".csv"))
   } else {
-    node_data <- read.csv(paste0("Data_node_grouped_", k, ".csv"))
+    node_data <- read.csv(paste0(examplefilepath, "Data_node_grouped_", k, ".csv"))
   }
+  
+  # Compute n
+  n = nrow(node_data)
   
   # Verifying if weights are available. 
-  
-  # Lists all the weight files provided by the user. There should be either none or 1.
-  Userwlist <- list.files(pattern=paste0("Weights_node_", k, ".csv"))
-  nbUserwfiles <- length(Userwlist)
-  # Assumes there is at most one weight file provided by the user found
-  if (nbUserwfiles > 1){
-    stop("There is more than one IPW file in this folder, the weights cannot be automatically identified")
-  }
-  
-  # Lists all the IPW files conforming the the pattern below. There should be either none or 1.
-  IPWfilelist <- list.files(pattern=paste0("IPW_node_", k, "_iter_[[:digit:]]+.csv"))
-  nbIPWfiles <- length(IPWfilelist)
-  # Assumes there is at most one IPW file found
-  if (nbIPWfiles > 1) {
-    stop("There is more than one IPW file in this folder, the weights cannot be automatically identified")
-  } 
-  
-  # Number of files related to weights
-  nbWeightfiles <- nbUserwfiles + nbIPWfiles
-  
-  # Assumes there is at most one type of weight file found
-  if (nbWeightfiles > 1){
-    stop("There is nore than one type of weight files in this folder, the weights cannot be automatically identified.")
-  }
-  
-  # Find which weights should be used, if any.  
-  # First case checked is for weights provided by the user      
-  if (file.exists(paste0("Weights_node_", k, ".csv"))) { 
-    node_weights <- read.csv(paste0("Weights_node_", k, ".csv"))[,1]
-    
-    # Second case is for IPW/ITPW
-  } else if(length(IPWfilelist)>0) { 
-    filename <- IPWfilelist[[1]]
-    lastunders <- max(unlist(gregexpr("_",filename)))
-    lastdot <- max(unlist(gregexpr(".", filename, fixed = T)))
-    autoiter <- strtoi(substring(filename,lastunders+1,lastdot-1))
-    
-    iter_weights <- autoiter
-    
-    node_weights <- read.csv(paste0("IPW_node_", k, "_iter_", iter_weights ,".csv"))$IPW
-    
-    # Last case is when no weights are provided. Uses uniform weights
-  } else { 
-    n <- nrow(node_data)
-    node_weights <- rep(1, n)
-  }
+  source("Data_node_core_weights.R") 
+  weights_handler(man_wd = manualwd, nodeid = k, expath = examplefilepath, nbrow = n)
+  node_weights <- read.csv(paste0(examplefilepath, "Weights_node_", k, ".csv"))[,1]
   
   # Find number of Betas (covariates)
   nbBetas <- dim(node_data)[2]-2
@@ -99,7 +60,7 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq, robflag) {
   if(t==0){
     
     # Read data
-    Dlist <- read.csv("Global_times_output.csv")
+    Dlist <- read.csv(paste0(examplefilepath, "Global_times_output.csv"))
     Dlist <- Dlist$x
     
     # Dik: list containing the index sets of subjects with observed events at time i
@@ -169,68 +130,26 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq, robflag) {
     df3 <- as.data.frame(do.call(rbind, padded_rows))
     
     # Write
-    write.csv(df2, file=paste0("Rik",k,".csv"),row.names = FALSE,na="")
-    write.csv(df3, file=paste0("Rik_comp",k,".csv"),row.names = FALSE,na="")
-    write.csv(sumWZr, file=paste0("sumWZr",k,".csv"),row.names = FALSE,na="")
-    write.csv(Wprimek, file=paste0("Wprime",k,".csv"), row.names = FALSE, na="")
+    write.csv(df2, file=paste0(examplefilepath, "Rik",k,".csv"),row.names = FALSE,na="")
+    write.csv(df3, file=paste0(examplefilepath, "Rik_comp",k,".csv"),row.names = FALSE,na="")
+    write.csv(sumWZr, file=paste0(examplefilepath, "sumWZr",k,".csv"),row.names = FALSE,na="")
+    write.csv(Wprimek, file=paste0(examplefilepath, "Wprime",k,".csv"), row.names = FALSE, na="")
     
   } 
   
   # ------------------------- All iterations CODE STARTS HERE ------------------------
   
   # Read data needed to compute next value of betak
-  beta <-  read.csv(paste0("Beta_", t, "_output.csv"))
-  Rik <- read.csv(paste0("Rik", k, ".csv"), header = FALSE, blank.lines.skip = FALSE, stringsAsFactors = FALSE)
+  beta <-  read.csv(paste0(examplefilepath, "Beta_", t, "_output.csv"))
+  Rik <- read.csv(paste0(examplefilepath, "Rik", k, ".csv"), header = FALSE, blank.lines.skip = FALSE, stringsAsFactors=FALSE)
   Rik <- Rik[-1, ]
-  Rik_comp <- read.csv(paste0("Rik_comp", k, ".csv"), header = FALSE, blank.lines.skip = FALSE, stringsAsFactors = FALSE)
+  Rik_comp <- read.csv(paste0(examplefilepath, "Rik_comp", k, ".csv"), header = FALSE, blank.lines.skip = FALSE, stringsAsFactors=FALSE)
   Rik_comp <- Rik_comp[-1, ]
   
   # Verifying if weights are available. 
-  
-  # Lists all the weight files provided by the user. There should be either none or 1.
-  Userwlist <- list.files(pattern=paste0("Weights_node_", k, ".csv"))
-  nbUserwfiles <- length(Userwlist)
-  # Assumes there is at most one weight file provided by the user found
-  if (nbUserwfiles > 1){
-    stop("There is more than one IPW file in this folder, the weights cannot be automatically identified")
-  }
-  
-  # Lists all the IPW files conforming the the pattern below. There should be either none or 1.
-  IPWfilelist <- list.files(pattern=paste0("IPW_node_", k, "_iter_[[:digit:]]+.csv"))
-  nbIPWfiles <- length(IPWfilelist)
-  # Assumes there is at most one IPW file found
-  if (nbIPWfiles > 1) {
-    stop("There is more than one IPW file in this folder, the weights cannot be automatically identified")
-  } 
-  
-  # Number of files related to weights
-  nbWeightfiles <- nbUserwfiles + nbIPWfiles
-  
-  # Assumes there is at most one type of weight file found
-  if (nbWeightfiles > 1){
-    stop("There is nore than one type of weight files in this folder, the weights cannot be automatically identified.")
-  }
-  
-  # Find which weights should be used, if any.  
-  # First case checked is for weights provided by the user      
-  if (file.exists(paste0("Weights_node_", k, ".csv"))) { 
-    node_weights <- read.csv(paste0("Weights_node_", k, ".csv"))[,1]
-    
-    # Second case is for IPW/ITPW
-  } else if(length(IPWfilelist)>0) { 
-    filename <- IPWfilelist[[1]]
-    lastunders <- max(unlist(gregexpr("_",filename)))
-    lastdot <- max(unlist(gregexpr(".", filename, fixed = T)))
-    autoiter <- strtoi(substring(filename,lastunders+1,lastdot-1))
-    
-    iter_weights <- autoiter
-    
-    node_weights <- read.csv(paste0("IPW_node_", k, "_iter_", iter_weights ,".csv"))$IPW
-    
-    # Last case is when no weights are provided. Uses uniform weights
-  } else { 
-    node_weights <- rep(1, n)
-  }
+  source("Data_node_core_weights.R") 
+  weights_handler(man_wd = manualwd, nodeid = k, expath = examplefilepath, nbrow = n)
+  node_weights <- read.csv(paste0(examplefilepath, "Weights_node_", k, ".csv"))[,1]
   
   # Create the sumWExp, sumWZqExp and sumWZqZrExp matrix
   sumWExp <- numeric(nrow(Rik))
@@ -287,14 +206,14 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq, robflag) {
   }
   
   # Write in csv
-  write.csv(sumWExp, file=paste0("sumWExp",k,"_output_", t+1,".csv"),row.names = FALSE,na="")
-  write.csv(sumWZqExp, file=paste0("sumWZqExp",k,"_output_", t+1,".csv"),row.names = FALSE,na="")
+  write.csv(sumWExp, file=paste0(examplefilepath, "sumWExp",k,"_output_", t+1,".csv"),row.names = FALSE,na="")
+  write.csv(sumWZqExp, file=paste0(examplefilepath, "sumWZqExp",k,"_output_", t+1,".csv"),row.names = FALSE,na="")
   
   # Write in csv for 3D matrix (a bit more complex than 2d)
   list_of_matrices <- lapply(seq_len(dim(sumWZqZrExp)[3]), function(i) sumWZqZrExp[,,i])
   list_of_vectors <- lapply(list_of_matrices, as.vector)
   combined_matrix <- do.call(cbind, list_of_vectors)
-  write.csv(combined_matrix, file = paste0("sumWZqZrExp",k,"_output_", t+1,".csv"), row.names = FALSE)
+  write.csv(combined_matrix, file = paste0(examplefilepath, "sumWZqZrExp",k,"_output_", t+1,".csv"), row.names = FALSE)
   
   # Files and code for robust se -------------------------------------------
   if(Robust){
@@ -325,8 +244,8 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq, robflag) {
       }
       
       # Read data produced by coord 
-      sumWExpGlobal <- read.csv(paste0("sumWExpGlobal_output_", t-1, ".csv"))
-      zbarri <- read.csv(paste0("zbarri_", t-1, ".csv"))
+      sumWExpGlobal <- read.csv(paste0(examplefilepath, "sumWExpGlobal_output_", t-1, ".csv"))
+      zbarri <- read.csv(paste0(examplefilepath, "zbarri_", t-1, ".csv"))
       
       sumInverseWexp <- matrix(0, nrow = nrow(sumWExpGlobal), ncol = ncol(sumWExpGlobal))
       sumzbarrr_WExp <- matrix(0, nrow = nrow(sumWExpGlobal), ncol = ncol(zbarri))
@@ -368,8 +287,8 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq, robflag) {
       }
       
       # write in csv
-      write.csv(as.data.frame(sumInverseWexp), file = paste0("inverseWExp_", k, "_output_", t-1, ".csv"), row.names = F)
-      write.csv(as.data.frame(sumzbarrr_WExp), file = paste0("zbarri_inverseWExp_", k, "_output_", t-1, ".csv"), row.names = F)
+      write.csv(as.data.frame(sumInverseWexp), file = paste0(examplefilepath, "inverseWExp_", k, "_output_", t-1, ".csv"), row.names = F)
+      write.csv(as.data.frame(sumzbarrr_WExp), file = paste0(examplefilepath, "zbarri_inverseWExp_", k, "_output_", t-1, ".csv"), row.names = F)
       
     }
     
@@ -384,12 +303,12 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq, robflag) {
       }
       
       # Compute Score Residuals (See Collett chapter 4 for formula)
-      old_beta <- read.csv(paste0("Beta_", t-2, "_output.csv"))[,1]
+      old_beta <- read.csv(paste0(examplefilepath, "Beta_", t-2, "_output.csv"))[,1]
       z_matrix <- as.matrix(node_data[, 3:ncol(node_data)])
       
       # 2nd term
       exp_oldb_z <- node_weights * exp(z_matrix%*%old_beta) 
-      mult_factor_zbar_exp <- read.csv(paste0("zbarri_inverseWExp_Global_output_", t-2, ".csv")) 
+      mult_factor_zbar_exp <- read.csv(paste0(examplefilepath, "zbarri_inverseWExp_Global_output_", t-2, ".csv")) 
       
       # Expand factor
       expanded_mult_factor_zbar_exp <- mult_factor_zbar_exp[Ind_to_Global[,2], ]
@@ -397,7 +316,7 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq, robflag) {
       second_term <- exp_oldb_z*expanded_mult_factor_zbar_exp
       
       # 3rd term
-      mult_factor_1_exp <- read.csv(paste0("inverseWExp_Global_output_", t-2, ".csv"))
+      mult_factor_1_exp <- read.csv(paste0(examplefilepath, "inverseWExp_Global_output_", t-2, ".csv"))
       
       # Expand factor 
       expanded_mult_factor_1_exp <- mult_factor_1_exp[Ind_to_Global[,2], ]
@@ -406,14 +325,14 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq, robflag) {
       sco_res <- sch_res + second_term - third_term 
       
       # Load Fisher's info from coord
-      fisher_info <- read.csv(file = paste0("Fisher_", t-2, ".csv"))
+      fisher_info <- read.csv(file = paste0(examplefilepath, "Fisher_", t-2, ".csv"))
       
       # Compute partial robust se (See Modeling Survival Data: Extending the Cox Model)
       Dk <- as.matrix(sco_res)%*%as.matrix(fisher_info)
       DDk <- t(Dk) %*% Dk
       
       # Write csv: Only the diagonal is sent to the Coord node
-      write.csv(diag(DDk), file = paste0("DD", k, "_output_", t-2, ".csv"), row.names = FALSE, na="")
+      write.csv(diag(DDk), file = paste0(examplefilepath, "DD", k, "_output_", t-2, ".csv"), row.names = FALSE, na="")
       
     }
   }
