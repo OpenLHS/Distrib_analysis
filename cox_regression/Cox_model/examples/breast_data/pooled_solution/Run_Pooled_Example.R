@@ -25,7 +25,7 @@ examplefilepath <- paste0(getwd(), "/")
 
 # Run pooled code
 setwd(this.dir())
-source("../../../example_handler/PoolingOrg_code_cox-reg_ex.R")
+source("../../example_handler/PoolingOrg_code_cox-reg_ex.R")
 cox_regression_example_pooled_handler(Robust = RobustVarianceFlag, expath = examplefilepath, nnodes = K, nbetas = nbBetas)
 
 ## Remove all environment variables. 
