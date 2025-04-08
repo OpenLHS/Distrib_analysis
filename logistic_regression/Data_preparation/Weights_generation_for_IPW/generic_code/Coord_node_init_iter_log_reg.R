@@ -37,7 +37,7 @@ if (manualwd != 1) {
 K <- length(list.files(path=examplefilepath, pattern="Data_node_[[:digit:]]+_iter_0_W_output.csv"))
 p <- 0 
 k <- 1
-Settings <- read.csv(paste0(examplefilepath, "Local_Settings_" ,k, ".csv"))
+Settings <- read.csv(paste0(examplefilepath, "Local_Settings_" ,k, ".csv"), stringsAsFactors = FALSE)
 Pred_names <- Settings[,1]
 Threshold <- Settings[1,2]
 node_1 <- read.csv(paste0(examplefilepath, "Data_node_", k, "_iter_0_W_output.csv"))
@@ -46,7 +46,7 @@ n <- 0
 
 for (k in 1:K) { 
   node_k <- read.csv(paste0(examplefilepath, "Data_node_", k, "_iter_0_W_output.csv"))
-  OtherSettings <- read.csv(paste0(examplefilepath, "Local_Settings_" ,k, ".csv"))
+  OtherSettings <- read.csv(paste0(examplefilepath, "Local_Settings_" ,k, ".csv"), stringsAsFactors = FALSE)
   Same_names <- OtherSettings[,1]
   Same_Threshold <- OtherSettings[1,2]
   

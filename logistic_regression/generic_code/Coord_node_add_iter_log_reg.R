@@ -72,7 +72,7 @@ beta_new <- beta_old + solve(V_t, D_t)
 write.csv(data.frame(coefs=beta_new),
           file=paste0(examplefilepath, "Coord_node_iter_", t+1, "_primer.csv"), row.names=FALSE)
 
-Predictor_names <- read.csv(paste0(examplefilepath, "Global_Predictor_names.csv"))
+Predictor_names <- read.csv(paste0(examplefilepath, "Global_Predictor_names.csv"), stringsAsFactors = FALSE)
 
 # Calculating current round estimates if we have at least one round completed
 if (t>0) {

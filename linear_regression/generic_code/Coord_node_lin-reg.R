@@ -45,9 +45,9 @@ K=length(list.files(path=path, pattern="Node[[:digit:]]+_output.csv"))
 
 # Predictor verification
 k <- 1
-Pred_names <- read.csv(paste0(path, "Predictor_names_" ,k, ".csv"))
+Pred_names <- read.csv(paste0(path, "Predictor_names_" ,k, ".csv"), stringsAsFactors = FALSE)
 for(k in 2:K){
-  Same_names <- read.csv(paste0(path, "Predictor_names_" ,k, ".csv"))
+  Same_names <- read.csv(paste0(path, "Predictor_names_" ,k, ".csv"), stringsAsFactors = FALSE)
   
   if(!all(Pred_names==Same_names)){
     stop("Node data files seems to have different column structure which may yield wrong results. \n Make sure each node uses the same variable names and the same order in the data file before running this algorithm.")

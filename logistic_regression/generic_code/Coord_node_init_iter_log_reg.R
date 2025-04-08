@@ -37,14 +37,14 @@ if (manualwd != 1) {
 K <- length(list.files(path=examplefilepath, pattern="Data_node_[[:digit:]]+_iter_0_output.csv"))
 p <- 0 
 k <- 1
-Pred_names <- read.csv(paste0(examplefilepath, "Predictor_names_" ,k, ".csv"))
+Pred_names <- read.csv(paste0(examplefilepath, "Predictor_names_" ,k, ".csv"), stringsAsFactors = FALSE)
 node_1 <- read.csv(paste0(examplefilepath, "Data_node_", k, "_iter_0_output.csv"))
 beta_sa <- rep(0, nrow(node_1))
 n <- 0
 
 for (k in 1:K) { 
   node_k <- read.csv(paste0(examplefilepath, "Data_node_", k, "_iter_0_output.csv"))
-  Same_names <- read.csv(paste0(examplefilepath, "Predictor_names_" ,k, ".csv"))
+  Same_names <- read.csv(paste0(examplefilepath, "Predictor_names_" ,k, ".csv"), stringsAsFactors = FALSE)
   
   if(!all(Pred_names==Same_names)){
     stop("Node data files seems to have different column structure which may yield wrong results. \n Make sure each node uses the same variable names and the same order in the data file before running this algorithm.")
