@@ -34,6 +34,9 @@ if (manualwd != 1) {
   print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
 }
 
+# Once the working directory as been set, save it so we can pass it to other files
+path <- paste0(getwd(), "/")
+
 # Initialise error messages
 error_message <- NULL
 
@@ -41,25 +44,25 @@ error_message <- NULL
 
 # Calculate number of data nodes from files fitting the pattern in the working directory
 # This assumes unique event times outputs have a name like Times_[[:digit:]]+_output.csv
-K=length(list.files(pattern="Times_[[:digit:]]+_output.csv")) 
+K=length(list.files(path=path, pattern="Times_[[:digit:]]+_output.csv")) 
 
 
 # First step: initialization of times and betas
-if (!file.exists("Global_times_output.csv")) {
+if (!file.exists(paste0(path,"Global_times_output.csv"))) {
 
   source("Coord_node_init_iter_cox-reg.R")
-  coord_init_iter_cox_reg(manualwd)
+  coord_init_iter_cox_reg(manualwd, path)
   
 } else {
   
   # Find current iteration number
-  files <- list.files(pattern = "Beta_\\d+_output.csv")
+  files <- list.files(path=path, pattern = "Beta_\\d+_output.csv")
   indext <- as.numeric(gsub("Beta_(\\d+)_output.csv", "\\1", files))
   t <- max(indext, 0)  
   t <- t + 1
   
   source("Coord_node_add_iter_cox-reg.R")
-  coord_call_add_iter_cox_reg(manualwd, t)
+  coord_call_add_iter_cox_reg(manualwd, t, path)
     
 } 
 

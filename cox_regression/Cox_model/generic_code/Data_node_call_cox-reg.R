@@ -16,7 +16,7 @@ RobustVarianceFlag <- FALSE
 manualwd <- -1
 
 # If you want to override the node numbering based on filename, input 0 or a positive integer here
-manualk <- 2
+manualk <- -1
 manualt <- -1
 
 # No modifications should be required below this point
@@ -42,17 +42,20 @@ if (manualwd != 1) {
   }
 } else {
   print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
-}
+  }
+
+# Once the working directory as been set, save it so we can pass it to other files
+path <- paste0(getwd(), "/")
 
 # Verifying if there is a coordination node output file present -- Otherwise initialize files
-if (!file.exists(paste0("Times_", manualk ,"_output.csv"))) {
+if (!file.exists(paste0(path, "Times_", manualk ,"_output.csv"))) {
   source("Data_node_call_init_cox-reg.R")
-  data_call_init_cox_reg(manualwd, manualk, RobustVarianceFlag)
-  
+  data_call_init_cox_reg(manualwd, manualk, RobustVarianceFlag, path)
+    
   # If a coordination node output file exists -- Start a new iteration
 } else {
   source("Data_node_call_iter_cox-reg.R")
-  data_call_iter_cox_reg(manualwd, manualk, manualt, RobustVarianceFlag)
+  data_call_iter_cox_reg(manualwd, manualk, manualt, RobustVarianceFlag, path)
 }
 
 ## Remove all environment variables. 
