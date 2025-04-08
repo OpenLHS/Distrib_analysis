@@ -36,15 +36,18 @@ if (manualwd != 1) {
   print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
 }
 
+# Once the working directory as been set, save it so we can pass it to other files
+path <- paste0(getwd(), "/")
+
 # Calculate number of data nodes from files fiting the pattern in the working directory
 # This assumes intermediate data results with a name like Node[[:digit:]]+_output.csv
-K=length(list.files(pattern="Node[[:digit:]]+_output.csv"))
+K=length(list.files(path=path, pattern="Node[[:digit:]]+_output.csv"))
 
 # Predictor verification
 k <- 1
-Pred_names <- read.csv(paste0("Predictor_names_" ,k, ".csv"))
+Pred_names <- read.csv(paste0(path, "Predictor_names_" ,k, ".csv"))
 for(k in 2:K){
-  Same_names <- read.csv(paste0("Predictor_names_" ,k, ".csv"))
+  Same_names <- read.csv(paste0(path, "Predictor_names_" ,k, ".csv"))
   
   if(!all(Pred_names==Same_names)){
     stop("Node data files seems to have different column structure which may yield wrong results. \n Make sure each node uses the same variable names and the same order in the data file before running this algorithm.")
@@ -93,7 +96,7 @@ lower <- beta - qt(p=.05/2, df=n-p-1, lower.tail=FALSE)*sqrt(diag(varbeta))
 output <- setNames(data.frame(beta,lower,upper, row.names = c("Intercept",Pred_names$x)), c("Beta", "Lower", "Upper"))
 
 ## Producing the CSV file containing the final outputs
-write.csv(output, file="CoordNode_results_distributed_lin_reg.csv")
+write.csv(output, file=paste0(path, "CoordNode_results_distributed_lin_reg.csv"))
 
 ## Remove all environment variables. 
 ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)
