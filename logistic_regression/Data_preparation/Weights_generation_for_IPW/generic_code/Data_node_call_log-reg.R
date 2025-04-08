@@ -8,21 +8,29 @@
 # Currently, the automated node number allocation currently requires execution in R studio and rstudioapi package
 # https://cran.r-project.org/package=rstudioapi
 
-
 # If you want to skip the automated working directory setting, input 1 here. 
 # If you do so, make sure the working directory is set correctly manualy.
 manualwd <- -1
 
-# If you want to override the iteration numbering based on filename, input 0 or a positive integer here
+# If you want to override the node numbering based on filename, input 0 or a positive integer here
+manualk <- 1
 manualt <- -1
+
+# If you do not want to use a threshold for the probabilities estimated, input 0 here.
+# Threshold value should be between 0 and 0.5. See details in the instructions.
+manualthresh <- 0.01
 
 # No modifications should be required below this point
 ###########################
 
-if (manualwd != 1) {
-  
-  # Set working directory automatically
+if (manualthresh<0 | manualthresh>0.5){
+  stop("The threshold for propensity score must be between 0 and 0.5.")
+}
 
+if (manualwd != 1) {
+
+  # Set working directory automatically
+  
   # this.path package is available
   if (require(this.path)) {
     setwd(this.dir())
@@ -44,14 +52,14 @@ if (manualwd != 1) {
 # Once the working directory as been set, save it so we can pass it to other files
 path <- paste0(getwd(), "/")
   
-# Verifying if there is a coordination node output file present
-nbprimerfiles <- length(list.files(path=path, pattern="Coord_node_iter_[[:digit:]]+_primer.csv"))
+# Veryfiying if there is a coordination node output file present
+nbprimerfiles <- length(list.files(path=path, pattern="Coord_node_iter_[[:digit:]]+_W_primer.csv"))
 if (nbprimerfiles > 0) {
-  source("Coord_node_call_add_iter_log-reg.R")
-  coord_call_add_iter_log_reg(manualwd,manualt,path)
+  source("Data_node_call_iter_log-reg.R")
+  data_call_iter_log_reg(manualwd,manualk,manualt,path,manualthresh)
 } else {
-  source("Coord_node_init_iter_log_reg.R")
-  coord_init_iter_log_reg(manualwd,path)
+  source("Data_node_call_init_log_reg.R")
+  data_call_init_log_reg(manualwd,manualk,path,manualthresh)
   }
 
 ## Remove all environment variables. 

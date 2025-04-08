@@ -6,17 +6,17 @@
 
 # Loading packages and setting up core variables --------------------------
 
-data_init_log_reg <- function(man_wd,nodeid) {
+data_init_log_reg <- function(man_wd,nodeid,expath="") {
   
   manualwd <- man_wd 
-  
   k <- nodeid
+  examplefilepath <- expath
 
   # Importing data ----------------------------------------------------------
   
 if (manualwd != 1) {
     
-    # Set working directory automatically
+  # Set working directory automatically
   
   # this.path package is available
   if (require(this.path)) {
@@ -38,61 +38,19 @@ if (manualwd != 1) {
   
   # Handles missing values, if any
   source("Data_node_core_missingvalues.R")
-  missing_value_handler(man_wd = manualwd, nodeid = k)
+  missing_value_handler(man_wd = manualwd, nodeid = k, expath = examplefilepath)
   
   # Expecting data file name like Data_node_1.csv where 1 is the variable k above
   # Construct file name according to node data
   # Assumes default parameters, like header and separator
-  node_data <- read.csv(paste0("Data_node_", k, ".csv"))
+  node_data <- read.csv(paste0(examplefilepath, "Data_node_", k, ".csv"))
   n <- nrow(node_data)
   
   # Verifying if weights are available. 
+  source("Data_node_core_weights.R") 
+  weights_handler(man_wd = manualwd, nodeid = k, expath = examplefilepath, nbrow = n)
+  node_weights <- read.csv(paste0(examplefilepath, "Weights_node_", k, ".csv"))[,1]
   
-  # Lists all the weight files provided by the user. There should be either none or 1.
-  Userwlist <- list.files(pattern=paste0("Weights_node_", k, ".csv"))
-  nbUserwfiles <- length(Userwlist)
-  # Assumes there is at most one weight file provided by the user found
-  if (nbUserwfiles > 1){
-    stop("There is more than one IPW file in this folder, the weights cannot be automatically identified")
-  }
-  
-  # Lists all the IPW files conforming the the pattern below. There should be either none or 1.
-  IPWfilelist <- list.files(pattern=paste0("IPW_node_", k, "_iter_[[:digit:]]+.csv"))
-  nbIPWfiles <- length(IPWfilelist)
-  # Assumes there is at most one IPW file found
-  if (nbIPWfiles > 1) {
-    stop("There is more than one IPW file in this folder, the weights cannot be automatically identified")
-  } 
-  
-  # Number of files related to weights
-  nbWeightfiles <- nbUserwfiles + nbIPWfiles
-  
-  # Assumes there is at most one type of weight file found
-  if (nbWeightfiles > 1){
-    stop("There is nore than one type of weight files in this folder, the weights cannot be automatically identified.")
-  }
-  
-  # Find which weights should be used, if any.  
-  # First case checked is for weights provided by the user      
-  if (file.exists(paste0("Weights_node_", k, ".csv"))) { 
-    node_weights <- read.csv(paste0("Weights_node_", k, ".csv"))[,1]
-    
-    # Second case is for IPW/ITPW
-  } else if(length(IPWfilelist)>0) { 
-    filename <- IPWfilelist[[1]]
-    lastunders <- max(unlist(gregexpr("_",filename)))
-    lastdot <- max(unlist(gregexpr(".", filename, fixed = T)))
-    autoiter <- strtoi(substring(filename,lastunders+1,lastdot-1))
-  
-    iter_weights <- autoiter
-    
-    node_weights <- read.csv(paste0("IPW_node_", k, "_iter_", iter_weights ,".csv"))$IPW
-      
-    # Last case is when no weights are provided. Uses uniform weights
-  } else { 
-    node_weights <- rep(1, n)
-  }
-
   # Makes sure the outcome variable is properly coded as 0s and 1s.
   if(!all(unique(node_data$out1) %in% c(0,1))){
     stop("The outcome variable (out1) contains values that are different from 0 and 1, which isn't allowed.")
@@ -106,11 +64,11 @@ if (manualwd != 1) {
   
   length(n) <- length(coefs)
   write.csv(cbind(coefs, n),
-            file=paste0("Data_node_",k,"_iter_0_output.csv"),
+            file=paste0(examplefilepath,"Data_node_",k,"_iter_0_output.csv"),
             row.names=FALSE)
   
   # Write variables names
-  write.csv(colnames(node_data)[-1], file=paste0("Predictor_names_", k, ".csv"), row.names = FALSE)
+  write.csv(colnames(node_data)[-1], file=paste0(examplefilepath, "Predictor_names_", k, ".csv"), row.names = FALSE)
   
   ## Remove all environment variables. 
   ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)
