@@ -4,11 +4,12 @@
 ## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 ## Copyright: GRIIS / Université de Sherbrooke
 
-data_iter_log_reg <- function(man_wd,nodeid, iterationseq, man_thresh) {
+data_iter_log_reg <- function(man_wd,nodeid,iterationseq,expath="",man_thresh) {
 
 manualwd <- man_wd  
 k <- nodeid
 t <- iterationseq
+examplefilepath <- expath
 probthresh <- man_thresh
 
 # Logistic-regression-specific functions
@@ -52,17 +53,15 @@ if (manualwd != 1) {
   print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
 }
 
-node_data <- read.csv(paste0("Data_node_", k, ".csv"))
+node_data <- read.csv(paste0(examplefilepath, "Data_node_", k, ".csv"))
 n <- nrow(node_data)
 
-# Verifying if weights are available. If not, use values of 1s as uniform weights.
-if (file.exists(paste0("Weights_node_", k, ".csv"))) {
-  node_weights <- read.csv(paste0("Weights_node_", k, ".csv"))[,1]
-} else {
-  node_weights <- rep(1, n)
-}
+# Verifying if weights are available. 
+source("Data_node_core_weights.R") 
+weights_handler(man_wd = manualwd, nodeid = k, expath = examplefilepath, nbrow = n, IPW_Gen = TRUE)
+node_weights <- read.csv(paste0(examplefilepath, "Weights_node_", k, ".csv"))[,1]
 
-beta_t <- read.csv(paste0("Coord_node_iter_", t, "_W_primer.csv"))[,1]
+beta_t <- read.csv(paste0(examplefilepath, "Coord_node_iter_", t, "_W_primer.csv"))[,1]
 
 X_k <- as.matrix(cbind(1, node_data[,-1]))
 y_k <- node_data[,1]
@@ -81,7 +80,7 @@ colnames(output)[1] <- "gradient"
 colnames(output)[2] <- "hessian_intercept"
 colnames(output)[-c(1,2)] <- paste("hessian", colnames(output)[-c(1,2)], sep = "_")
 write.csv(output,
-          file=paste0("Data_node_", k, "_iter_", t, "_W_output.csv"), row.names=FALSE)
+          file=paste0(examplefilepath, "Data_node_", k, "_iter_", t, "_W_output.csv"), row.names=FALSE)
 
 # Computing & exporting weight predictions --------------------------------
 
@@ -98,7 +97,7 @@ colnames(Weights_output)[1] <- "IPW"
 colnames(Weights_output)[2] <- "Propensity_score"
 
 write.csv(Weights_output,
-          file=paste0("IPW_node_", k, "_iter_", t, ".csv"), row.names = FALSE)
+          file=paste0(examplefilepath, "IPW_node_", k, "_iter_", t, ".csv"), row.names = FALSE)
 
 ## Remove all environment variables. 
 ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)

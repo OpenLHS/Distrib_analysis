@@ -8,11 +8,12 @@
 # Currently, the automated node number allocation currently requires execution in R studio and rstudioapi package
 # https://cran.r-project.org/package=rstudioapi
 
-data_call_iter_log_reg <- function(man_wd=-1,man_nodeid=-1, man_iter=-1) {
+data_call_iter_log_reg <- function(man_wd=-1,man_nodeid=-1, man_iter=-1, expath="") {
 
 manualwd <- man_wd
 manualk <- man_nodeid
 manualt <- man_iter
+examplefilepath <- expath
 
 # No modifications should be required below this point
 ###########################
@@ -50,7 +51,7 @@ if (manualk >= 0) {
 } else {
   
   # List all the data files conforming the the pattern below. There should be only 1
-  datafileslist <- list.files(pattern="Data_node_[[:digit:]]+.csv")
+  datafileslist <- list.files(path=examplefilepath, pattern="Data_node_[[:digit:]]+.csv")
   
   # Assuming there is only one data file found
   if (length(datafileslist) == 1) {
@@ -76,7 +77,7 @@ if (manualt >= 0) {
 } else {
   
   # List all the data files conforming the the pattern below. There should be at least 1
-  coordouputfileslist <- list.files(pattern="Coord_node_iter_[[:digit:]]+_primer.csv")
+  coordouputfileslist <- list.files(path=examplefilepath, pattern="Coord_node_iter_[[:digit:]]+_primer.csv")
   # Assuming there is at least one file found
   if (length(coordouputfileslist) > 0) {
     
@@ -99,7 +100,7 @@ if (manualt >= 0) {
 # Verifying that a valid node number and sequence numbers could be allocated manually or automatically
 if (k >= 0 & t >= 0) {
   source("Data_node_core_iter_log-reg.R")
-  data_iter_log_reg(manualwd,k,t)
+  data_iter_log_reg(manualwd,k,t,examplefilepath)
 } else {
   stop("Node numbering was not set properly")
 }

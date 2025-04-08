@@ -8,9 +8,10 @@
 library("survival")          # Contains the core survival analysis routines
 library(MASS)                # Functions for matrix manipulation (ginv)
 
-coord_init_iter_cox_reg <- function(man_wd=-1) {
+coord_init_iter_cox_reg <- function(man_wd=-1, expath="") {
 
   manualwd <- man_wd
+  examplefilepath <- expath
   
   if (manualwd != 1) {
     
@@ -39,17 +40,17 @@ coord_init_iter_cox_reg <- function(man_wd=-1) {
 
   # Calculate number of data nodes from files fitting the pattern in the working directory
   # This assumes unique event times outputs have a name like Times_[[:digit:]]+_output.csv
-  K <- length(list.files(pattern="Times_[[:digit:]]+_output.csv")) 
+  K <- length(list.files(path=examplefilepath, pattern="Times_[[:digit:]]+_output.csv")) 
   p <- 0
   k <- 1
   
   # Compares local settings to ensure all data nodes are 1) aligned and 2) expect the same kind of estimation
-  Settings <- read.csv(file = paste0("Local_Settings_", k, ".csv"), stringsAsFactors = FALSE)
+  Settings <- read.csv(paste0(examplefilepath, "Local_Settings_", k, ".csv"), stringsAsFactors=FALSE)
   Pred_names <- Settings[,1]
   Robust <- Settings[1,2]
   
   for(k in 2:K){
-    OtherSettings <- read.csv(file = paste0("Local_Settings_", k, ".csv"), stringsAsFactors = FALSE)
+    OtherSettings <- read.csv(paste0(examplefilepath, "Local_Settings_", k, ".csv"), stringsAsFactors=FALSE)
     Same_names <- OtherSettings[,1]
     Same_Robust <- OtherSettings[1,2]
     
@@ -68,19 +69,19 @@ coord_init_iter_cox_reg <- function(man_wd=-1) {
   globalinfo <- cbind(Pred_names, Robust)
   colnames(globalinfo)[1] <- "Predictor_names"
   colnames(globalinfo)[2] <- "Robust_Flag"
-  write.csv(globalinfo, file="Global_Settings.csv", row.names = FALSE)
+  write.csv(globalinfo, file=paste0(examplefilepath, "Global_Settings.csv"), row.names = FALSE)
   
   # Time initialization -----------------------------------------------------
   # Read local times from all sites
   times_list <- list()
   for (k in 1:K) {
-    times_list[[k]] <- read.csv(paste0("Times_", k, "_output.csv"))
+    times_list[[k]] <- read.csv(paste0(examplefilepath, "Times_", k, "_output.csv"))
   }
   
   # Combine and get all unique event times
   combined_times <- do.call(c, lapply(times_list, function(df) unlist(df)))
   Times_list <- sort(unique(combined_times))
-  write.csv(Times_list, file="Global_times_output.csv", row.names = FALSE)
+  write.csv(Times_list, file=paste0(examplefilepath, "Global_times_output.csv"), row.names = FALSE)
   
   # Beta initialization -----------------------------------------------------
   # Here, we try the inverse variance method for beta initialization.
@@ -92,8 +93,8 @@ coord_init_iter_cox_reg <- function(man_wd=-1) {
     
     # Read matrices from files and calculate inverses
     for (k in 1:K) {
-      Bk_list[[k]] <- as.matrix(read.csv(paste0("Beta_local_", k, ".csv")))
-      Vk_list[[k]] <- as.matrix(read.csv(paste0("Vk_", k, ".csv")))
+      Bk_list[[k]] <- as.matrix(read.csv(paste0(examplefilepath, "Beta_local_", k, ".csv")))
+      Vk_list[[k]] <- as.matrix(read.csv(paste0(examplefilepath, "Vk_", k, ".csv")))
       Vk_inv_list[[k]] <- solve(Vk_list[[k]])
     }
     
@@ -108,20 +109,20 @@ coord_init_iter_cox_reg <- function(man_wd=-1) {
     }
     
     beta <- t(Vk_inv_Bk_sum) %*% solve(Vk_inv_sum)
-    write.csv(t(beta), file="Beta_0_output.csv", row.names = FALSE)
+    write.csv(t(beta), file=paste0(examplefilepath, "Beta_0_output.csv"), row.names = FALSE)
     
   }, error = function(e) {
     error_message <<- paste("Warning: Initial beta estimate done with simple averaging method, as an error occured trying the inverse variance weighted initial estimator.\n", e$message)
     message("Warning: Initial beta estimate done with simple averaging method, as an error occured trying the inverse variance weighted initial estimator.\n", e$message)
     
     # Find number of Betas (covariates) and makes sure this number is the same across nodes
-    nbBetas <- nrow(read.csv(paste0("Beta_local_1.csv")))
+    nbBetas <- nrow(read.csv(paste0(examplefilepath, "Beta_local_1.csv")))
     
     # Beta is a weighted sum of local betas depending on the number of individuals in the sites
     
     p <- 0
     for (k in 1:K) {
-      local_beta = as.matrix(read.csv(paste0("Beta_local_", k, ".csv")))
+      local_beta = as.matrix(read.csv(paste0(examplefilepath, "Beta_local_", k, ".csv")))
       q <- nrow(local_beta)
       if(p==0){
         p <- q
@@ -130,13 +131,13 @@ coord_init_iter_cox_reg <- function(man_wd=-1) {
       }
       else if (p != q)
         stop("Nodes files do not seem to contain the same number of predictors.")
-      local_subjects <- as.integer(read.csv(paste0("N_node_", k, ".csv")))
+      local_subjects <- as.integer(read.csv(paste0(examplefilepath, "N_node_", k, ".csv")))
       total_subjects <- total_subjects + local_subjects
       beta_sum <- beta_sum + local_subjects * local_beta
     }
     beta <- beta_sum/total_subjects
     
-    write.csv(beta, file="Beta_0_output.csv", row.names = FALSE)
+    write.csv(beta, file=paste0(examplefilepath, "Beta_0_output.csv"), row.names = FALSE)
   })
   
   if (!is.null(error_message)) {

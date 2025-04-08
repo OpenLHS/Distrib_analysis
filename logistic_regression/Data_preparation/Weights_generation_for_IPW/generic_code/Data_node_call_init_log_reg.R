@@ -8,10 +8,11 @@
 # Currently, the automated node number allocation currently requires execution in R studio and rstudioapi package
 # https://cran.r-project.org/package=rstudioapi
 
-data_call_init_log_reg <- function(man_wd=-1,man_nodeid=-1, man_thresh=-1) {
+data_call_init_log_reg <- function(man_wd=-1,man_nodeid=-1, expath="", man_thresh=-1) {
 
 manualwd <- man_wd  
 manualk <- man_nodeid
+examplefilepath <- expath
 probthresh <- man_thresh
 
 # No modifications should be required below this point
@@ -48,7 +49,7 @@ if (manualk >= 0) {
   } else {
     
     # List all the data files conforming the the pattern below. There should be only 1
-    datafileslist <- list.files(pattern="Data_node_[[:digit:]]+.csv")
+    datafileslist <- list.files(path=examplefilepath, pattern="Data_node_[[:digit:]]+.csv")
   
     # Assuming there is only one data file found
     if (length(datafileslist) == 1) {
@@ -69,7 +70,7 @@ if (manualk >= 0) {
 # Verifying that a valid node number could be allocated manually or automatically
 if (k >= 0) {
   source("Data_node_core_init_log_reg.R")
-  data_init_log_reg(manualwd,k,probthresh)
+  data_init_log_reg(manualwd,k,expath,probthresh)
 } else {
   stop("Node numbering was not set properly")
 }

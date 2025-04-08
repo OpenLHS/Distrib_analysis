@@ -40,15 +40,18 @@ if (manualwd != 1) {
 } else {
   print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
 }
-  
+ 
+# Once the working directory as been set, save it so we can pass it to other files
+path <- paste0(getwd(), "/")
+ 
 # Veryfiying if there is a coordination node output file present
-nbprimerfiles <- length(list.files(pattern="Coord_node_iter_[[:digit:]]+_primer.csv"))
+nbprimerfiles <- length(list.files(path=path, pattern="Coord_node_iter_[[:digit:]]+_primer.csv"))
 if (nbprimerfiles > 0) {
   source("Data_node_call_iter_log-reg.R")
-  data_call_iter_log_reg(manualwd,manualk,manualt)
+  data_call_iter_log_reg(manualwd,manualk,manualt,path)
 } else {
   source("Data_node_call_init_log_reg.R")
-  data_call_init_log_reg(manualwd,manualk)
+  data_call_init_log_reg(manualwd,manualk,path)
   }
 
 ## Remove all environment variables. 
