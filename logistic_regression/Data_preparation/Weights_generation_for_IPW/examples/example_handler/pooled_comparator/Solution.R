@@ -7,11 +7,10 @@
 # This assumes three data node files in the same folder named as below
 # The output is visible in RStudio console
 
-# If you do not want to use a threshold for the probabilities estimated, input 0 here.
-# Threshold value should be between 0 and 0.5. See details in the instructions.
-manualthresh <- 0.01
+K <- 3 # Input the number of nodes
 
 # Set working directory automatically
+
 # this.path package is available
 if (require(this.path)) {
   setwd(this.dir())
@@ -27,16 +26,23 @@ if (require(this.path)) {
   stop("The required conditions to automatically set the working directory are not met. See R file")
 }
 
-# Pooling data for comparison with pooled model
-pooled_data <- rbind(read.csv(paste0("Data_node_1.csv")),
-                     read.csv(paste0("Data_node_2.csv")),
-                     read.csv(paste0("Data_node_3.csv")))
+# Extracts data and weights from the CSVs and creates R data frames
+pooled_data = data.frame()
+weights_pooled = data.frame()
 
-# Verifying if weights are available. If not, use values of 1s as uniform weights.
-if (file.exists(paste0("Weights_pooled.csv"))) {
-  weights_pooled <- read.csv("Weights_pooled.csv")[,1]
-} else {
-  weights_pooled <- as.data.frame(rep(1, nrow(pooled_data)))
+for(k in 1:K){
+  # Data
+  node_data <- read.csv(paste0("Data_node_", k, ".csv"))
+  
+  # Weights, if provided
+  if(file.exists(paste0("Weights_node_", k, ".csv"))){
+    node_weights <- read.csv(paste0("Weights_node_", k, ".csv"))
+  } else{
+    node_weights <- as.data.frame(rep(1, nrow(node_data)))
+  }
+  
+  pooled_data <- rbind(pooled_data, node_data)
+  weights_pooled <- rbind(weights_pooled, node_weights)
 }
 
 # Remove missing values, if any
@@ -47,17 +53,7 @@ weights_pooled <- data_and_weights[, ncol(data_and_weights)]
 
 # Fitting and printing pooled model
 print("Pooled logistic regression results:")
-fit <- glm(Tx ~ ., data=pooled_data, family="binomial", weights = weights_pooled)
+fit <- glm(out1 ~ ., data=pooled_data, family="binomial", weights = weights_pooled)
 print(summary(fit)$coefficients)
 print("Confidence intervals")
 print(confint.default(fit))
-
-# Predicted probabilities
-predprop <- predict(fit, pooled_data, type="response")
-
-# Printing predicted probabilities after threshold
-predprop[predprop<manualthresh] = manualthresh
-predprop[predprop>(1-manualthresh)] = 1-manualthresh
-
-print("Propensity scores")
-print(predprop)

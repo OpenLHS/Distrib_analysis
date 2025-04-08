@@ -6,12 +6,11 @@
 
 # Loading packages and setting up core variables --------------------------
 
-data_init_log_reg <- function(man_wd,nodeid,man_thresh) {
+data_init_log_reg <- function(man_wd,nodeid,expath="",man_thresh) {
   
   manualwd <- man_wd 
-  
   k <- nodeid
-  
+  examplefilepath <- expath
   probthresh <- man_thresh
 
   # Importing data ----------------------------------------------------------
@@ -40,19 +39,18 @@ if (manualwd != 1) {
   
   # Handles missing values, if any
   source("Data_node_core_missingvalues.R")
-  missing_value_handler(man_wd = manualwd, nodeid = k)
+  missing_value_handler(man_wd = manualwd, nodeid = k, expath = examplefilepath)
   
   # Expecting data file name like Data_node_1.csv where 1 is the variable k above
   # Construct file name according to node data
   # Assumes default parameters, like header and separator
-  node_data <- read.csv(paste0("Data_node_", k, ".csv"))
+  node_data <- read.csv(paste0(examplefilepath, "Data_node_", k, ".csv"))
   n <- nrow(node_data)
-  # Verifying if weights are available. If not, use values of 1s as uniform weights.
-    if (file.exists(paste0("Weights_node_", k, ".csv"))) {
-      node_weights <- read.csv(paste0("Weights_node_", k, ".csv"))[,1]
-  } else {
-      node_weights <- rep(1, n)
-  }
+  
+  # Verifying if weights are available. 
+  source("Data_node_core_weights.R") 
+  weights_handler(man_wd = manualwd, nodeid = k, expath = examplefilepath, nbrow = n)
+  node_weights <- read.csv(paste0(examplefilepath, "Weights_node_", k, ".csv"))[,1]
   
   # Makes sure the outcome variable is properly coded as 0s and 1s.
   if(!all(unique(node_data$out1) %in% c(0,1))){
@@ -67,7 +65,7 @@ if (manualwd != 1) {
   
   length(n) <- length(coefs)
   write.csv(cbind(coefs, n),
-            file=paste0("Data_node_",k,"_iter_0_W_output.csv"),
+            file=paste0(examplefilepath,"Data_node_",k,"_iter_0_W_output.csv"),
             row.names=FALSE)
   
   # Export local settings
@@ -75,7 +73,7 @@ if (manualwd != 1) {
   localinfo <- cbind(colnames(node_data)[-1], probthresh)
   colnames(localinfo)[1] <- "Predictor_names"
   colnames(localinfo)[2] <- "Prob_threshold"
-  write.csv(localinfo, file=paste0("Local_Settings_", k, ".csv"), row.names = FALSE)
+  write.csv(localinfo, file=paste0(examplefilepath, "Local_Settings_", k, ".csv"), row.names = FALSE)
   
   ## Remove all environment variables. 
   ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)

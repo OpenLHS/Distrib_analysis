@@ -13,7 +13,7 @@
 manualwd <- -1
 
 # If you want to override the node numbering based on filename, input 0 or a positive integer here
-manualk <- 2
+manualk <- 1
 manualt <- -1
 
 # If you do not want to use a threshold for the probabilities estimated, input 0 here.
@@ -28,7 +28,7 @@ if (manualthresh<0 | manualthresh>0.5){
 }
 
 if (manualwd != 1) {
-  
+
   # Set working directory automatically
   
   # this.path package is available
@@ -49,15 +49,18 @@ if (manualwd != 1) {
   print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
 }
 
+# Once the working directory as been set, save it so we can pass it to other files
+path <- paste0(getwd(), "/")
+  
 # Veryfiying if there is a coordination node output file present
-nbprimerfiles <- length(list.files(pattern="Coord_node_iter_[[:digit:]]+_W_primer.csv"))
+nbprimerfiles <- length(list.files(path=path, pattern="Coord_node_iter_[[:digit:]]+_W_primer.csv"))
 if (nbprimerfiles > 0) {
   source("Data_node_call_iter_log-reg.R")
-  data_call_iter_log_reg(manualwd,manualk,manualt,manualthresh)
+  data_call_iter_log_reg(manualwd,manualk,manualt,path,manualthresh)
 } else {
   source("Data_node_call_init_log_reg.R")
-  data_call_init_log_reg(manualwd,manualk,manualthresh)
-}
+  data_call_init_log_reg(manualwd,manualk,path,manualthresh)
+  }
 
 ## Remove all environment variables. 
 ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)

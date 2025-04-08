@@ -36,7 +36,7 @@ pooled_data <- rbind(read.csv(paste0("Data_node_1.csv")),
 if (file.exists(paste0("Weights_pooled.csv"))) {
   weights_pooled <- read.csv("Weights_pooled.csv")[,1]
 } else {
-  weights_pooled <- rep(1, nrow(pooled_data))
+  weights_pooled <- as.data.frame(rep(1, nrow(pooled_data)))
 }
 
 # Remove missing values, if any
