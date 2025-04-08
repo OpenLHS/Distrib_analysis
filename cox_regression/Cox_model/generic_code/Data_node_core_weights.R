@@ -6,12 +6,13 @@
 
 # Loading packages and setting up core variables --------------------------
 
-weights_handler <- function(man_wd=-1,nodeid=-1,expath="", nbrow=-1) {
+weights_handler <- function(man_wd=-1,nodeid=-1,expath="", nbrow=-1, IPW_Gen=FALSE) {
   
   manualwd <- man_wd
   k <- nodeid
   examplefilepath <- expath
   n = nbrow
+  IPW_Generation = IPW_Gen
   
   if (k<0){
     stop
@@ -49,23 +50,29 @@ weights_handler <- function(man_wd=-1,nodeid=-1,expath="", nbrow=-1) {
   nbUserwfiles <- length(Userwlist)
   # Assumes there is at most one weight file provided by the user found
   if (nbUserwfiles > 1){
-    stop("There is more than one IPW file in this folder, the weights cannot be automatically identified")
+    stop("There is more than one Weight file in this folder, the weights cannot be automatically identified")
   }
   
-  # Lists all the IPW files conforming the the pattern below. There should be either none or 1.
-  IPWfilelist <- list.files(path=examplefilepath, pattern=paste0("IPW_node_", k, "_iter_[[:digit:]]+.csv"))
-  nbIPWfiles <- length(IPWfilelist)
-  # Assumes there is at most one IPW file found
-  if (nbIPWfiles > 1) {
-    stop("There is more than one IPW file in this folder, the weights cannot be automatically identified")
-  } 
-  
-  # Number of files related to weights
-  nbWeightfiles <- nbUserwfiles + nbIPWfiles
-  
-  # Assumes there is at most one type of weight file found
-  if (nbWeightfiles > 1){
-    stop("There is nore than one type of weight files in this folder, the weights cannot be automatically identified.")
+  # Only try to read IPW when we are NOT running the algorithm to create IPW files.
+  if(IPW_Generation==FALSE){
+    # Lists all the IPW files conforming the the pattern below. There should be either none or 1.
+    IPWfilelist <- list.files(path=examplefilepath, pattern=paste0("IPW_node_", k, "_iter_[[:digit:]]+.csv"))
+    nbIPWfiles <- length(IPWfilelist)
+    # Assumes there is at most one IPW file found
+    if (nbIPWfiles > 1) {
+      stop("There is more than one IPW file in this folder, the weights cannot be automatically identified")
+    } 
+    
+    # Number of files related to weights
+    nbWeightfiles <- nbUserwfiles + nbIPWfiles
+    
+    # Assumes there is at most one type of weight file found
+    if (nbWeightfiles > 1){
+      stop("There is nore than one type of weight files in this folder, the weights cannot be automatically identified.")
+    }
+    # If we ARE running the algorithm to create IPW files, initialize said IPW list to me empty
+  } else{
+    IPWfilelist <- list()
   }
   
   # Find which weights should be used, if any.  
