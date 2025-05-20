@@ -100,12 +100,12 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq, robflag, expath) {
     # Summary and outputs -----------------------------------------------------
     
     # Function to convert NULL to a row of NAs of a specified length
-    pad_with_na <- function(x, max_length) {
+    pad_with_na <- function(x, specified_length) {
       if (is.null(x)) {
-        return(rep(NA, max_length))
+        return(rep(NA, specified_length))
       } else {
         x[x == 0] <- NA
-        length(x) <- max_length
+        length(x) <- specified_length
         return(x)
       }
     }
