@@ -160,7 +160,8 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq, robflag, expath) {
   for (i in 1:nrow(Rik)) {
     
     # Get id of people still in the study
-    indices <- as.numeric(unlist(Rik[i, ])[unlist(Rik[i, ]) != ""])
+    unlistedRik <- unlist(Rik[i, ], use.names = FALSE)
+    indices <- as.numeric(unlistedRik[unlistedRik != ""])
     
     if(length(indices) > 0){
       
