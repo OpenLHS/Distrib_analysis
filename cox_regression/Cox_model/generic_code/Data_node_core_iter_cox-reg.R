@@ -121,7 +121,7 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq, robflag, expath) {
       set(dt, which(is.na(dt[[j]])), j,0)
 
     # Wprimek
-    Wprimek <- rowSums(df)
+    Wprimek <- rowSums(dt)
     
     # Convert Rik
     max_length <- max(sapply(Rik, function(x) if (is.null(x)) 0 else length(x)))
