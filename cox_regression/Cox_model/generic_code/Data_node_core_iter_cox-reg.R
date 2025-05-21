@@ -6,6 +6,7 @@
 
 # Loading packages and setting up core variables --------------------------
 library("survival")
+library("data.table")
 
 data_iter_cox_reg <- function(man_wd, nodeid, iterationseq, robflag, expath) {
   
@@ -14,10 +15,7 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq, robflag, expath) {
   t <- iterationseq
   Robust <- robflag
   examplefilepath <- expath
-  
-  # (!)
-  NewApproach = TRUE
-  
+
   if (manualwd != 1) {
     
     # Set working directory automatically
@@ -117,28 +115,13 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq, robflag, expath) {
     max_length <- max(sapply(Wprime_list, function(x) if (is.null(x)) 0 else length(x)))
     padded_rows <- lapply(Wprime_list, pad_with_na, max_length)
     
-    if(!NewApproach){
-      df <- as.data.frame(do.call(rbind, padded_rows))
-      df[is.na(df)] <- 0
-    }
-    
-    # (!) new section, testing for optimization
-    if(NewApproach){
-      library(data.table)  
-      test <- as.data.table(do.call(rbind, padded_rows)) # (!), objet de type matrice --> data.table
-      for(j in seq_len(ncol(test)))
-        set(test, which(is.na(test[[j]])), j,0)
-    }
+    # Converts NAs to 0s 
+    dt <- as.data.table(do.call(rbind, padded_rows))
+    for(j in seq_len(ncol(dt)))
+      set(dt, which(is.na(dt[[j]])), j,0)
 
     # Wprimek
-    if(!NewApproach){
-      Wprimek <- rowSums(df)
-    }
-    
-    # (!) new section, testing for optimization
-    if(NewApproach){
-      Wprimek_test <- rowSums(test)
-    }
+    Wprimek <- rowSums(df)
     
     # Convert Rik
     max_length <- max(sapply(Rik, function(x) if (is.null(x)) 0 else length(x)))
@@ -154,17 +137,8 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq, robflag, expath) {
     write.csv(df2, file=paste0(examplefilepath, "Rik",k,".csv"),row.names = FALSE,na="")
     write.csv(df3, file=paste0(examplefilepath, "Rik_comp",k,".csv"),row.names = FALSE,na="")
     write.csv(sumWZr, file=paste0(examplefilepath, "sumWZr",k,".csv"),row.names = FALSE,na="")
-    
-    if(!NewApproach){
-      write.csv(Wprimek, file=paste0(examplefilepath, "Wprime",k,".csv"), row.names = FALSE, na="")  
-    }
+    write.csv(Wprimek, file=paste0(examplefilepath, "Wprime",k,".csv"), row.names = FALSE, na="")  
   
-    # (!) new section, testing for optimization
-    if(NewApproach){
-      write.csv(Wprimek_test, file=paste0(examplefilepath, "Wprime",k,".csv"), row.names = FALSE, na="")  
-    }
-    
-      
   } 
   
   # ------------------------- All iterations CODE STARTS HERE ------------------------
