@@ -14,11 +14,6 @@ k <- man_nodeid
 # Loading packages and setting up core variables --------------------------
 library("dplyr")        # A fast, consistent tool for working with data frame like objects, both in memory and out of memory.
 
-# If you want to skip the automated working directory setting, input 1 here. 
-# If you do so, make sure the working directory is set correctly manualy.
-
-manualwd <- -1
-
 if (manualwd != 1) {
   
   # Set working directory automatically

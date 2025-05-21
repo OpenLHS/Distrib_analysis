@@ -72,12 +72,12 @@ The generic_code folder contains examplar `R` code files pertaining to the distr
 
 - `lung_data_same_folder` is an example based on the `lung` dataset in `R` (whereas `lung_data_grouped_same_folder` is based on the same example where the data was aggregated).
 
-- `breast_data`, `breast_data_same_folder`, `breast_data_with_weights_same_folder` are based on the same example. They both use the "[Breast Cancer Dataset](https://www.kaggle.com/datasets/utkarshx27/breast-cancer-dataset-used-royston-and-altman)" from Royston and Altman (2013).  
+- `breast_data`, `breast_data_same_folder`, `breast_data_with_weights_same_folder` are based on the same example. They all use the "[Breast Cancer Dataset](https://www.kaggle.com/datasets/utkarshx27/breast-cancer-dataset-used-royston-and-altman)" from Royston and Altman (2013).  
 	- The first one has the files separated in different folders to better mimic a distributed environment. To run, you need to copy the results across folders, which clarifies what is sent where.  
 	- The second example is based on the same dataset, but if you simply want to look at the output, everything is happening in the same folder, without the need to copy files across.  
 	- The third example is based on the same dataset alongside weights files. Everything is happening in the same folder, without the need to copy files across.
 
-- * Optional : if you want to try to generate new test datasets, the file `cox_data_generation.R` might be useful.*
+- *Optional : if you want to try to generate new test datasets, the file `cox_data_generation.R` might be useful.*
 
 ### Generic code
 
@@ -98,6 +98,7 @@ The algorithm currently requires the use of package(s) not present in the base i
 
 - [survival](https://cran.r-project.org/web/packages/survival/index.html)
 - [MASS](https://cran.r-project.org/web/packages/MASS/index.html)
+- [data.table](https://cran.r-project.org/web/packages/data.table/index.html)
 
 Furthermore, the examples will be easier to explore and adapt/change if the package `this.path` is also available. Yet this is NOT required and you can safely ignore any warning about this is if you want to use the algorithm "as-is". Should you choose not to use this package, you will then need to manually set your working directory in your `R` instance.
 
@@ -174,6 +175,7 @@ The algorithm currently requires the use of package(s) not present in the base i
 
 - [survival](https://cran.r-project.org/web/packages/survival/index.html)
 - [MASS](https://cran.r-project.org/web/packages/MASS/index.html)
+- [data.table](https://cran.r-project.org/web/packages/data.table/index.html)
 
 Furthermore, the examples will be easier to explore and adapt/change if the package `this.path` is also available. Yet this is NOT required and you can safely ignore any warning about this is if you want to use the algorithm "as-is".
 
@@ -243,14 +245,21 @@ In order to compute the robust variance estimator, additionnal files `sumWExpGlo
 This implementation of the Cox model mimics the following `R` call: 
 - `coxph(formula, data, ties = “breslow”)`, whenever one checks `Results_iter_t.csv` and once convergence is attained.
 
+Since this implementation is made for distributed analysis, the following `R` files should not be shared:
+- `Data_node_k.csv`.
+- `Weights_node_k.csv`.
+
 ### Data node side
 
 | Step | Files created | Shared? |
 | ----------- | ----------- | ----------- |
-| Initialization | `Beta_local_k.csv` <br> `N_node_k.csv` <br> `Local_Settings_k.csv` <br> `Times_k_output.csv` <br> `Vk_k.csv` | Yes <br> Yes <br> Yes <br> Yes <br> Yes |
-| Iteration `0` | `Rik_comp_k.csv` <br> `Rikk.csv` <br> `sumWExpk_output0.csv` <br> `sumWZqExpk_output_0.csv` <br> `sumWZqZrExpk_output_0.csv` <br> `sumWZrk.csv` <br> `Wprimek.csv `| No <br> No <br> Yes <br> Yes <br> Yes <br> Yes <br> Yes |
-| Iteration `1` | `sumWExpk_output1.csv` <br> `sumWZqExpk_output_1.csv` <br> `sumWZqZrExpk_output_1.csv` | Yes <br> Yes <br> Yes|
-| Iteration `t` | `sumWExpk_output(t).csv` <br> `sumWZqExpk_output_(t).csv` <br> `sumWZqZrExpk_output_(t).csv` | Yes <br> Yes <br> Yes|
+| Initialization | `Beta_local_k.csv` <br> `N_node_k.csv` <br> `Local_Settings_k.csv` <br> `Times_k_output.csv` <br> `Vk_k.csv` <br> `Backup_Data_node_Incomplete_k.csv`\* <br> `Backup_Weights_node_Incomplete_k.csv`\* <br> `Backup_Data_node_Unordered_k.csv`\*\* <br> `Backup_Weights_node_Unordered_k.csv`\*\* | Yes <br> Yes <br> Yes <br> Yes <br> Yes <br> No <br> No <br> No <br> No |
+| Iteration `0` | `Rik_comp_k.csv` <br> `Rikk.csv` <br> `sumWExpk_output_0.csv` <br> `sumWZqExpk_output_0.csv` <br> `sumWZqZrExpk_output_0.csv` <br> `sumWZrk.csv` <br> `Wprimek.csv `| No <br> No <br> Yes <br> Yes <br> Yes <br> Yes <br> Yes |
+| Iteration `1` | `sumWExpk_output_1.csv` <br> `sumWZqExpk_output_1.csv` <br> `sumWZqZrExpk_output_1.csv` | Yes <br> Yes <br> Yes|
+| Iteration `t` | `sumWExpk_output_(t).csv` <br> `sumWZqExpk_output_(t).csv` <br> `sumWZqZrExpk_output_(t).csv` | Yes <br> Yes <br> Yes|
+
+\* The algorithm currently only works when there are no missing value. Should there be any missing value in the `Data_node_k.csv` file, the algorithm will perform a complete case analysis. In order to do so, it will save your data to a backup file and will replace `Data_node_k.csv` with only the complete cases.
+\*\* The algorithm currently expects the `time` variable do be ordered. If it isn't, it will save your data to a backup file and will replace `Data_node_k.csv` with the same data but ordered by `time`.
 
 ### Coordination node side
 
@@ -270,13 +279,16 @@ This implementation of the Cox model mimics the following `R` call:
 
 | Step | Files created | Shared? |
 | ----------- | ----------- | ----------- |
-| Initialization | `Beta_local_k.csv` <br> `N_node_k.csv` <br> `Local_Settings_k.csv` <br> `Times_k_output.csv` <br> `Vk_k.csv` | Yes <br> Yes <br> Yes <br> Yes <br> Yes |
-| Iteration `0` | `Rik_comp_k.csv` <br> `Rikk.csv` <br> `sumWExpk_output0.csv` <br> `sumWZqExpk_output_0.csv` <br> `sumWZqZrExpk_output_0.csv` <br> `sumWZrk.csv` <br> `Wprimek.csv `| No <br> No <br> Yes <br> Yes <br> Yes <br> Yes <br> Yes |
-| Iteration `1` | `sumWExpk_output1.csv` <br> `sumWZqExpk_output_1.csv` <br> `sumWZqZrExpk_output_1.csv` | Yes <br> Yes <br> Yes|
-| Iteration `2` | `sumWExpk_output2.csv` <br> `sumWZqExpk_output_2.csv` <br> `sumWZqZrExpk_output_2.csv` | Yes <br> Yes <br> Yes|
-| Iteration `3` | `sumWExpk_output3.csv` <br> `sumWZqExpk_output_3.csv` <br> `sumWZqZrExpk_output_3.csv` <br> `inverseWExp_k_output_1.csv` <br> `zbarri_inverseWExp_k_output_1.csv` | Yes <br> Yes <br> Yes <br> Yes <br> Yes |
-| Iteration `4` | `sumWExpk_output4.csv` <br> `sumWZqExpk_output_4.csv` <br> `sumWZqZrExpk_output_4.csv` <br> `inverseWExp_k_output_2.csv` <br> `zbarri_inverseWExp_k_output_2.csv` <br> `DDk_output_1` | Yes <br> Yes <br> Yes <br> Yes <br> Yes <br> Yes |
-| Iteration `t` | `sumWExpk_output(t).csv` <br> `sumWZqExpk_output_(t).csv` <br> `sumWZqZrExpk_output_(t).csv` <br> `inverseWExp_k_output_(t-2).csv` <br> `zbarri_inverseWExp_k_output_(t-2).csv` <br> `DDk_output_(t-3)` | Yes <br> Yes <br> Yes <br> Yes <br> Yes <br> Yes  |
+| Initialization | `Beta_local_k.csv` <br> `N_node_k.csv` <br> `Local_Settings_k.csv` <br> `Times_k_output.csv` <br> `Vk_k.csv` <br> `Backup_Data_node_Incomplete_k.csv`\* <br> `Backup_Weights_node_Incomplete_k.csv`\* <br> `Backup_Data_node_Unordered_k.csv`\*\* <br> `Backup_Weights_node_Unordered_k.csv`\*\* | Yes <br> Yes <br> Yes <br> Yes <br> Yes <br> No <br> No <br> No <br> No |
+| Iteration `0` | `Rik_comp_k.csv` <br> `Rikk.csv` <br> `sumWExpk_output_0.csv` <br> `sumWZqExpk_output_0.csv` <br> `sumWZqZrExpk_output_0.csv` <br> `sumWZrk.csv` <br> `Wprimek.csv `| No <br> No <br> Yes <br> Yes <br> Yes <br> Yes <br> Yes |
+| Iteration `1` | `sumWExpk_output_1.csv` <br> `sumWZqExpk_output_1.csv` <br> `sumWZqZrExpk_output_1.csv` | Yes <br> Yes <br> Yes|
+| Iteration `2` | `sumWExpk_output_2.csv` <br> `sumWZqExpk_output_2.csv` <br> `sumWZqZrExpk_output_2.csv` | Yes <br> Yes <br> Yes|
+| Iteration `3` | `sumWExpk_output_3.csv` <br> `sumWZqExpk_output_3.csv` <br> `sumWZqZrExpk_output_3.csv` <br> `inverseWExp_k_output_1.csv` <br> `zbarri_inverseWExp_k_output_1.csv` | Yes <br> Yes <br> Yes <br> Yes <br> Yes |
+| Iteration `4` | `sumWExpk_output_4.csv` <br> `sumWZqExpk_output_4.csv` <br> `sumWZqZrExpk_output_4.csv` <br> `inverseWExp_k_output_2.csv` <br> `zbarri_inverseWExp_k_output_2.csv` <br> `DDk_output_1` | Yes <br> Yes <br> Yes <br> Yes <br> Yes <br> Yes |
+| Iteration `t` | `sumWExpk_output_(t).csv` <br> `sumWZqExpk_output_(t).csv` <br> `sumWZqZrExpk_output_(t).csv` <br> `inverseWExp_k_output_(t-2).csv` <br> `zbarri_inverseWExp_k_output_(t-2).csv` <br> `DDk_output_(t-3)` | Yes <br> Yes <br> Yes <br> Yes <br> Yes <br> Yes  |
+
+\* The algorithm currently only works when there are no missing value. Should there be any missing value in the `Data_node_k.csv` file, the algorithm will perform a complete case analysis. In order to do so, it will save your data to a backup file and will replace `Data_node_k.csv` with only the complete cases.
+\*\* The algorithm currently expects the `time` variable do be ordered. If it isn't, it will save your data to a backup file and will replace `Data_node_k.csv` with the same data but ordered by `time`.
 
 ### Coordination node side
 
