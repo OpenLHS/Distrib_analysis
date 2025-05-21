@@ -259,6 +259,7 @@ Since this implementation is made for distributed analysis, the following `R` fi
 | Iteration `t` | `sumWExpk_output_(t).csv` <br> `sumWZqExpk_output_(t).csv` <br> `sumWZqZrExpk_output_(t).csv` | Yes <br> Yes <br> Yes|
 
 \* The algorithm currently only works when there are no missing value. Should there be any missing value in the `Data_node_k.csv` file, the algorithm will perform a complete case analysis. In order to do so, it will save your data to a backup file and will replace `Data_node_k.csv` with only the complete cases.
+
 \*\* The algorithm currently expects the `time` variable do be ordered. If it isn't, it will save your data to a backup file and will replace `Data_node_k.csv` with the same data but ordered by `time`.
 
 ### Coordination node side
@@ -288,6 +289,7 @@ This implementation of the Cox model mimics the following `R` call:
 | Iteration `t` | `sumWExpk_output_(t).csv` <br> `sumWZqExpk_output_(t).csv` <br> `sumWZqZrExpk_output_(t).csv` <br> `inverseWExp_k_output_(t-2).csv` <br> `zbarri_inverseWExp_k_output_(t-2).csv` <br> `DDk_output_(t-3)` | Yes <br> Yes <br> Yes <br> Yes <br> Yes <br> Yes  |
 
 \* The algorithm currently only works when there are no missing value. Should there be any missing value in the `Data_node_k.csv` file, the algorithm will perform a complete case analysis. In order to do so, it will save your data to a backup file and will replace `Data_node_k.csv` with only the complete cases.
+
 \*\* The algorithm currently expects the `time` variable do be ordered. If it isn't, it will save your data to a backup file and will replace `Data_node_k.csv` with the same data but ordered by `time`.
 
 ### Coordination node side
