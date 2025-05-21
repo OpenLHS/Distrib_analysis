@@ -16,7 +16,7 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq, robflag, expath) {
   examplefilepath <- expath
   
   # (!)
-  NewApproach = FALSE
+  NewApproach = TRUE
   
   if (manualwd != 1) {
     
@@ -161,7 +161,7 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq, robflag, expath) {
   
     # (!) new section, testing for optimization
     if(NewApproach){
-      write.csv(Wprimek_test, file=paste0(examplefilepath, "Wprime_test",k,".csv"), row.names = FALSE, na="")  
+      write.csv(Wprimek_test, file=paste0(examplefilepath, "Wprime",k,".csv"), row.names = FALSE, na="")  
     }
     
       
