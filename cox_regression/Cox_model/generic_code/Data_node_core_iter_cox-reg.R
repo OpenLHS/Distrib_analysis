@@ -6,6 +6,7 @@
 
 # Loading packages and setting up core variables --------------------------
 library("survival")
+library("data.table")
 
 data_iter_cox_reg <- function(man_wd, nodeid, iterationseq, robflag, expath) {
   
@@ -14,7 +15,7 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq, robflag, expath) {
   t <- iterationseq
   Robust <- robflag
   examplefilepath <- expath
-  
+
   if (manualwd != 1) {
     
     # Set working directory automatically
@@ -100,12 +101,12 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq, robflag, expath) {
     # Summary and outputs -----------------------------------------------------
     
     # Function to convert NULL to a row of NAs of a specified length
-    pad_with_na <- function(x, max_length) {
+    pad_with_na <- function(x, specified_length) {
       if (is.null(x)) {
-        return(rep(NA, max_length))
+        return(rep(NA, specified_length))
       } else {
         x[x == 0] <- NA
-        length(x) <- max_length
+        length(x) <- specified_length
         return(x)
       }
     }
@@ -113,11 +114,14 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq, robflag, expath) {
     # Convert Wprime
     max_length <- max(sapply(Wprime_list, function(x) if (is.null(x)) 0 else length(x)))
     padded_rows <- lapply(Wprime_list, pad_with_na, max_length)
-    df <- as.data.frame(do.call(rbind, padded_rows))
-    df[is.na(df)] <- 0
     
+    # Converts NAs to 0s 
+    dt <- as.data.table(do.call(rbind, padded_rows))
+    for(j in seq_len(ncol(dt)))
+      set(dt, which(is.na(dt[[j]])), j,0)
+
     # Wprimek
-    Wprimek <- rowSums(df)
+    Wprimek <- rowSums(dt)
     
     # Convert Rik
     max_length <- max(sapply(Rik, function(x) if (is.null(x)) 0 else length(x)))
@@ -133,8 +137,8 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq, robflag, expath) {
     write.csv(df2, file=paste0(examplefilepath, "Rik",k,".csv"),row.names = FALSE,na="")
     write.csv(df3, file=paste0(examplefilepath, "Rik_comp",k,".csv"),row.names = FALSE,na="")
     write.csv(sumWZr, file=paste0(examplefilepath, "sumWZr",k,".csv"),row.names = FALSE,na="")
-    write.csv(Wprimek, file=paste0(examplefilepath, "Wprime",k,".csv"), row.names = FALSE, na="")
-    
+    write.csv(Wprimek, file=paste0(examplefilepath, "Wprime",k,".csv"), row.names = FALSE, na="")  
+  
   } 
   
   # ------------------------- All iterations CODE STARTS HERE ------------------------
@@ -160,7 +164,8 @@ data_iter_cox_reg <- function(man_wd, nodeid, iterationseq, robflag, expath) {
   for (i in 1:nrow(Rik)) {
     
     # Get id of people still in the study
-    indices <- as.numeric(unlist(Rik[i, ])[unlist(Rik[i, ]) != ""])
+    unlistedRik <- unlist(Rik[i, ], use.names = FALSE)
+    indices <- as.numeric(unlistedRik[unlistedRik != ""])
     
     if(length(indices) > 0){
       
