@@ -59,7 +59,7 @@ As both implementation use the same base files even if different amounts of info
 - The core article is in the root directory: "Lu et al. - 2015 - WebDISCO: A Web Service for Distributed Cox Model.pdf."  This describes the background of the work and presents the method used.
 
 - Examples  
-The examples folder contains a few examples. Each example folder is self-contained. Therefore, some files will be duplicated across examples, but this is to facilitate their exploration independantly.
+The examples folder contains a few examples. Each example can be ran directly from their specific folder. Therefore, some files will be duplicated across examples, but this is to facilitate their exploration independantly.
 
 - Generic_code  
 The generic_code folder contains examplar `R` code files pertaining to the distributed approach and its pooled comparator. Please read the code and its comments in the `R` file as files may require edition before being used.
