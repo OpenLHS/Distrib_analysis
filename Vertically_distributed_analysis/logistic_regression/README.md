@@ -26,9 +26,9 @@ The results can be interpreted as they would with the following `R` calls in a p
 	
 3. [Expected outputs](#expected-outputs)
 
-	a. [Covariate-node side](#covariate-node-side)
+	a. [Response-node side](#response-node-side)
 	
-	b. [Response-node side](#response-node-side)
+	b. [Covariate-node side](#covariate-node-side)
 	
 	c. [Covariate-node side - Privacy assessment](#covariate-node-side-privacy-assessment)
 
@@ -45,7 +45,7 @@ The results can be interpreted as they would with the following `R` calls in a p
 
 ## Repository structure
 
-- The core article (Preprint) is in the root directory: "Camirand Lemyre et al. - 2025 - Vertically Distributed Logistic Regression.pdf."  This describes the background of the work and presents the method used. (!)
+- The core article (Preprint) is in the root directory: "Camirand Lemyre et al. - 2025 - Vertically Distributed Logistic Regression.pdf."  This describes the background of the work and presents the method used. 
 
 - Examples  
 The examples folder contains an example of a vertically partitioned dataset to test the method if needed.
@@ -53,9 +53,12 @@ The examples folder contains an example of a vertically partitioned dataset to t
 - Generic_code  
 The generic_code folder contains `R` code files pertaining to the distributed approach. Please read the code and its comments in the `R` file as files may require edition before being used.
 
+- Privacy_check
+The privacy_check folder contains `R` code files allowing one covariate-node to verify privacy-preserving properties while disclosing results such as estimates, standard errors and p-values.
+
 ### List of examples
 
-- `Example_Vertical_Partition` contains two datasets corresponding to different nodes in a vertically distributed analysis. They can be copied and used to run examples of the method and compare with the pooled results. (!)
+- `random_data_same_folder` contains two datasets corresponding to different nodes in a vertically distributed analysis. They can be copied and used to run examples of the method and compare with the pooled results. 
 
 ### Generic code
 
@@ -103,7 +106,7 @@ If you work in an isolated environment, you might need to download them manually
 ***Make sure `R studio` is not currently running and close it if it is.***  
 ***If you are not able to automatically set your working directory (for example, if you do not have access to `this.path`), manually set the variable `manualwd = 1` in `Response_node_call_iter_log-regV.R` and  `Data_node_call_log-regV.R`.***
 
-In the following procedure, `k` represents the number of the local node. In the Datafiles, Node 1 is automatically associated with the response-node. 
+In the following procedure, `k` represents the number of the local node. In the Datafiles, Node 1 must be associated with the response-node. 
 
 Initialization:
 
