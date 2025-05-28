@@ -6,11 +6,11 @@
 
 # Loading packages and setting up core variables --------------------------
 
-data_init_log_reg <- function(man_wd,nodeid) {
+data_init_log_reg <- function(man_wd,nodeid,expath) {
   
   manualwd <- man_wd 
-  
   k <- nodeid
+  examplefilepath <- expath
 
   # Importing data ----------------------------------------------------------
   
@@ -65,7 +65,8 @@ if (manualwd != 1) {
 ', depends = "RcppArmadillo")
   
   # Import and Verify condition over data --------------------
-  node_data_k <- scale(as.matrix(read.csv(paste0("Data_node_", k, ".csv"))))
+  filehandle <- paste0("Data_node_")
+  node_data_k <- scale(as.matrix(read.csv(paste0(examplefilepath, filehandle, k, ".csv"))))
   if(any(is.na(node_data_k))){
     stop("The dataset seems to contain NA value(s). The method cannot be applied. 
     You can verify with other participating nodes if the individual(s) concerned should be removed from all datasets to proceed with complete-case analysis.")
@@ -77,7 +78,7 @@ if (manualwd != 1) {
   }
 
   # Exporting local Gram Matrix -------------------------------
-  saveRDS(extract_upper_tri(node_data_k%*%t(node_data_k)), paste0("Data_node_",k,"_init_output.rds"), compress = TRUE)
+  saveRDS(extract_upper_tri(node_data_k%*%t(node_data_k)), paste0(examplefilepath,"Data_node_",k,"_init_output.rds"), compress = TRUE)
   
   ## Remove all environment variables. 
   ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)

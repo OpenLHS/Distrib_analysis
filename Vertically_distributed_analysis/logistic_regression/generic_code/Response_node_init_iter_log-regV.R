@@ -4,10 +4,11 @@
 ## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 ## Copyright: GRIIS / Université de Sherbrooke
 
-coord_log_reg <- function(man_wd=-1, man_lambda) {
+coord_log_reg <- function(man_wd=-1, man_lambda, expath = "") {
 
 manualwd <- man_wd
 lambda <- man_lambda
+examplefilepath <- expath
 
 if (manualwd != 1) {
   
@@ -139,7 +140,7 @@ cppFunction(depends = "RcppEigen", code = '
 # Extract node data and Initialization ----------------------------------------
 
 ### Import data from response-node and verify if any missing values
-node_1_complete <- (read.csv("Data_node_1.csv"))
+node_1_complete <- (read.csv(paste0(examplefilepath, "Data_node_1.csv")))
 if(any(is.na(node_1_complete))){
   stop("The dataset seems to contain NA value(s). The method cannot be applied. 
     You can verify with other participating nodes if the individual(s) concerned should be removed from all datasets to proceed with complete-case analysis.")
@@ -171,9 +172,9 @@ cov_node_1 <- cbind(rep(1,n),scale(node_1_complete[,-1]))
 K_all <- cov_node_1%*%t(cov_node_1)
 
 ### Data from covariate-nodes
-K <- length(list.files(pattern="Data_node_[[:digit:]]+_init_output.rds"))+1
+K <- length(list.files(path=examplefilepath, pattern="Data_node_[[:digit:]]+_init_output.rds"))+1
 for (k in 2:K) {
-  node_k <- readRDS(paste0("Data_node_", k, "_init_output.rds"))
+  node_k <- readRDS(paste0(examplefilepath,"Data_node_", k, "_init_output.rds"))
   m <- (-1+sqrt(1+8*length(node_k)))/2
   if (n != m) {
     stop("Nodes files do not seem to contain the same number of individuals.")
@@ -195,11 +196,9 @@ if(lambda<=0){
   stop("The algorithm cannot run because the penalty parameter lambda was set lower or equal to 0.")
 }
 
-
 if(n<=10000){
   epsilon <- 2*lambda*(((p+1)*(p*(n-1)+n))^(-1/2))*n^(-1)
 }else{epsilon <- 2*lambda*(((p+1)*(p*(n-1)+n))^(-1/2))*5*(n^(-1))}
-
 
 # Adjustments to fit the following implementation simplified with a factor of n
 lambda <- lambda*n
@@ -288,15 +287,15 @@ S_inv <- inv_sympd_matrix((diag(1/as.vector((X_beta/
 
 ### Produce and export system of equation results and noisy inverse of S for each nodes
 for (k in 2:K) {
-  gram_k <- reconstruct_from_upper_tri(readRDS(paste0("Data_node_", k, "_init_output.rds")), n)
+  gram_k <- reconstruct_from_upper_tri(readRDS(paste0(examplefilepath, "Data_node_", k, "_init_output.rds")), n)
   c_system_k <- (1/lambda)*arma_mm(gram_k,(alpha_u*y))
   lambda_shared <- lambda/n
   length(lambda_shared) <- length(c_system_k)
   write.csv(data.frame(c_system_k,lambda_shared),
-            file=paste0("Coord_node_primerA_for_data_node_",k ,".csv"), row.names=FALSE)
+            file=paste0(examplefilepath, "Coord_node_primerA_for_data_node_",k ,".csv"), row.names=FALSE)
   null_addition_k <- nullspace_sym_pd(gram_k, tol = 1e-8)
   null_addition_k <- t(t(null_addition_k)*rnorm(ncol(null_addition_k)))
-  saveRDS(extract_upper_tri(0.1*null_addition_k%*%t(null_addition_k)+S_inv), file = paste0("Coord_node_primerB_for_data_node_",k,".rds"), compress = TRUE)
+  saveRDS(extract_upper_tri(0.1*null_addition_k%*%t(null_addition_k)+S_inv), file = paste0(examplefilepath, "Coord_node_primerB_for_data_node_",k,".rds"), compress = TRUE)
 }
 
 
@@ -324,7 +323,7 @@ p_vals_1 <- 2*(1 - pnorm(abs(beta_node_1_adjusted)[-1]/err_node_1_adjusted[-1]))
 ### Export results
 write.csv(data.frame(coefs_scaled=c(beta_node_1[1],rep(NA,p_response_node)), std_error_scaled=c(err_node_1[1],rep(NA,p_response_node)),
                      coefs=beta_node_1_adjusted,std_error=err_node_1_adjusted,two_sided_pvalue=c(NA,p_vals_1)),
-          file="Data_node_1_results.csv", row.names=c("intercept",covariate_names_response))
+          file=paste0(examplefilepath, "Data_node_1_results.csv"), row.names=c("intercept",covariate_names_response))
 
 
 ## Remove all environment variables. 

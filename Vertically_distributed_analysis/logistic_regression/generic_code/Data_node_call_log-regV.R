@@ -39,16 +39,19 @@ if (manualwd != 1) {
 } else {
   print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
 }
+
+# Once the working directory as been set, save it so we can pass it to other files
+path <- paste0(getwd(), "/")
   
 # Veryfiying if there is a coordination node output file present
 nbprimerfilesA <- length(list.files(pattern="Coord_node_primerA_for_data_node_[[:digit:]]+.csv"))
 nbprimerfilesB <- length(list.files(pattern="Coord_node_primerB_for_data_node_[[:digit:]]+.rds"))
 if (nbprimerfilesA == 1 & nbprimerfilesB == 1) {
   source("Data_node_call_iter_log-regV.R")
-  data_call_iter_log_reg(manualwd,manualk)
+  data_call_iter_log_reg(manualwd,manualk,path)
 } else if(nbprimerfilesA == 0 & nbprimerfilesB == 0) {
   source("Data_node_call_init_log_regV.R")
-  data_call_init_log_reg(manualwd,manualk)} else {
+  data_call_init_log_reg(manualwd,manualk,path)} else {
     stop("Primer files are missing or repeated.")
 }
 

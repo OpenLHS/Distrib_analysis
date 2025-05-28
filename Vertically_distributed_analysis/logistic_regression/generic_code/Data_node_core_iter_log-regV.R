@@ -4,10 +4,11 @@
 ## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 ## Copyright: GRIIS / Université de Sherbrooke
 
-data_iter_log_reg <- function(man_wd,nodeid) {
+data_iter_log_reg <- function(man_wd,nodeid,expath) {
 
 manualwd <- man_wd  
 k <- nodeid
+examplefilepath <- expath
 
 # Libraries and functions ------------------------------------------------
 library(Rcpp)
@@ -57,13 +58,13 @@ if (manualwd != 1) {
 
 
 #Import covariate-node data and intermediary quantities from response-node
-node_data_k_unscale <- (as.matrix(read.csv(paste0("Data_node_",k, ".csv"))))
+node_data_k_unscale <- (as.matrix(read.csv(paste0(examplefilepath,"Data_node_",k, ".csv"))))
 node_data_k <- scale(node_data_k_unscale)
 
-c_system_k <- as.matrix(read.csv(paste0("Coord_node_primerA_for_data_node_",k ,".csv"))[,1])
-lambda <- as.numeric(read.csv(paste0("Coord_node_primerA_for_data_node_",k ,".csv"))[1,2])
+c_system_k <- as.matrix(read.csv(paste0(examplefilepath,"Coord_node_primerA_for_data_node_",k ,".csv"))[,1])
+lambda <- as.numeric(read.csv(paste0(examplefilepath,"Coord_node_primerA_for_data_node_",k ,".csv"))[1,2])
 
-S_inv <- reconstruct_from_upper_tri(readRDS(paste0("Coord_node_primerB_for_data_node_",k ,".rds")), nrow(node_data_k))
+S_inv <- reconstruct_from_upper_tri(readRDS(paste0(examplefilepath,"Coord_node_primerB_for_data_node_",k ,".rds")), nrow(node_data_k))
 
 #Computations of parameter estimates
 t_node_data_k <-t(node_data_k)
@@ -83,8 +84,7 @@ p_vals <- 2*(1 - pnorm(abs(beta_node_k_adjusted)/err_node_k_adjusted))
 # Exporting final results at covariate-node k ------------------------------------------
 
 write.csv(data.frame(coefs=beta_node_k_adjusted,std_error=err_node_k_adjusted,two_sided_pvalue=p_vals),
-          file=paste0("Data_node_",k,"_results.csv"), row.names=colnames(node_data_k))
-
+          file=paste0(examplefilepath,"Data_node_",k,"_results.csv"), row.names=colnames(node_data_k))
 
 
 ## Remove all environment variables. 
