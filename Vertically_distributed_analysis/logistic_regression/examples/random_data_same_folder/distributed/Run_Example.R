@@ -31,13 +31,6 @@ vert_logistic_regression_example_coordnode_handler(man_lambda = lambda, expath =
 # Run covariate node code for results
 vert_logistic_regression_example_datanode_handler(nodeid = 2, expath = examplefilepath)
 
-if(PrivacyCheckFlag){
-  # Run covariate node code
-  setwd(this.dir())
-  source("../../example_handler/Data_node_privacy_call_log-regV_ex.R")
-  vert_logistic_regression_example_privacy_handler(nodeid = 2, man_index_se = index_se, expath = examplefilepath)
-}
-
 ## Remove all environment variables. 
 ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)
 rm(list = ls())
