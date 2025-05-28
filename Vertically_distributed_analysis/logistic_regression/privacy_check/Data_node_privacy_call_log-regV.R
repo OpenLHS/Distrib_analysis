@@ -61,7 +61,7 @@ if (manualk >= 0) {
 } else {
   
   # List all the data files conforming the the pattern below. There should be only 1
-  datafileslist <- list.files(path=examplefilepath, pattern="Data_node_[[:digit:]]+.csv")
+  datafileslist <- list.files(path=path, pattern="Data_node_[[:digit:]]+.csv")
   
   # Assuming there is only one data file found
   if (length(datafileslist) == 1) {

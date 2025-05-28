@@ -9,10 +9,12 @@
 # LOAD LIBRARIES AND DATA
 ###############################################
 
-data_privacy_log_reg <- function(man_wd,nodeid,index_se) {
+data_privacy_log_reg <- function(man_wd,nodeid,man_index_se, expath) {
   
   manualwd <- man_wd  
   k <- nodeid
+  index_se <- man_index_se
+  examplefilepath <- expath
   
   library(nleqslv)
   library(Rcpp)
@@ -95,11 +97,11 @@ data_privacy_log_reg <- function(man_wd,nodeid,index_se) {
   
   
   #Import covariate-node data and intermediary quantities from response-node
-  node_data_k_unscale <- (as.matrix(read.csv(paste0("Data_node_",k, ".csv"))))
+  node_data_k_unscale <- (as.matrix(read.csv(paste0(examplefilepath, "Data_node_",k, ".csv"))))
   node_data_k <- scale(node_data_k_unscale)
-  lambda <- as.numeric(read.csv(paste0("Coord_node_primerA_for_data_node_",k ,".csv"))[1,2])
-  S_inv <- reconstruct_from_upper_tri(readRDS(paste0("Coord_node_primerB_for_data_node_",k ,".rds")), nrow(node_data_k))
-  node_k_results <- read.csv(paste0("Data_node_",k, "_results.csv"))
+  lambda <- as.numeric(read.csv(paste0(examplefilepath,"Coord_node_primerA_for_data_node_",k ,".csv"))[1,2])
+  S_inv <- reconstruct_from_upper_tri(readRDS(paste0(examplefilepath,"Coord_node_primerB_for_data_node_",k ,".rds")), nrow(node_data_k))
+  node_k_results <- read.csv(paste0(examplefilepath,"Data_node_",k, "_results.csv"))
   node_k_results <- node_k_results[,-1]
   
   
