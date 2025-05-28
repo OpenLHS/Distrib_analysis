@@ -47,8 +47,8 @@ if (manualwd != 1) {
 path <- paste0(getwd(), "/")
   
 # Verifying if there is a coordination node (response-node) data file present
-nb_node1_files <- length(list.files(path=examplefilpath, pattern="Data_node_1.csv"))
-nb_node_output_files <- length(list.files(path=examplefilpath, pattern="Data_node_[[:digit:]]+_init_output.rds"))
+nb_node1_files <- length(list.files(path=path, pattern="Data_node_1.csv"))
+nb_node_output_files <- length(list.files(path=path, pattern="Data_node_[[:digit:]]+_init_output.rds"))
 
 if (nb_node1_files==1 & nb_node_output_files>0) {
   source("Response_node_init_iter_log-regV.R")
