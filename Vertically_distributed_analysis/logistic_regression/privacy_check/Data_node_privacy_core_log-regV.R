@@ -9,13 +9,11 @@
 # LOAD LIBRARIES AND DATA
 ###############################################
 
-data_privacy_log_reg <- function(man_wd,nodeid,man_index_se,expath) {
+data_privacy_log_reg <- function(man_wd,nodeid,index_se) {
   
   manualwd <- man_wd  
   k <- nodeid
-  index_se <- man_index_se
-  examplefilepath <- expath
-
+  
   library(nleqslv)
   library(Rcpp)
   library(RcppArmadillo)
@@ -55,20 +53,21 @@ data_privacy_log_reg <- function(man_wd,nodeid,man_index_se,expath) {
   
   # Construct symmetric matrix from upper triangle
   cppFunction('
-    arma::mat reconstruct_from_upper_tri(const arma::vec& upper_tri, arma::uword n) {
-      arma::mat A(n, n, arma::fill::zeros);
-      arma::uword idx = 0;
-  
-      for (arma::uword j = 0; j < n; ++j) {
-        for (arma::uword i = 0; i <= j; ++i) {
-          A(i, j) = upper_tri(idx);      // fill the upper triangular part
-          A(j, i) = upper_tri(idx++);    // fill the symmetric lower part
-        }
+  arma::mat reconstruct_from_upper_tri(const arma::vec& upper_tri, arma::uword n) {
+    arma::mat A(n, n, arma::fill::zeros);
+    arma::uword idx = 0;
+
+    for (arma::uword j = 0; j < n; ++j) {
+      for (arma::uword i = 0; i <= j; ++i) {
+        A(i, j) = upper_tri(idx);      // fill the upper triangular part
+        A(j, i) = upper_tri(idx++);    // fill the symmetric lower part
       }
-  
-      return A;
     }
-  ', depends = "RcppArmadillo")
+
+    return A;
+  }
+', depends = "RcppArmadillo")
+  
   
   # Importing data ----------------------------------------------------------
   
@@ -94,17 +93,24 @@ data_privacy_log_reg <- function(man_wd,nodeid,man_index_se,expath) {
     print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
   }
   
+  
   #Import covariate-node data and intermediary quantities from response-node
-  node_data_k_unscale <- (as.matrix(read.csv(paste0(examplefilepath,"Data_node_",k, ".csv"))))
+  node_data_k_unscale <- (as.matrix(read.csv(paste0("Data_node_",k, ".csv"))))
   node_data_k <- scale(node_data_k_unscale)
-  lambda <- as.numeric(read.csv(paste0(examplefilepath,"Coord_node_primerA_for_data_node_",k ,".csv"))[1,2])
-  S_inv <- reconstruct_from_upper_tri(readRDS(paste0(examplefilepath,"Coord_node_primerB_for_data_node_",k ,".rds")), nrow(node_data_k))
-  node_k_results <- read.csv(paste0(examplefilepath,"Data_node_",k, "_results.csv"))
+  lambda <- as.numeric(read.csv(paste0("Coord_node_primerA_for_data_node_",k ,".csv"))[1,2])
+  S_inv <- reconstruct_from_upper_tri(readRDS(paste0("Coord_node_primerB_for_data_node_",k ,".rds")), nrow(node_data_k))
+  node_k_results <- read.csv(paste0("Data_node_",k, "_results.csv"))
+  node_k_results <- node_k_results[,-1]
+  
+  
+  
+  
   
   
   #############################################################
   # Define the system of equations & solve, given covariances
   #############################################################
+  
   
   solve_theta12 <- function(Sigma,beta,Sigma_data_diag,S_inv,se_beta,index_se=NA,lambda, 
                             start = rep(0, ncol(Sigma)-1+sum(!is.na(index_se))), 
@@ -131,13 +137,13 @@ data_privacy_log_reg <- function(man_wd,nodeid,man_index_se,expath) {
       P_Givens <- givens_basis(p_k, theta_complete)
       eq <- apply(P_Givens[, -p_k], 2, p_jSigma_minusI_pj, Sigma, p_k)
       if(any(is.na(index_se))){
-      return(eq)}else{
-        eq_se <- rep(NA,length(index_se))
-        for ( i in (index_se) ){
-        eq_se[i] <- (1/se_beta[i])*sqrt(lambda^(-1)-lambda^(-2)*(diag((t(Xcs%*%P_Givens))%*%S_inv%*%(Xcs%*%P_Givens)))[i])-
-          (1/beta[i])*colSums(t((t(P_Givens[,i]))*(Sigma_data_diag)*beta))}
-        eq_se <- eq_se[!is.na(eq_se)]
-        return(c(eq,eq_se))}
+        return(eq)}else{
+          eq_se <- rep(NA,length(index_se))
+          for ( i in (index_se) ){
+            eq_se[i] <- (1/se_beta[i])*sqrt(lambda^(-1)-lambda^(-2)*(diag((t(Xcs%*%P_Givens))%*%S_inv%*%(Xcs%*%P_Givens)))[i])-
+              (1/beta[i])*colSums(t((t(P_Givens[,i]))*(Sigma_data_diag)*beta))}
+          eq_se <- eq_se[!is.na(eq_se)]
+          return(c(eq,eq_se))}
     }
     
     attempt <- 1
@@ -146,7 +152,7 @@ data_privacy_log_reg <- function(man_wd,nodeid,man_index_se,expath) {
     
     while (attempt <= max_attempts && !success) {
       result <- nleqslv(current_start, system_eqs, method = "Broyden")
-  
+      
       if (result$termcd == 1) {
         success <- TRUE
       } else {
@@ -164,7 +170,10 @@ data_privacy_log_reg <- function(man_wd,nodeid,man_index_se,expath) {
     }
   }
   
-    #############################################################
+  
+  
+  
+  #############################################################
   # verify solution for given dataset
   #############################################################
   
@@ -176,6 +185,7 @@ data_privacy_log_reg <- function(man_wd,nodeid,man_index_se,expath) {
   beta <- node_k_results[,1]# estimates at node k 
   se_beta <- node_k_results[,2] #standard errors at node k
   
+  
   #Solve
   solution <- solve_theta12(Sigma,beta,Sigma_data_diag,S_inv,se_beta,index_se,lambda)
   print(solution$attempts)
@@ -185,13 +195,14 @@ data_privacy_log_reg <- function(man_wd,nodeid,man_index_se,expath) {
   P <- givens_basis(p,theta)
   A <- Xcs %*% P
   
+  
   #### Are the constraints met?
   print(max(abs(diag(t(A) %*% A /(n-1))-rep(1,p)))<10^(-6))
   print(max(abs((A) %*% t(A) - Xcs %*% t(Xcs)))<10^(-6))
   for ( i in (index_se) ){
     print(((1/se_beta[i])*sqrt(lambda^(-1)-lambda^(-2)*(diag((t(A))%*%S_inv%*%(A)))[i])-
-            (1/beta[i])*colSums(t((t(P[,i]))*(Sigma_data_diag)*beta)))<10^(-6))}
+             (1/beta[i])*colSums(t((t(P[,i]))*(Sigma_data_diag)*beta)))<10^(-6))}
   
   return(TRUE)
-
+  
 }
