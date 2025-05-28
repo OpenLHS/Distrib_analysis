@@ -4,46 +4,60 @@
 ## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 ## Copyright: GRIIS / Université de Sherbrooke
 
-# Loading packages and setting up core variables --------------------------
-# Currently, the automated node number allocation currently requires execution in R studio and rstudioapi package
-# https://cran.r-project.org/package=rstudioapi
-
-
-# If you want to skip the automated working directory setting, input 1 here. 
-# If you do so, make sure the working directory is set correctly manually.
-manualwd <- -1
-
 # No modifications should be required below this point
 ###########################
 
-if (manualwd != 1) {
+vert_logistic_regression_example_pooled_handler <- function(man_wd=-1, man_nnodes=-1, expath=""){
+ 
+  manualwd <- man_wd
+  K <- man_nnodes
+  examplefilepath <- expath
   
-  # Set working directory automatically
-  
-  # this.path package is available
-  if (require(this.path)) {
-    setwd(this.dir())
+  if (manualwd != 1) {
     
-    # else if running in R studio and the rstudioapi is available, set the correct working directory
-  } else if ((Sys.getenv("RSTUDIO") == "1") & (require("rstudioapi"))) {
-    print("RSTUDIO")
-    path <- dirname(rstudioapi::getActiveDocumentContext()$path)
-    setwd(path)
+    # Set working directory automatically
     
-    # no known means to automatically set working directory
+    # this.path package is available
+    if (require(this.path)) {
+      setwd(this.dir())
+      
+      # else if running in R studio and the rstudioapi is available, set the correct working directory
+    } else if ((Sys.getenv("RSTUDIO") == "1") & (require("rstudioapi"))) {
+      print("RSTUDIO")
+      path <- dirname(rstudioapi::getActiveDocumentContext()$path)
+      setwd(path)
+      
+      # no known means to automatically set working directory
+    } else {
+      stop("The required conditions to automatically set the working directory are not met. See R file")
+    }
   } else {
-    stop("The required conditions to automatically set the working directory are not met. See R file")
+    print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
   }
-} else {
-  print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
+  
+  if(K<1){
+    stop
+  }
+  
+  # Read data and weights
+  for(k in 1:K){
+    # Data
+    node_data <- read.csv(paste0(examplefilepath, "Data_node_", k, ".csv"))
+    
+    if(k==1){
+      pooled_data <- node_data
+    } else{
+      pooled_data <- cbind(pooled_data, node_data)  
+    }
+    
+  }
+
+  # Pooled model
+  model_pooled <- glm(data=pooled_data, formula=out1~.,family="binomial")
+  
+  # Printing pooled models
+  print(summary(model_pooled))
+  
 }
-
-#### Import example datasets
-
-datatset_complete_pooled <- cbind(read.csv("Data_node_1.csv"), read.csv("Data_node_2.csv"))
-
-model_pooled <- glm(data=datatset_complete_pooled, formula=out1~.,family="binomial")
-
-summary(model_pooled)
 
 
