@@ -1,0 +1,12 @@
+Folder structure
+
+1. Generic_code
+: The generic_code folder contains examplar R code files pertaining to the distributed approach and its pooled comparator.
+: Please read the code and its comments in the R file as files may require edition before being used.
+
+2. Examples
+: The examples folder contains a few examples. Each example can be ran directly from their specific folder.
+: Therefore, some files will be duplicated across examples, but this is to facilitate their exploration independantly.
+
+3. Data_preparation
+: The Data_preparation folder contains different methods to compute weights for individuals which may be used afterwards in a GLM. 

@@ -1,8 +1,11 @@
 # Distrib_analysis
 Distributed analysis examples and code using R
 
-## Background and details
-The origin and fundamentals can be found in this paper : https://medinform.jmir.org/2025/1/e71249
+## Repository structure
+
+1. All methods that can be used with horizontally distributed data are in the `horizontally_distributed_analysis` folder.
+
+2. All methods that can be used with horizontally distributed data are in the `vertically_distributed_analysis` folder.
 
 ## Contact information
 * Pr Félix Camirand-Lemyre : Felix.Camirand.Lemyre@usherbrooke.ca

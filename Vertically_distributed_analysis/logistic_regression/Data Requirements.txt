@@ -1,0 +1,15 @@
+:::::: DATA REQUIREMENTS (Vertical_Logistic_Regression) ::::::
+
+- Data is expected to be saved in a .csv file.
+
+- The code is written so that the binary response output is coded using 0 and 1. Make sure to follow this structure with your dataset.
+
+- The response-node must currently be named "Data_node_1.csv".
+
+- The first column of the Data file for the response-node should be the response vector with column name out1. Any additional covariate at the response-node (if applies) are put in the same Data file as additional columns.
+
+- Rows (individuals) must be in the same order in all Data files across all nodes, including the response-node and covariate-nodes.
+
+- Categorical variables must be binarized before running this code. Binarized variables must use the values 0 or 1, where 1 indicates a success (or having the characteristic).
+
+- It is expected that there are no missing values.
