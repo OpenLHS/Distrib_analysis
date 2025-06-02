@@ -1,14 +1,14 @@
-# Distributed WebDisco-based implementation
+# Horizontally distributed WebDisco-based implementation
 
 ## Repository structure
 
 1. The core article "Lu et al. - 2015 - WebDISCO: A Web Service for Distributed Cox Model.pdf" describes the background of the work and presents the method used.
 
 2. Cox_model  
-This folder contains generic code and examples of the distributed Cox model.
+This folder contains generic code and examples of the horizontally distributed Cox model.
 
 3. Data_preparation  
-This folder contains instructions on how to prepare your data before running the code of the Cox model.
+This folder contains instructions on how to prepare your data before running the code of the horizontally distributed Cox model.
 
 ## Before using
 

@@ -1,8 +1,11 @@
 # Data preparation
 
-(!)
-Description générique de ce dossier à venir. À uniformiser.
-(!)
+This folder contains instructions on how to prepare your data before running the code of the horizontally distributed Cox model.
+
+## Data aggregation 
+
+The folders aims at containing different methods to categorize individuals into time intervals differently.
+Currently, only one method is available.
 
 ## License
 

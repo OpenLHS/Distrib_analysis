@@ -1,4 +1,4 @@
-# Data preparation
+# Data aggregation
 
 This algorithm allows one to group data using the `time` variable of a Cox regression.
 
