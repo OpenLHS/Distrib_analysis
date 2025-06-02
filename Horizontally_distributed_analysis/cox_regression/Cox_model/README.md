@@ -10,47 +10,47 @@ As both implementation use the same base files even if different amounts of info
 
 1. [Repository structure](#repository-structure)
 
-	a. [List of examples](#list-of-examples)
+	1. [List of examples](#list-of-examples)
 	
-	b. [Generic code](#generic-code)
+	2. [Generic code](#generic-code)
 
 2. [Data requirements](#Data-requirements)
 
 3. [Instructions to run the examples/algorithm (classic estimation)](#instructions-to-run-the-examplesalgorithm-classic-estimation)
 
-	a. [Installing R and R Studio](#installing-r-and-r-studio)
+	1. [Installing R and R Studio](#installing-r-and-r-studio)
 	
-	b. [Installing the required packages](#installing-the-required-packages)
+	2. [Installing the required packages](#installing-the-required-packages)
 	
-	c. [Installing an example](#installing-an-example)
+	3. [Installing an example](#installing-an-example)
 	
-	d. [Executing the distributed code](#executing-the-distributed-code)
+	4. [Executing the distributed code](#executing-the-distributed-code)
 	
-	e. [Executing the pooled solution code](#executing-the-pooled-solution-code)
+	5. [Executing the pooled solution code](#executing-the-pooled-solution-code)
 	
 4. [Instructions to run the examples/algorithm (robust estimation)](#instructions-to-run-the-examplesalgorithm-robust-estimation)
 
-	a. [Installing R and R Studio](#installing-r-and-r-studio-1)
+	1. [Installing R and R Studio](#installing-r-and-r-studio-1)
 	
-	b. [Installing the required packages](#installing-the-required-packages-1)
+	2. [Installing the required packages](#installing-the-required-packages-1)
 	
-	c. [Installing an example](#installing-an-example-1)
+	3. [Installing an example](#installing-an-example-1)
 	
-	d. [Executing the distributed code](#executing-the-distributed-code-1)
+	4. [Executing the distributed code](#executing-the-distributed-code-1)
 	
-	e. [Executing the pooled solution code](#executing-the-pooled-solution-code-1)
+	5. [Executing the pooled solution code](#executing-the-pooled-solution-code-1)
 	
 5. [Expected outputs (classic estimation)](#expected-outputs-classic-estimation)
 
-	a. [Data node side](#data-node-side)
+	1. [Data node side](#data-node-side)
 	
-	b. [Coordination node side](#coordination-node-side)
+	2. [Coordination node side](#coordination-node-side)
 	
 6. [Expected outputs (robust estimation)](#expected-outputs-robust-estimation)
 
-	a. [Data node side](#data-node-side-1)
+	1. [Data node side](#data-node-side-1)
 	
-	b. [Coordination node side](#coordination-node-side-1)
+	2. [Coordination node side](#coordination-node-side-1)
 
 7. [License](#license)
 
@@ -173,11 +173,11 @@ The file `Beta_t_output.csv` and `Results_iter_t.csv` will be generated. To cont
 
 ***Make sure `R studio` is not currently running and close it if it is.***
 
-1.	Navigate to the folder `pooled_solution`.
-2.	Open the file `Solution.R`. It should then appear in `R`.
-3.  Since we want to use the classic variance estimation, we need to make sure that all manual parameters of the coordination `R` file (`Solution.R`) are set properly. In the header section of the file, make sure that the variable `robust_flag` is set to `FALSE`.
-4.	Select all the code and click `run`.
-5.	The results will be available in the console.
+1. Navigate to the folder `pooled_solution`.
+2. Open the file `Solution.R`. It should then appear in `R`.
+3. Since we want to use the classic variance estimation, we need to make sure that all manual parameters of the coordination `R` file (`Solution.R`) are set properly. In the header section of the file, make sure that the variable `robust_flag` is set to `FALSE`.
+4. Select all the code and click `run`.
+5. The results will be available in the console.
 
 ## Instructions to run the examples/algorithm (robust estimation)
 
@@ -252,11 +252,11 @@ In order to compute the robust variance estimator, additionnal files `sumWExpGlo
 
 ***Make sure `R studio` is not currently running and close it if it is.***
 
-1.	Navigate to the folder `pooled_solution`.
-2.	Open the file `Solution.R`. It should then appear in `R`.
-3.  Since we want to use the robust variance estimation, we need to make sure that all manual parameters of the coordination `R` file (`Solution.R`) are set properly. In the header section of the file, make sure that the variable `robust_flag` is set to `TRUE`.
-4.	Select all the code and click `run`.
-5.	The results will be available in the console.
+1. Navigate to the folder `pooled_solution`.
+2. Open the file `Solution.R`. It should then appear in `R`.
+3. Since we want to use the robust variance estimation, we need to make sure that all manual parameters of the coordination `R` file (`Solution.R`) are set properly. In the header section of the file, make sure that the variable `robust_flag` is set to `TRUE`.
+4. Select all the code and click `run`.
+5. The results will be available in the console.
 
 ## Expected outputs (classic estimation)
 
@@ -320,7 +320,6 @@ This implementation of the Cox model mimics the following `R` call:
 | Iteration `3` | `Beta_3_output.csv` <br> `Fisher_3.csv` <br> `Results_iter_3.csv` <br> `sumWExpGlobal_output_2.csv` <br> `zbarri_2.csv` <br> `zbarri_inverseWExp_Global_output_1.csv` <br> `inverseWExp_t_Global_output_1.csv` | Yes  <br> Yes <br> Does not apply <br> Yes <br> Yes <br> Yes |
 | Iteration `4` | `Beta_4_output.csv` <br> `Fisher_4.csv` <br> `Results_iter_4.csv` <br> `sumWExpGlobal_output_3.csv` <br> `zbarri_3.csv` <br> `zbarri_inverseWExp_Global_output_2.csv` <br> `inverseWExp_t_Global_output_2.csv` <br> `RobustResults_iter_1.csv` | Yes <br> Yes <br> Does not apply <br> Yes <br> Yes <br> Yes <br> Yes <br> Does not apply |
 | Iteration `t` | `Beta_(t)_output.csv` <br> `Fisher_(t).csv` <br> `Results_iter_(t).csv` <br> `sumWExpGlobal_output_(t-1).csv` <br> `zbarri_(t-1).csv` <br> `zbarri_inverseWExp_Global_output_(t-2).csv` <br> `inverseWExp_t_Global_output_(t-2).csv` <br> `RobustResults_iter_(t-3).csv` | Yes <br> Yes <br> Does not apply <br> Yes <br> Yes <br> Yes <br> Yes <br> Does not apply |
-
 
 ## License
 
