@@ -1,90 +1,6 @@
-# Horizontally distributed Cox model 
+# Generic code
 
-This implementation of the Cox model mimics the following `R` calls: 
-- `coxph(formula, data, ties = “breslow”)`, whenever one checks `Results_iter_t.csv` and once convergence is attained.
-- `coxph(formula, data, ties = “breslow”, weights, robust = TRUE)`, whenever one checks `RobustResults_t.csv` and once convergence is attained.
-
-As both implementation use the same base files even if different amounts of information is shared troughout the algorithm, this guide has been splitted in two sections to better help users.
-
-## Table of contents
-
-1. [Repository structure](#repository-structure)
-
-	a. [List of examples](#list-of-examples)
-	
-	b. [Generic code](#generic-code)
-
-2. [Data requirements](#Data-requirements)
-
-3. [Instructions to run the examples/algorithm (classic estimation)](#instructions-to-run-the-examplesalgorithm-classic-estimation)
-
-	a. [Installing R and R Studio](#installing-r-and-r-studio)
-	
-	b. [Installing the required packages](#installing-the-required-packages)
-	
-	c. [Installing an example](#installing-an-example)
-	
-	d. [Executing the distributed code](#executing-the-distributed-code)
-	
-	e. [Executing the pooled solution code](#executing-the-pooled-solution-code)
-	
-4. [Instructions to run the examples/algorithm (robust estimation)](#instructions-to-run-the-examplesalgorithm-robust-estimation)
-
-	a. [Installing R and R Studio](#installing-r-and-r-studio-1)
-	
-	b. [Installing the required packages](#installing-the-required-packages-1)
-	
-	c. [Installing an example](#installing-an-example-1)
-	
-	d. [Executing the distributed code](#executing-the-distributed-code-1)
-	
-	e. [Executing the pooled solution code](#executing-the-pooled-solution-code-1)
-	
-5. [Expected outputs (classic estimation)](#expected-outputs-classic-estimation)
-
-	a. [Data node side](#data-node-side)
-	
-	b. [Coordination node side](#coordination-node-side)
-	
-6. [Expected outputs (robust estimation)](#expected-outputs-robust-estimation)
-
-	a. [Data node side](#data-node-side-1)
-	
-	b. [Coordination node side](#coordination-node-side-1)
-
-7. [License](#license)
-
-8. [Copyright](#copyright-griis--université-de-sherbrooke)
-
-## Repository structure
-
-- The core article is in the root directory: "Lu et al. - 2015 - WebDISCO: A Web Service for Distributed Cox Model.pdf."  This describes the background of the work and presents the method used.
-
-- Examples  
-The examples folder contains a few examples. Each example can be ran directly from their specific folder. Therefore, some files will be duplicated across examples, but this is to facilitate their exploration independantly.
-
-- Generic_code  
-The generic_code folder contains examplar `R` code files pertaining to the distributed approach and its pooled comparator. Please read the code and its comments in the `R` file as files may require edition before being used.
-
-### List of examples
-
-- `random_data`, and `random_data_same_folder` are based on the same example (whereas `random_grouped_data`, `random_grouped_data_same_folder` and `random_grouped_data_with_weights_same_folder` are based on the same example where the data was aggregated).  
-	- The first one has the files separated in different folders to better mimic a distributed environment. To run, you need to copy the results across folders, which clarifies what is sent where.  
-	- The second example is based on the same dataset, but if you simply want to look at the output, everything is happening in the same folder, without the need to copy files across folders.
-
-- `lung_data_same_folder` is an example based on the `lung` dataset in `R` (whereas `lung_data_grouped_same_folder` is based on the same example where the data was aggregated).
-
-- `breast_data`, `breast_data_same_folder`, `breast_data_with_weights_same_folder` are based on the same example. They all use the "[Breast Cancer Dataset](https://www.kaggle.com/datasets/utkarshx27/breast-cancer-dataset-used-royston-and-altman)" from Royston and Altman (2013).  
-	- The first one has the files separated in different folders to better mimic a distributed environment. To run, you need to copy the results across folders, which clarifies what is sent where.  
-	- The second example is based on the same dataset, but if you simply want to look at the output, everything is happening in the same folder, without the need to copy files across.  
-	- The third example is based on the same dataset alongside weights files. Everything is happening in the same folder, without the need to copy files across.
-
-- *Optional : if you want to try to generate new test datasets, the file `cox_data_generation.R` might be useful.*
-
-### Generic code
-
-The files in this folder can be used to execute a horizontally distributed cox regression analysis.
-Assuming a data structure similar to the data nodes `.csv` files in the example folder, this code can be used to execute a data node operation or a coordination node operation for a Cox model.
+The files in this folder can be used to execute a distributed cox regression analysis. Assuming a data structure similar to the data nodes `.csv` files in the example folder, this code can be used to execute a data node operation or a coordination node operation for a Cox model.
 
 ## Data requirements
 
@@ -320,7 +236,6 @@ This implementation of the Cox model mimics the following `R` call:
 | Iteration `3` | `Beta_3_output.csv` <br> `Fisher_3.csv` <br> `Results_iter_3.csv` <br> `sumWExpGlobal_output_2.csv` <br> `zbarri_2.csv` <br> `zbarri_inverseWExp_Global_output_1.csv` <br> `inverseWExp_t_Global_output_1.csv` | Yes  <br> Yes <br> Does not apply <br> Yes <br> Yes <br> Yes |
 | Iteration `4` | `Beta_4_output.csv` <br> `Fisher_4.csv` <br> `Results_iter_4.csv` <br> `sumWExpGlobal_output_3.csv` <br> `zbarri_3.csv` <br> `zbarri_inverseWExp_Global_output_2.csv` <br> `inverseWExp_t_Global_output_2.csv` <br> `RobustResults_iter_1.csv` | Yes <br> Yes <br> Does not apply <br> Yes <br> Yes <br> Yes <br> Yes <br> Does not apply |
 | Iteration `t` | `Beta_(t)_output.csv` <br> `Fisher_(t).csv` <br> `Results_iter_(t).csv` <br> `sumWExpGlobal_output_(t-1).csv` <br> `zbarri_(t-1).csv` <br> `zbarri_inverseWExp_Global_output_(t-2).csv` <br> `inverseWExp_t_Global_output_(t-2).csv` <br> `RobustResults_iter_(t-3).csv` | Yes <br> Yes <br> Does not apply <br> Yes <br> Yes <br> Yes <br> Yes <br> Does not apply |
-
 
 ## License
 

@@ -12,7 +12,7 @@ This algorithm allows one to group data using the `time` variable of a Cox regre
 
 2. [Data requirements](#Data-requirements)
 
-3. [Instructions to run the examples/algorithm classic estimation)](#instructions-to-run-the-examplesalgorithm-classic-estimation)
+3. [Instructions to run the examples/algorithm](#instructions-to-run-the-examplesalgorithm)
 
 	a. [Installing R and R Studio](#installing-r-and-r-studio)
 	
@@ -102,6 +102,8 @@ If you work in an isolated environment, you might need to download them manually
 
 The coordination node should not use this feature.
 
-## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
+## License
+
+https://creativecommons.org/licenses/by-nc-sa/4.0/
 
 ## Copyright: GRIIS / Université de Sherbrooke

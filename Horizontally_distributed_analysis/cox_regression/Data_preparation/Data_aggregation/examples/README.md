@@ -1,7 +1,7 @@
-# Data preparation
+# Generic code
 
 (!)
-Description générique de ce dossier à venir. À uniformiser.
+Explications génériques de ce que l'on veut dire par code générique..!
 (!)
 
 ## License

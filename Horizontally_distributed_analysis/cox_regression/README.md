@@ -31,6 +31,8 @@ This folder contains instructions on how to prepare your data before running the
 
 Note: While it is not a requirement, the algorithm expects your data to be ordered by time. Should that not be the case, the main algorithm will save a copy of your original data (`Backup_Data_Unordered_k.csv`) and will also save a new `.csv` file (`Data_node_k.csv`) that is ordered by time.
 
-### License: https://creativecommons.org/licenses/by-nc-sa/4.0/
+## License
 
-### Copyright: GRIIS / Université de Sherbrooke
+https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+## Copyright: GRIIS / Université de Sherbrooke
