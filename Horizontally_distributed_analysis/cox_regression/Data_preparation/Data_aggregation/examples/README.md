@@ -1,6 +1,6 @@
 # Example list
 
-This folder contains some data example that can be used to better understand the data aggregation method's behavior, inputs, outputs and special cases.
+This folder contains some data examples that can be used to better understand the data aggregation method's behavior, inputs, outputs and special cases.
 
 ## Methods
 
