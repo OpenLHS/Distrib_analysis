@@ -40,7 +40,7 @@ For any given example, it is possible to compare the distributed method with the
 
 ## Examples
 
-1. `random_data`, and `random_data_same_folder` are based on the same example (whereas `random_grouped_data`, `random_grouped_data_same_folder` and `random_grouped_data_with_weights_same_folder`) are based on the same example where the data was aggregated).  
+1. `random_data`, and `random_data_same_folder` are based on the same example (whereas `random_grouped_data`, `random_grouped_data_same_folder` and `random_grouped_data_with_weights_same_folder`) are based on the same example where the data was aggregated).
 
 	a. The first one has the files separated in different folders to better mimic a distributed environment. To run, you need to copy the results across folders, which clarifies what is sent where.
 	
