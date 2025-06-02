@@ -6,29 +6,29 @@ This algorithm allows one to group data using the `time` variable of a Cox regre
 
 1. [Repository structure](#repository-structure)
 
-	a. [List of examples](#list-of-examples)
+	1. [List of examples](#list-of-examples)
 	
-	b. [Generic code](#generic-code)
+	2. [Generic code](#generic-code)
 
 2. [Data requirements](#Data-requirements)
 
 3. [Instructions to run the examples/algorithm](#instructions-to-run-the-examplesalgorithm)
 
-	a. [Installing R and R Studio](#installing-r-and-r-studio)
+	1. [Installing R and R Studio](#installing-r-and-r-studio)
 	
-	b. [Installing the required packages](#installing-the-required-packages)
+	2. [Installing the required packages](#installing-the-required-packages)
 	
-	c. [Installing an example](#installing-an-example)
+	3. [Installing an example](#installing-an-example)
 	
-	d. [Executing the distributed code](#executing-the-distributed-code)
+	4. [Executing the distributed code](#executing-the-distributed-code)
 	
-	e. [Executing the pooled solution code](#executing-the-pooled-solution-code)
+	5. [Executing the pooled solution code](#executing-the-pooled-solution-code)
 	
 4. [Expected outputs](#expected-outputs)
 
-	a. [Data node side](#data-node-side)
+	1. [Data node side](#data-node-side)
 	
-	b. [Coordination node side](#coordination-node-side)
+	2. [Coordination node side](#coordination-node-side)
 
 5. [License](#license-httpscreativecommonsorglicensesby-nc-sa40)
 
