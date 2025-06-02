@@ -12,27 +12,27 @@ For any given example, it is possible to compare the distributed method with the
 
 3. [Instructions to run the examples (labelled same folder)](#Instructions-to-run-the-examples-labelled-same-folder)
 
-	a. [Installing R and R Studio](#Installing-R-and-R-Studio)
+    1. [Installing R and R Studio](#Installing-R-and-R-Studio)
 	
-	b. [Installing the required packages](#Installing-the-required-packages)
+    2. [Installing the required packages](#Installing-the-required-packages)
 	
-	c. [Installing an example](#Installing-an-example)
+    3. [Installing an example](#Installing-an-example)
 	
-	d. [Executing the distributed code](#Executing-the-distributed-code)
+    4. [Executing the distributed code](#Executing-the-distributed-code)
 	
-	e. [Executing the pooled solution code](#Executing-the-pooled-solution-code)
+    5. [Executing the pooled solution code](#Executing-the-pooled-solution-code)
 
 4. [Instructions to run the examples (not labelled same folder)](#Instructions-to-run-the-examples-not-labelled-same-folder)
 
-	a. [Installing R and R Studio](#Installing-R-and-R-Studio-1)
+    1. [Installing R and R Studio](#Installing-R-and-R-Studio-1)
 	
-	b. [Installing the required packages](#Installing-the-required-packages-1)
+    2. [Installing the required packages](#Installing-the-required-packages-1)
+
+    3. [Installing an example](#Installing-an-example-1)
 	
-	c. [Installing an example](#Installing-an-example-1)
+    4. [Executing the distributed code](#Executing-the-distributed-code-1)
 	
-	d. [Executing the distributed code](#Executing-the-distributed-code-1)
-	
-	e. [Executing the pooled solution code](#Executing-the-pooled-solution-code-1)
+    5. [Executing the pooled solution code](#Executing-the-pooled-solution-code-1)
 
 5. [License](#license)
 
@@ -42,20 +42,20 @@ For any given example, it is possible to compare the distributed method with the
 
 1. `random_data`, and `random_data_same_folder` are based on the same example (whereas `random_grouped_data`, `random_grouped_data_same_folder` and `random_grouped_data_with_weights_same_folder`) are based on the same example where the data was aggregated).
 
-	a. The first one has the files separated in different folders to better mimic a distributed environment. To run, you need to copy the results across folders, which clarifies what is sent where.
+    1. The first one has the files separated in different folders to better mimic a distributed environment. To run, you need to copy the results across folders, which clarifies what is sent where.
 	
-	b. The second example is based on the same dataset, but if you simply want to look at the output, everything is happening in the same folder, without the need to copy files across folders.
+    2. The second example is based on the same dataset, but if you simply want to look at the output, everything is happening in the same folder, without the need to copy files across folders.
 
 2. `lung_data_same_folder` is an example based on the `lung` dataset in `R` (`whereas lung_data_grouped_same_folder` is based on the same example where the data was aggregated).
 
 3. `breast_data`, `breast_data_same_folder`, `breast_data_with_weights_same_folder` are based on the same example. They both use the "Breast Cancer Dataset" from Royston and Altman (2013).  
 See: https://www.kaggle.com/datasets/utkarshx27/breast-cancer-dataset-used-royston-and-altman  
 
-	a. The first one has the files separated in different folders to better mimic a distributed environment. To run, you need to copy the results across folders, which clarifies what is sent where.  
+    1. The first one has the files separated in different folders to better mimic a distributed environment. To run, you need to copy the results across folders, which clarifies what is sent where.  
 	
-	b. The second example is based on the same dataset, but if you simply want to look at the output, everything is happening in the same folder, without the need to copy files across.  
+    2. The second example is based on the same dataset, but if you simply want to look at the output, everything is happening in the same folder, without the need to copy files across.  
 	
-	c. The third example is based on the same dataset alongside weights files. Everything is happening in the same folder, without the need to copy files across.
+    3. The third example is based on the same dataset alongside weights files. Everything is happening in the same folder, without the need to copy files across.
 
 ***Optional : if you want to try to generate new test datasets, the file `cox_data_generation.R` might be useful.***
 
