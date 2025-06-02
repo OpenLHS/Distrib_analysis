@@ -37,10 +37,10 @@ This algorithm allows one to group data using the `time` variable of a Cox regre
 ## Repository structure
 
 - Examples  
-The examples folder contains a few examples. Each example folder is self-contained. Therefore, some files will be duplicated across examples, but this is to facilitate their exploration independantly.
+The examples folder contains a few examples. Each example folder is self-contained. 
 
 - Generic_code  
-The generic_code folder contains examplar `R` code files pertaining to the distributed approach and its pooled comparator. Please read the code and its comments in the `R` file as files may require edition before being used.
+The generic_code folder contains examplar `R` code files. Please read the code and its comments in the `R` file as files may require edition before being used.
 
 ### List of examples
 
@@ -49,8 +49,8 @@ Orders the data by time and averages the time values across a specified number o
 
 ### Generic code
 
-The files in this folder can be used to support an example of aggregating the times of a dataset.  
-Assuming a data structure similar to the data nodes `.csv` files in the example folder, this code can be used to execute a data node operation or a coordination node operation for a Cox model.
+The files in this folder can be used to support an example aggregating the times of a dataset.  
+Assuming a data structure similar to the data nodes `.csv` files in the example folder, this code can be used to execute an aggregation of individuals for a data node.
 
 ## Data requirements
 
