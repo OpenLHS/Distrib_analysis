@@ -97,23 +97,74 @@ If you work in an isolated environment, you might need to download them manually
 
 ### Executing the code 
 
-***Make sure `R studio` is not currently running and close it if it is.***  
-***If you are not able to automatically set your working directory, manually set the variable `manualwd = 1` in `Data_node_call_cox-reg_k.R` and  `Coord_node_call_iter_cox-reg.R`.***
+In the following procedure, `k` represents the number of the local node, and `t` represents the iteration number. Note that the iteration number `t` increments everytime the coordination node is reached.
 
-1. In the file `data_node_call_precox_average.R`, select all the code and execute it. A new file will be generated, which contains the original data with modified times.
-2. This data can now be used by a data node to participate into a privacy preserving Cox model.
+Initialization:
+
+1. Run the local `R` file (`Data_node_call_log-reg_k.R`) for each data node to compute local settings and local beta estimates.  
+The files `Data_node_k_iter_0.csv` and `Predictor_names` will be generated. All files must be sent to the coordination node.
+
+2. Run the coordination `R` file (`Coord_node_call_iter_log-reg.R`) to initialise the values of beta.  
+The file `Coord_node_iter_1_primer.csv`  will be generated. This file must be shared with the local nodes.  
+The file `Global_Predictor_names.csv` will also be generated if all nodes have the same data structure and estimation parameters. It does not need to be shared with the local nodes.
+
+For the first iteration, data node side:
+
+3. Run the local `R` file (`Data_node_call_log-reg_k.R`) for each data node to compute local aggregates used for derivatives.  
+The file `Data_node_k_iter_1.csv` will be generated. It must be sent to the coordination node.
+
+For the first iteration, coordinating node side:
+
+4. Run the coordination `R` file (`Coord_node_call_iter_log-reg.R`)to compute first and second derivative and to update beta estimate.  
+The files `Coord_node_iter_2_primer.csv`, `Coord_node_iter_1_covariance.csv` and `Coord_node_ter_1_results.csv` will be generated. To continue, the coordination node must share the file `Coord_node_iter_2_primer.csv` with the local nodes.
+
+Then, to perform other iterations:
+
+5. Run the local `R` file (`Data_node_call_log-reg_k.R`) for each data node to compute local aggregates used for derivatives.  
+The file `Data_node_k_iter_(t).csv` will be generated. It must be sent to the coordination node.
+
+6. Run the coordination `R` file (`Coord_node_call_iter_log-reg.R`)to compute first and second derivative and to update beta estimate.  
+The files `Coord_node_iter_(t+1)_primer.csv`, `Coord_node_iter_(t)_covariance.csv` and `Coord_node_iter_(t)_results.csv` will be generated. To continue, the coordination node must share the file `Coord_node_iter_(t+1)_primer.csv` with the local nodes.
+
+7. (optional) Compare the results of the previous iteration with the current one to decide if another iteration is pertinent (return to step `5`) or not.
+
+### Executing the pooled solution code
+
+***Make sure `R studio` is not currently running and close it if it is.***  
+***This should only be used with the provided examples (or an example of your own), as it requires to pool all your data sources together.***
+
+1. Navigate to the folder `examples/example_handler/pooled_comparator`. You might need to copy the data and weight files in this folder.
+2. Open the file `Solution.R`. It should then appear in `R`.
+3. Make sure that all manual parameters of the coordination `R` file (`Solution.R`) are set properly. 
+4. Select all the code and click `run`.
+5. The results will be available in the console.
 
 ## Expected outputs
 
+This implementation of the logistic regression model mimics the following `R` calls: 
+- `glm(formula, data, family="binomial", weights)`, whenever one checks `Coord_node_iter_t_results.csv` and once convergence is attained. 
+
+Since this implementation is made for distributed analysis, the following `R` files should not be shared:
+- `Data_node_k.csv`.
+- `Weights_node_k.csv`.
+
 ### Data node side
 
-| Step | Files created |
-| ----------- | ----------- | 
-| Data preparation | `Data_node_grouped_k.csv` |
+| Step | Files created | Shared? |
+| ----------- | ----------- | ----------- |
+| Initialization | `Data_node_k_iter_0_output.csv` <br> `Predictor_names_k.csv` <br> `Backup_Data_node_Incomplete_k.csv`\* <br> `Backup_Weights_node_Incomplete_k.csv`\* | Yes <br> Yes <br> No <br> No |
+| Iteration `1`  | `Data_node_k_iter_1_output.csv` | Yes |
+| Iteration `t`  | `Data_node_k_iter_(t)_output.csv` | Yes |
+
+\* The algorithm currently only works when there are no missing value. Should there be any missing value in the `Data_node_k.csv` file, the algorithm will perform a complete case analysis. In order to do so, it will save your data to a backup file and will replace `Data_node_k.csv` with only the complete cases.
 
 ### Coordination node side
 
-The coordination node should not use this feature.
+| Step | Files created | Shared? |
+| ----------- | ----------- | ----------- |
+| Initialization  | `Coord_node_iter_1_primer.csv` <br> `Global_Predictor_names.csv` | Yes <br> No |
+| Iteration `1`   | `Coord_node_iter_2_primer.csv` <br> `Coord_node_iter_1_covariance.csv` <br> `Coord_node_iter_1_results.csv` | Yes <br> Does not apply <br> Does not apply |
+| Iteration `t`   | `Coord_node_iter_(t+1)_primer.csv` <br> `Coord_node_iter_(t)_covariance.csv` <br> `Coord_node_iter_(t)_results.csv` | Yes <br> Does not apply <br> Does not apply |
 
 ## License
 
