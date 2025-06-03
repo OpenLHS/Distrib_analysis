@@ -142,6 +142,8 @@ If you work in an isolated environment, you might need to download them manually
 
 ***Make sure `R studio` is not currently running and close it if it is.***
 
+In the following procedure, `k` represents the number of the local node, and `t` represents the iteration number. Note that the iteration number `t` increments everytime the coordination node is reached.
+
 Initialization: 
 
 1. Run the `Run_example.R` file for each data node subfolder (`Data_node_k`).  
