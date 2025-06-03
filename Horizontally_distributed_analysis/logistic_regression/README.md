@@ -1,20 +1,16 @@
-# Horizontally distributed WebDisco-based implementation
+# Horizontally distributed logistic regression
 
 ## Repository structure
 
-1. The core article "Lu et al. - 2015 - WebDISCO: A Web Service for Distributed Cox Model.pdf" describes the background of the work and presents the method used.
-
-2. Cox_regression_modelling
-This folder contains generic code and examples of a horizontally distributed Cox model.
+1. Logistic_regression_modelling  
+This folder contains generic code and examples of a horizontally distributed logistic regression model.
 
 3. Data_preparation  
 This folder contains instructions on how to prepare your data before running the code of a horizontally distributed Cox model.
 
 ## Before using
 
-- **The Cox model does not ensure data privacy by itself. The data must be aggregated first to ensure confidentiality. (See the folder `Data_preparation`)**
-- Make sure to adjust the number of files `Data_node_call_cox-reg_k.R` according to the number of nodes, and make sure to change the value of `manualk` to the node number.
-- Make sure that all local files `Data_node_call_cox-reg_k.R` set the variable `RobustVarianceFlag` to the same value (`TRUE` for a robust variance estimation, `FALSE` for a classic variance estimation).
+- Make sure to adjust the number of files `Data_node_call_log-reg_k.R` according to the number of nodes, and make sure to change the value of `manualk` to the node number.
 - To start over, it is important to delete all "output" files.
 - The code currently works only with complete data. Should that not be the case, the main algorithm will save a copy of your original data (`Backup_Data_Incomplete_k.csv`) and will also save a new .csv file (`Data_node_k.csv`) that contains all complete rows of the original data. As such, it will be as if you were running a complete case analysis.
 - ***OF NOTE, this is PURELY to demonstrate the feasibility of distributed Cox models. The code here has NOT been optimised NOR made secure in a significant way. A thorough review NEEDS to be undertaken before using this code in any production/research project.***
@@ -22,15 +18,12 @@ This folder contains instructions on how to prepare your data before running the
 ## Data requirements
 
 - Data is expected to be saved in a `.csv` file.
-- The code is written so that `0 = censored` and `1 = event` for the `status` variable. Make sure to follow this structure with your dataset.
-- The first two columns of your Data file must be named `time` and `status` (order not important).
+- The first column of your data file must be the outcome variable and must be named `out1`. This variable must use the values `0` or `1`, where `1` indicates a success (or having the characteristic).
 - All other columns (predictor variables) must be in the same order and must share the same names across nodes.
 - Each level for categorical variables is expected to have been possible to sample across all nodes. Otherwise, said level should either be removed or merged with another level.
 - Categorical variables must be binarized before running this code. Binarized variables must use the values `0` or `1`, where `1` indicates a success (or having the characteristic).
 - It is expected that there are no missing values. Should there be any, they must be coded as `NA` values. In the case, the method will do a complete case analysis.
 - (optional) Weights are expected to be saved in a separated `.csv` file.
-
-Note: While it is not a requirement, the algorithm expects your data to be ordered by time. Should that not be the case, the main algorithm will save a copy of your original data (`Backup_Data_Unordered_k.csv`) and will also save a new `.csv` file (`Data_node_k.csv`) that is ordered by time.
 
 ## License
 
