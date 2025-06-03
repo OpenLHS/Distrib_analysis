@@ -84,7 +84,7 @@ The generic_code folder contains examplar `R` code files pertaining to the distr
 ### Generic code
 
 The files in this folder can be used to execute a horizontally distributed cox regression analysis.
-Assuming a data structure similar to the data nodes `.csv` files in the example folder, this code can be used to execute a data node operation or a coordination node operation for a Cox model.
+Assuming a data structure similar to the data nodes `.csv` files in the example folder, this code can be used to execute a data node operation or a coordination node operation for a horizontally distributed Cox model.
 
 ## Data requirements
 
