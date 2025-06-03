@@ -68,7 +68,7 @@ Assuming a data structure similar to the data nodes `.csv` files in the example 
 
 ## Before using
 
-*** OF NOTE, this is PURELY to demonstrate the feasibility of distributed linear regressions. The code here has NOT been optimised NOR made secure in a significant way. A thorough review NEEDS to be undertaken before using this code in any production/research project.***
+***OF NOTE, this is PURELY to demonstrate the feasibility of distributed linear regressions. The code here has NOT been optimised NOR made secure in a significant way. A thorough review NEEDS to be undertaken before using this code in any production/research project.***
 
 ## Data requirements
 
