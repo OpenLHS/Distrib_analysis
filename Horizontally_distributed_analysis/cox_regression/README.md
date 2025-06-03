@@ -16,7 +16,7 @@
 2. Cox_regression_modelling
 This folder contains generic code and examples of a horizontally distributed Cox model.
 
-3. Data_preparation  
+3. Data_preprocessing  
 This folder contains instructions on how to prepare your data before running the code of a horizontally distributed Cox model.
 
 ## Data requirements
