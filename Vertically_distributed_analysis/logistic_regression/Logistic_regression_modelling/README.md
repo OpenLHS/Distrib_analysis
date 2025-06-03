@@ -151,6 +151,13 @@ The files `Data_node_k_results.csv` will be generated and contains results assoc
 
 ## Expected outputs
 
+This implementation of the Vertical Logistic Regression leads to valid estimates and standard errors for the logistic regression model (with no penalization).
+The results can be interpreted as they would with the following `R` calls in a pooled setting: 
+- `glm(formula, data, family = “binomial”)`
+
+Since this implementation is made for distributed analysis, the following `R` files should not be shared:
+- `Data_node_k.csv`.
+
 ### Response-node side
 
 | Step | Files created | Shared with covariate-node k? |
