@@ -39,9 +39,9 @@ The results can be interpreted as they would with the following `R` calls in a p
 
 ## Before using
 
-- The implementation was tested to operate using R version 4.4.1.
-- Data requirements should be read and followed before running.
-
+- The implementation was tested to operate using `R` version 4.4.1.
+- To start over, it is important to deletee all "output" files.
+- The code currently works only with complete data.
 
 ## Repository structure
 
