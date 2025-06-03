@@ -95,7 +95,7 @@ If you work in an isolated environment, you might need to download them manually
 
 1. Unpack one of the example folders on one of your drives.
 
-### Executing the code 
+### Executing the distributed code 
 
 In the following procedure, `k` represents the number of the local node, and `t` represents the iteration number. Note that the iteration number `t` increments everytime the coordination node is reached.
 
