@@ -53,7 +53,7 @@ The generic_code folder contains examplar `R` code files pertaining to the distr
 	3. The third example (`random_data_same_folder_missing`) is based on the same dataset but has some missing data in the first data node. This will allow one to know how the method behaves when it has to do a complete case analysis.
 	4. The fourth example (`random_data_with_weights_same_folder`) is based on the same dataset and also uses weights. The weights used were chosen randomly.	
 
-2. `MatchIt_data_with_weights` and `MatchIt_data_with_weights_same_folder` are based on the same example. They both use the `Lalonde` data sets from the `R` package `MatchIt`. See [MatchIt](hps://cran.r-project.org/web/packages/MatchIt/index.html).  
+2. `MatchIt_data_with_weights` and `MatchIt_data_with_weights_same_folder` are based on the same example. They both use the `Lalonde` data sets from the `R` package `MatchIt`. See [MatchIt](https://cran.r-project.org/web/packages/MatchIt/index.html).  
 For both examples, the weights are the ones obtained from running the content of the `Weights_generation_for_IPW` with the MatchIt example.
 
 	1. The first one (`MatchIt_data_with_weights`) has the files separated in different folders to better mimic a distributed environment. To run, you need to copy the results across folders, which clarifies what is sent where.
