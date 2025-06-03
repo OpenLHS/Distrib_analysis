@@ -13,7 +13,7 @@ This folder contains instructions on how to prepare your data before running the
 ## Before using
 
 - **The Cox model does not ensure data privacy by itself. The data must be aggregated first to ensure confidentiality. (See the folder `Data_preparation`)**
-- Make sure to adjust the number of files `Data_node_call_cox-reg_k.R` according to the number of nodes, and make sure to change the value of `manualto the node number.
+- Make sure to adjust the number of files `Data_node_call_cox-reg_k.R` according to the number of nodes, and make sure to change the value of `manualk` to the node number.
 - Make sure that all local files `Data_node_call_cox-reg_k.R` set the variable `RobustVarianceFlag` to the same value (`TRUE` for a robust variance estimation, `FALSE` for a classic variance estimation).
 - To start over, it is important to delete all "output" files.
 - The code currently works only with complete data. Should that not be the case, the main algorithm will save a copy of your original data (`Backup_Data_Incomplete_k.csv`) and will also save a new .csv file (`Data_node_k.csv`) that contains all complete rows of the original data. As such, it will be as if you were running a complete case analysis.
