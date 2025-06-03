@@ -11,8 +11,9 @@
 1. Logistic_regression_modelling  
 This folder contains generic code and examples of a vertically distributed logistic regression model.
 
-2. Data_preparation  
-This folder contains instructions on how to prepare your data before running the code of a vertically distributed model.
+2. Privacy_check  
+The privacy_check folder contains `R` code files allowing one covariate-node to verify privacy-preserving properties while disclosing results such as estimates, standard errors and p-values.
+
 
 ## Data requirements
 
