@@ -83,9 +83,10 @@ The file `Beta_t_output.csv` and `Results_iter_t.csv` will be generated. To cont
 ### Executing the pooled solution code
 
 ***Make sure `R studio` is not currently running and close it if it is.***
+***This should only be used with the provided examples (or an example of your own), as it requires to pool all your data sources together.***
 
-1.	Navigate to the folder `pooled_solution`.
-2.	Open the file `Solution.R`. It should then appear in `R`.
+1. Navigate to the folder `examples/example_handler/pooled_comparator`. You might need to copy the data and weight files in this folder.
+2. Open the file `Solution.R`. It should then appear in `R`.
 3.  Since we want to use the classic variance estimation, we need to make sure that all manual parameters of the coordination `R` file (`Solution.R`) are set properly. In the header section of the file, make sure that the variable `robust_flag` is set to `FALSE`.
 4.	Select all the code and click `run`.
 5.	The results will be available in the console.
@@ -162,9 +163,10 @@ In order to compute the robust variance estimator, additionnal files `sumWExpGlo
 ### Executing the pooled solution code
 
 ***Make sure `R studio` is not currently running and close it if it is.***
+***This should only be used with the provided examples (or an example of your own), as it requires to pool all your data sources together.***
 
-1.	Navigate to the folder `pooled_solution`.
-2.	Open the file `Solution.R`. It should then appear in `R`.
+1. Navigate to the folder `examples/example_handler/pooled_comparator`. You might need to copy the data and weight files in this folder.
+2. Open the file `Solution.R`. It should then appear in `R`.
 3.  Since we want to use the robust variance estimation, we need to make sure that all manual parameters of the coordination `R` file (`Solution.R`) are set properly. In the header section of the file, make sure that the variable `robust_flag` is set to `TRUE`.
 4.	Select all the code and click `run`.
 5.	The results will be available in the console.
