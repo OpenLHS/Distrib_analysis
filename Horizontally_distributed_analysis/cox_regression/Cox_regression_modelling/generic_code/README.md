@@ -82,7 +82,7 @@ The file `Beta_t_output.csv` and `Results_iter_t.csv` will be generated. To cont
 
 ### Executing the pooled solution code
 
-***Make sure `R studio` is not currently running and close it if it is.***
+***Make sure `R studio` is not currently running and close it if it is.***  
 ***This should only be used with the provided examples (or an example of your own), as it requires to pool all your data sources together.***
 
 1. Navigate to the folder `examples/example_handler/pooled_comparator`. You might need to copy the data and weight files in this folder.
@@ -162,7 +162,7 @@ In order to compute the robust variance estimator, additionnal files `sumWExpGlo
 
 ### Executing the pooled solution code
 
-***Make sure `R studio` is not currently running and close it if it is.***
+***Make sure `R studio` is not currently running and close it if it is.***  
 ***This should only be used with the provided examples (or an example of your own), as it requires to pool all your data sources together.***
 
 1. Navigate to the folder `examples/example_handler/pooled_comparator`. You might need to copy the data and weight files in this folder.

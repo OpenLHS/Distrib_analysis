@@ -54,8 +54,8 @@ The generic_code folder contains examplar `R` code files pertaining to the distr
 2. `MatchIt_data_with_weights` and `MatchIt_data_with_weights_same_folder` are based on the same example. They both use the `Lalonde` data sets from the `R` package `MatchIt`. See [MatchIt](hps://cran.r-project.org/web/packages/MatchIt/index.html).  
 For both examples, the weights are the ones obtained from running the content of the `Weights_generation_for_IPW` with the MatchIt example.
 
-	1. The first one has the files separated in different folders to better mimic a distributed environment. To run, you need to copy the results across folders, which clarifies what is sent where.
-	2. The second example is based on the same dataset, but if you simply want to look at the output, everything is happening in the same folder, without the need to copy files across.
+	1. The first one (`MatchIt_data_with_weights`) has the files separated in different folders to better mimic a distributed environment. To run, you need to copy the results across folders, which clarifies what is sent where.
+	2. The second example (`MatchIt_data_with_weights_same_folder`) is based on the same dataset, but if you simply want to look at the output, everything is happening in the same folder, without the need to copy files across.
 
 3.  `newborn_data_same_folder` is yet another example.
 
@@ -86,7 +86,7 @@ There are many ways to run `R` code. The proposed instructions here are focusing
 
 The algorithm currently requires the use of package(s) not present in the base installation. `R` should prompt you to download the packages automatically.
 
-- [KS](https://cran.r-project.org/package=ks https://cran.r-project.org/web/packages/ks/ks.pdf)
+- [KS](https://cran.r-project.org/web/packages/ks/index.html)
 
 Furthermore, the examples will be easier to explore and adapt/change if the package `this.path` is also available. Yet this is NOT required and you can safely ignore any warning about this is if you want to use the algorithm "as-is". Should you choose not to use this package, you will then need to manually set your working directory in your `R` instance.
 
@@ -101,11 +101,9 @@ If you work in an isolated environment, you might need to download them manually
 ### Executing the distributed code
 
 ***Make sure `R studio` is not currently running and close it if it is.***  
-***If you are not able to automatically set your working directory (for example, if you do not have access to `this.path`), manually set the variable `manualwd = 1` in `Data_node_call_cox-reg_k.R` and  `Coord_node_call_iter_cox-reg.R`.***
+***If you are not able to automatically set your working directory (for example, if you do not have access to `this.path`), manually set the variable `manualwd = 1` in `Data_node_call_lin-reg_k.R` and  `Coord_node_lin-reg.R`.***
 
 In the following procedure, `k` represents the number of the local node.
-
-Initialization:
 
 1. Run the local `R` file (`Data_node_call_lin-reg_k.R`) for each data node to compute local matrix products.
 The files `Predictor_names_k.csv` and `Nodek_output.csv` will be generated. All files must be sent to the coordination node.
@@ -115,7 +113,7 @@ The file `CoordNode_results_distributed_lin_reg.csv` will be generated.
 
 ### Executing the pooled solution code
 
-***Make sure `R studio` is not currently running and close it if it is.***
+***Make sure `R studio` is not currently running and close it if it is.***  
 ***This should only be used with the provided examples (or an example of your own), as it requires to pool all your data sources together.***
 
 1. Navigate to the folder `examples/example_handler/pooled_comparator`. You might need to copy the data and weight files in this folder.
@@ -124,7 +122,7 @@ The file `CoordNode_results_distributed_lin_reg.csv` will be generated.
 4. Select all the code and click `run`.
 5. The results will be available in the console.
 
-## Expected outputs (classic estimation)
+## Expected outputs
 
 This implementation of the linear regression model mimics the method presented in the brief summary.
 
