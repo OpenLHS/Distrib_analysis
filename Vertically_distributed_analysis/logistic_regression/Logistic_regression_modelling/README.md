@@ -14,7 +14,9 @@ The results can be interpreted as they would with the following `R` calls in a p
 	
 	b. [Generic code](#generic-code)
 
-2. [Instructions to run the algorithm](#instructions-to-run-the-algorithm)
+2. [Data requirements](#Data-requirements)
+
+3. [Instructions to run the algorithm](#instructions-to-run-the-algorithm)
 
 	a. [Installing R and R Studio](#installing-r-and-r-studio)
 	
@@ -26,15 +28,15 @@ The results can be interpreted as they would with the following `R` calls in a p
 	
 	e. [Executing the pooled solution code](#executing-the-pooled-solution-code)
 	
-3. [Expected outputs](#expected-outputs)
+4. [Expected outputs](#expected-outputs)
 
 	a. [Response-node side](#response-node-side)
 	
 	b. [Covariate-node side](#covariate-node-side)
 
-4. [License](#license-httpscreativecommonsorglicensesby-nc-sa40)
+5. [License](#license-httpscreativecommonsorglicensesby-nc-sa40)
 
-5. [Copyright](#copyright-griis--université-de-sherbrooke)
+6. [Copyright](#copyright-griis--université-de-sherbrooke)
 
 
 ## Before using
@@ -53,6 +55,16 @@ The examples folder contains an example of a vertically partitioned dataset to t
 
 - Generic_code  
 The generic_code folder contains `R` code files pertaining to the distributed approach. Please read the code and its comments in the `R` file as files may require edition before being used.
+
+## Data requirements
+
+- Data is expected to be saved in a `.csv` file.
+- The code is written so that the binary response output is coded using `0` and `1`. Make sure to follow this structure with your dataset.
+- The response-node must be named `Data_node_1.csv`.
+- The first column of the data file for the response-node should be the response vector with column name `out1`. Any additional covariate at the response-node (if applies) are put in the same data file as additional columns.
+- Rows (individuals) must be in the same order in all data files across all nodes, including the response-node and covariate-nodes.
+- Categorical variables must be binarized before running this code. Binarized variables must use the values `0` or `1`, where `1` indicates a success (or having the characteristic).
+- It is expected that there are no missing values.
 
 ### List of examples
 
@@ -138,13 +150,6 @@ The files `Data_node_k_results.csv` will be generated and contains results assoc
 5. The results will be available in the console.
 
 ## Expected outputs
-
-This implementation of the Vertical Logistic Regression leads to valid estimates and standard errors for the logistic regression model (with no penalization).
-The results can be interpreted as they would with the following `R` calls in a pooled setting: 
-- `glm(formula, data, family = “binomial”)`
-
-Since this implementation is made for distributed analysis, the following `R` files should not be shared:
-- `Data_node_k.csv`.
 
 ### Response-node side
 
