@@ -5,7 +5,7 @@
 - Make sure to adjust the number of files `Data_node_call_log-reg_k.R` according to the number of nodes, and make sure to change the value of `manualk` to the node number.
 - To start over, it is important to delete all "output" files.
 - The code currently works only with complete data. Should that not be the case, the main algorithm will save a copy of your original data (`Backup_Data_Incomplete_k.csv`) and will also save a new .csv file (`Data_node_k.csv`) that contains all complete rows of the original data. As such, it will be as if you were running a complete case analysis.
-- ***OF NOTE, this is PURELY to demonstrate the feasibility of distributed Cox models. The code here has NOT been optimised NOR made secure in a significant way. A thorough review NEEDS to be undertaken before using this code in any production/research project.***
+- ***OF NOTE, this is PURELY to demonstrate the feasibility of distributed logistic regression. The code here has NOT been optimised NOR made secure in a significant way. A thorough review NEEDS to be undertaken before using this code in any production/research project.***
 
 ## Repository structure
 
