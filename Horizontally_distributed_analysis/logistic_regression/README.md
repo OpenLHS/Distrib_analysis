@@ -6,7 +6,7 @@
 This folder contains generic code and examples of a horizontally distributed logistic regression model.
 
 3. Data_preparation  
-This folder contains instructions on how to prepare your data before running the code of a horizontally distributed Cox model.
+This folder contains instructions on how to prepare your data before running the code of a horizontally distributed model.
 
 ## Before using
 
