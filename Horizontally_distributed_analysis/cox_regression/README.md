@@ -11,7 +11,7 @@ This folder contains generic code and examples of a horizontally distributed Cox
 This folder contains instructions on how to prepare your data before running the code of a horizontally distributed Cox model.
 
 ## Before using
-k` 
+
 - **The Cox model does not ensure data privacy by itself. The data must be aggregated first to ensure confidentiality. (See the folder `Data_preparation`)**
 - Make sure to adjust the number of files `Data_node_call_cox-reg_k.R` according to the number of nodes, and make sure to change the value of `manualto the node number.
 - Make sure that all local files `Data_node_call_cox-reg_k.R` set the variable `RobustVarianceFlag` to the same value (`TRUE` for a robust variance estimation, `FALSE` for a classic variance estimation).
