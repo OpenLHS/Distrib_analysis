@@ -105,7 +105,7 @@ If you work in an isolated environment, you might need to download them manually
 ***Make sure `R studio` is not currently running and close it if it is.***  
 ***This should only be used with the provided examples (or an example of your own), as it requires to pool all your data sources together.***
 
-1. Navigate to the folder `pooled_solution`. You might need to copy the data and weight files in this folder.
+1. Navigate to the folder `pooled_solution`. 
 2. Open the file `Run_Pooled_Example.R`. It should then appear in `R`.
 3.	Select all the code and click `run`.
 4.	The results will be available in the console.
@@ -177,7 +177,7 @@ The file `Beta_t_output.csv` and `Results_iter_t.csv` will be generated. To cont
 ***Make sure `R studio` is not currently running and close it if it is.***  
 ***This should only be used with the provided examples (or an example of your own), as it requires to pool all your data sources together.***
 
-1. Navigate to the folder `pooled_solution`. You might need to copy the data and weight files in this folder.
+1. Navigate to the folder `pooled_solution`. 
 2. Open the file `Run_Pooled_Example.R`. It should then appear in `R`.
 3.	Select all the code and click `run`.
 4.	The results will be available in the console.
