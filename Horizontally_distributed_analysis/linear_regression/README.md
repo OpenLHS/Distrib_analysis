@@ -5,17 +5,17 @@ This implementation of the linear regression model mimics the method presented i
 
 ## Table of contents
 
+0. [Before using](#Before-using)
+
 1. [Repository structure](#repository-structure)
 
 	1. [List of examples](#list-of-examples)
 	
 	2. [Generic code](#generic-code)
 
-2. [Before using](#Before-using)
-
-3. [Data requirements](#Data-requirements)
+2. [Data requirements](#Data-requirements)
 	
-4. [Instructions to run the examples/algorithm](#instructions-to-run-the-examplesalgorithm)
+3. [Instructions to run the examples/algorithm](#instructions-to-run-the-examplesalgorithm)
 
 	1. [Installing R and R Studio](#installing-r-and-r-studio)
 	
@@ -27,15 +27,22 @@ This implementation of the linear regression model mimics the method presented i
 	
 	5. [Executing the pooled solution code](#executing-the-pooled-solution-code)
 	
-5. [Expected outputs](#expected-outputs)
+4. [Expected outputs](#expected-outputs)
 
 	1. [Data node side](#data-node-side)
 	
 	2. [Coordination node side](#coordination-node-side)
 	
-6. [License](#license)
+5. [License](#license)
 
-7. [Copyright](#copyright-griis--université-de-sherbrooke)
+6. [Copyright](#copyright-griis--université-de-sherbrooke)
+
+## Before using
+
+- Make sure to adjust the number of files `Data_node_call_lin-reg_k.R` according to the number of nodes, and make sure to change the value of `manualk` to the node number.
+- To start over, it is important to delete all "output" files.
+- The code currently works only with complete data. Should that not be the case, the main algorithm will save a copy of your original data (`Backup_Data_Incomplete_k.csv`) and will also save a new .csv file (`Data_node_k.csv`) that contains all complete rows of the original data. As such, it will be as if you were running a complete case analysis.
+- ***OF NOTE, this is PURELY to demonstrate the feasibility of distributed linear regressions. The code here has NOT been optimised NOR made secure in a significant way. A thorough review NEEDS to be undertaken before using this code in any production/research project.***
 
 ## Repository structure
 
@@ -65,13 +72,6 @@ For both examples, the weights are the ones obtained from running the content of
 
 The files in this folder can be used to execute a horizontally distributed linear regression analysis.
 Assuming a data structure similar to the data nodes `.csv` files in the example folder, this code can be used to execute a data node operation or a coordination node operation for a horizontally distributed linear regression.
-
-## Before using
-
-- Make sure to adjust the number of files `Data_node_call_lin-reg_k.R` according to the number of nodes, and make sure to change the value of `manualk` to the node number.
-- To start over, it is important to delete all "output" files.
-- The code currently works only with complete data. Should that not be the case, the main algorithm will save a copy of your original data (`Backup_Data_Incomplete_k.csv`) and will also save a new .csv file (`Data_node_k.csv`) that contains all complete rows of the original data. As such, it will be as if you were running a complete case analysis.
-- ***OF NOTE, this is PURELY to demonstrate the feasibility of distributed linear regressions. The code here has NOT been optimised NOR made secure in a significant way. A thorough review NEEDS to be undertaken before using this code in any production/research project.***
 
 ## Data requirements
 
