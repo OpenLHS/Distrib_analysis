@@ -5,18 +5,13 @@ The files in this folder can be used to execute a distributed cox regression ana
 ## Data requirements
 
 - Data is expected to be saved in a `.csv` file.
-
 - The code is written so that `0 = censored` and `1 = event` for the `status` variable. Make sure to follow this structure with your dataset.
-
 - The first two columns of your Data file must be named `time` and `status` (order not important).
-
 - All other columns (predictor variables) must be in the same order and must share the same names across nodes.
-
 - Each level for categorical variables is expected to have been possible to sample across all nodes. Otherwise, said level should either be removed or merged with another level.
-
 - Categorical variables must be binarized before running this code. Binarized variables must use the values `0` or `1`, where `1` indicates a success (or having the characteristic).
-
-- (optional) Weights are expected to be saved in a `.csv` file.
+- It is expected that there are no missing values. Should there be any, they must be coded as `NA` values. In the case, the method will do a complete case analysis.
+- (optional) Weights are expected to be saved in a separated `.csv` file.
 
 ## Instructions to run the examples/algorithm (classic estimation)
 
