@@ -102,7 +102,7 @@ In the following procedure, `k` represents the number of the local node, and `t`
 Initialization:
 
 1. Run the local `R` file (`Data_node_call_log-reg_k.R`) for each data node to compute local settings and local beta estimates.  
-The files `Data_node_k_iter_0.csv` and `Predictor_names` will be generated. All files must be sent to the coordination node.
+The files `Data_node_k_iter_0_W_output.csv` and `Local_Settings_k.csv` will be generated. All files must be sent to the coordination node.
 
 2. Run the coordination `R` file (`Coord_node_call_iter_log-reg.R`) to initialise the values of beta.  
 The file `Coord_node_iter_1_primer.csv`  will be generated. This file must be shared with the local nodes.  
