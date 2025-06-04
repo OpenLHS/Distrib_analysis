@@ -54,7 +54,7 @@ Assuming a data structure similar to the data nodes `.csv` files in the example 
 
 There are many ways to run `R` code. The proposed instructions here are focusing on using a graphical interface.
 
-### Installing R and R Studio
+### Installing R and R Studion
 
 1. Go to the page : https://posit.co/download/rstudio-desktop/ and follow the instructions for your operating system
 
