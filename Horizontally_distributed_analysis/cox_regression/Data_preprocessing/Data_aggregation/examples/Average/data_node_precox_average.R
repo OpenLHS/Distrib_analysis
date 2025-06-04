@@ -1,6 +1,7 @@
 ###############  DATA AGGREGATION #####################
 ############### AVERAGED INTERVALS ####################
 
+## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 ## Copyright: GRIIS / Université de Sherbrooke
 
 data_node_precox_average <- function(man_wd=-1,man_nodeid=-1,evbucketsize=-1) {
@@ -8,16 +9,9 @@ data_node_precox_average <- function(man_wd=-1,man_nodeid=-1,evbucketsize=-1) {
 manualwd <- man_wd  
 k <- man_nodeid
 
-# No modifications should be required below this point
-###########################
-
 # Loading packages and setting up core variables --------------------------
 library("dplyr")        # A fast, consistent tool for working with data frame like objects, both in memory and out of memory.
 
-# If you want to skip the automated working directory setting, input 1 here. 
-# If you do so, make sure the working directory is set correctly manualy.
-
-manualwd <- -1
 
 if (manualwd != 1) {
   
