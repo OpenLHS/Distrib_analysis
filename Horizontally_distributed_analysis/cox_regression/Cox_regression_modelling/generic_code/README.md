@@ -109,11 +109,17 @@ There are many ways to run `R` code. The proposed instructions here are focusing
 
 The algorithm currently requires the use of package(s) not present in the base installation. `R` should prompt you to download the packages automatically.
 
-- [survival](https://cran.r-project.org/web/packages/survival/index.html)
-- [MASS](https://cran.r-project.org/web/packages/MASS/index.html)
-- [data.table](https://cran.r-project.org/web/packages/data.table/index.html)
+Data nodes:
 
-Furthermore, the examples will be easier to explore and adapt/change if the package `this.path` is also available. Yet this is NOT required and you can safely ignore any warning about this is if you want to use the algorithm "as-is".
+- [data.table](https://cran.r-project.org/web/packages/data.table/index.html)
+- [survival](https://cran.r-project.org/web/packages/survival/index.html)
+
+Coordination node:
+
+- [MASS](https://cran.r-project.org/web/packages/MASS/index.html)
+- [survival](https://cran.r-project.org/web/packages/survival/index.html)
+
+Furthermore, the examples will be easier to explore and adapt/change if the package `this.path` is also available. Yet this is NOT required and you can safely ignore any warning about this is if you want to use the algorithm "as-is". Should you choose not to use this package, you will then need to manually set your working directory in your `R` instance.
 
 - [this.path](https://cran.r-project.org/package=this.path)
 
