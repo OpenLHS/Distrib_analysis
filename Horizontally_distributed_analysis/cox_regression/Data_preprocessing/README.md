@@ -1,6 +1,6 @@
-# Data preparation
+# Data preprocessing
 
-This folder contains instructions on how to prepare your data before running the code of the horizontally distributed Cox model.
+This folder contains instructions on how to preprocess your data before running the code of the horizontally distributed Cox model. Note that this is optionnal.
 
 ## Data aggregation 
 
