@@ -1,5 +1,5 @@
-###############  DATA AGGREGATION #####################
-############### AVERAGED INTERVALS ####################
+############### Distributed inference ####################
+############### Data node code ###################
 
 ## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 ## Copyright: GRIIS / Université de Sherbrooke

@@ -10,7 +10,7 @@ library(this.path)
 nb_iter <- 8
 
 # If you do not want to use a threshold for the probabilities estimated, input 0 here.
-# Threshold value should be between 0 and 0.5. See details in the instructions.
+# Threshold value should be between 0 and 0.5. See details in the summary.
 manualthresh <- 0.01
 
 # No modifications should be required below this point
