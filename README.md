@@ -18,5 +18,8 @@ Research group: **GRIIS** - Groupe de recherche interdisciplinaire en informatiq
 
 Health Data Research Network Canada (https://hdrn.ca)
 
-### License: https://creativecommons.org/licenses/by-nc-sa/4.0/
-### Copyright: GRIIS / Université de Sherbrooke
+## License
+
+https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+## Copyright: GRIIS / Université de Sherbrooke
