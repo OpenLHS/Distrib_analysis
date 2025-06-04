@@ -54,7 +54,7 @@ Usecase: Weights in our horizontally distributed linear and logistic regression 
 	1. The first one (`MatchIt_data`) has the files separated in different folders to better mimic a distributed environment. To run, you need to copy the results across folders, which clarifies what is sent where.
 	2. The second example (`MatchIt_data_same_folder`) is based on the same dataset, but if you simply want to look at the output, everything is happening in the same folder, without the need to copy files across.
 3. `breast_data` and `breast_data_same_folder` are based on the same example. They both use the "[Breast Cancer Dataset](https://www.kaggle.com/datasets/utkarshx27/breast-cancer-dataset-used-royston-and-altman)" from Royston and Altman (2013).  
-Usecase: Weights in our horizontally distributed cox regression examples (see the folder `breast_data_with_weeights_same_folder` in that method).
+Usecase: Weights in our horizontally distributed cox regression examples (see the folder `breast_data_with_weights_same_folder` in that method).
 	1. The first one (`breast_data`) has the files separated in different folders to better mimic a distributed environment. To run, you need to copy the results across folders, which clarifies what is sent where.
 	2. The second example (`breast_data_same_folder`) is based on the same dataset, but if you simply want to look at the output, everything is happening in the same folder, without the need to copy files across.
 
