@@ -128,32 +128,33 @@ In the following procedure, `k` represents the number of the local node, and `t`
 Initialization: 
 
 1. Run the `Run_example.R` file for each data node subfolder (`Data_node_k`).   
-The files `Data_node_k_iter_0.csv` and `Predictor_names` will be generated. All files must be sent to the coordination node.
+The files `Data_node_k_iter_0_W_output.csv` and `Local_Settings_k.csv` will be generated. All files must be sent to the coordination node.
 
 2. Run the `Run_example.R` file for the coordination node, located in its own folder (`Coord_node`).  
-The file `Coord_node_iter_1_primer.csv`  will be generated. This file must be shared with the local nodes.  
-The file `Global_Predictor_names.csv` will also be generated if all nodes have the same data structure and estimation parameters. It does not need to be shared with the local nodes.
+The file `Coord_node_iter_1_W_primer.csv`  will be generated. This file must be shared with the local nodes.  
+The file `Global_Settings.csv` will also be generated if all nodes have the same data structure and estimation parameters. It does not need to be shared with the local nodes.
 
 For the first iteration, data node side:
 
 3. Run the `Run_example.R` file for each data node subfolder (`Data_node_k`).  
-The file `Data_node_k_iter_1.csv` will be generated. It must be sent to the coordination node.
+The file `Data_node_k_iter_1_W_output.csv` will be generated. It must be sent to the coordination node.
+The file `IPW_node_k_iter_1.csv` will also be generated. It does not need to be shared with the coordination node.
 
 For the first iteration, coordinating node side:
 
 4. Run the `Run_example.R` file for the coordination node, located in its own folder (`Coord_node`).  
-The files `Coord_node_iter_2_primer.csv`, `Coord_node_iter_1_covariance.csv` and `Coord_node_ter_1_results.csv` will be generated. To continue, the coordination node must share the file `Coord_node_iter_2_primer.csv` with the local nodes.
+The file `Coord_node_iter_2_W_primer.csv` will be generated. To continue, the coordination node must share it with the local nodes.
 
 Then, to perform other iterations:
 
 5. Run the `Run_example.R` file for each data node subfolder (`Data_node_k`).  
-The file `Data_node_k_iter_(t).csv` will be generated. It must be sent to the coordination node.
+The file `Data_node_k_iter_(t)_W_output.csv` will be generated. It must be sent to the coordination node.
+The file `IPW_node_k_iter_(t).csv` will also be generated. It does not need to be shared with the coordination node.
 
 6. Run the `Run_example.R` file for the coordination node, located in its own folder (`Coord_node`).  
-The files `Coord_node_iter_(t+1)_primer.csv`, `Coord_node_iter_(t)_covariance.csv` and `Coord_node_iter_(t)_results.csv` will be generated. To continue, the coordination node must share the file `Coord_node_iter_(t+1)_primer.csv` with the local nodes.
+The file `Coord_node_iter_(t+1)_W_primer.csv` will be generated. To continue, the coordination node must share it with the local nodes.
 
 7. (optional) Compare the results of the previous iteration with the current one to decide if another iteration is pertinent (return to step `5`) or not.
-
 
 ### Executing the pooled solution code
 
