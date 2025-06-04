@@ -16,18 +16,19 @@ nb_iter <- 8
 setwd(this.dir())
 examplefilepath <- paste0(getwd(), "/")
 
+# Retrieve source code
+setwd("../../example_handler")
+source("Data_node_call_log-reg_ex.R")
+source("Coord_node_call_iter_log-reg_ex.R")
+
 for(replicate in 1:nb_iter){
   
   # Run data node code
-  setwd(this.dir())
-  source("../../example_handler/Data_node_call_log-reg_ex.R")
   logistic_regression_example_datanode_handler(nodeid = 1, expath = examplefilepath)
   logistic_regression_example_datanode_handler(nodeid = 2, expath = examplefilepath)
   logistic_regression_example_datanode_handler(nodeid = 3, expath = examplefilepath)
   
   # Run coordination node code
-  setwd(this.dir())
-  source("../../example_handler/Coord_node_call_iter_log-reg_ex.R")
   logistic_regression_example_coordnode_handler(expath = examplefilepath)
   
 }
