@@ -69,15 +69,15 @@ The generic_code folder contains examplar `R` code files pertaining to the distr
 ### List of examples
 
 1. `random_data`, and `random_data_same_folder` are based on the same example (whereas `random_grouped_data`, `random_grouped_data_same_folder` and `random_grouped_data_with_weights_same_folder` are based on the same example where the data was aggregated).  
-	1. The first one has the files separated in different folders to better mimic a distributed environment. To run, you need to copy the results across folders, which clarifies what is sent where.  
-	2. The second example is based on the same dataset, but if you simply want to look at the output, everything is happening in the same folder, without the need to copy files across folders.
+	1. The first one (`random_data`) has the files separated in different folders to better mimic a distributed environment. To run, you need to copy the results across folders, which clarifies what is sent where.  
+	2. The second example (`random_data_same_folder`) is based on the same dataset, but if you simply want to look at the output, everything is happening in the same folder, without the need to copy files across folders.
 
 2. `lung_data_same_folder` is an example based on the `lung` dataset in `R` (whereas `lung_data_grouped_same_folder` is based on the same example where the data was aggregated).
 
-3. `breast_data`, `breast_data_same_folder`, `breast_data_with_weights_same_folder` are based on the same example. They all use the "[Breast Cancer Dataset](https://www.kaggle.com/datasets/utkarshx27/breast-cancer-dataset-used-royston-and-altman)" from Royston and Altman (2013).  
-	1. The first one has the files separated in different folders to better mimic a distributed environment. To run, you need to copy the results across folders, which clarifies what is sent where.  
-	2. The second example is based on the same dataset, but if you simply want to look at the output, everything is happening in the same folder, without the need to copy files across.  
-	3. The third example is based on the same dataset alongside weights files. Everything is happening in the same folder, without the need to copy files across.
+3. `breast_data`, `breast_data_same_folder`, `breast_data_with_weights_same_folder` are based on the same example. They all use the "[Breast Cancer Dataset](https://www.kaggle.com/datasets/utkarshx27/breast-cancer-dataset-used-royston-and-altman)" from Royston and Altman (2013).
+	1. The first one (`breast_data`) has the files separated in different folders to better mimic a distributed environment. To run, you need to copy the results across folders, which clarifies what is sent where.  
+	2. The second example (`breast_data_same_folder`) is based on the same dataset, but if you simply want to look at the output, everything is happening in the same folder, without the need to copy files across.  
+	3. The third example (`breast_data_with_weights_same_folder`) is based on the same dataset alongside weights files. Everything is happening in the same folder, without the need to copy files across. For this example, the weights are the ones obtained from running the content of the `Weights_generation_for_IPW` with the Breast example.
 
 *Optional : if you want to try to generate new test datasets, the file `cox_data_generation.R` might be useful.*
 
