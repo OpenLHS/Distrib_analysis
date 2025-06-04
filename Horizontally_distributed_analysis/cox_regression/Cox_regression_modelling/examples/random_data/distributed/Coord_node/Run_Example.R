@@ -20,9 +20,11 @@ RobustVarianceFlag <- FALSE
 setwd(this.dir())
 examplefilepath <- paste0(getwd(), "/")
 
+# Retrieve source code
+setwd("../../../example_handler")
+source("Coord_node_call_iter_cox-reg_ex.R")
+
 # Run coordination node code
-setwd(this.dir())
-source("../../../example_handler/Coord_node_call_iter_cox-reg_ex.R")
 cox_regression_example_coordnode_handler(Robust = RobustVarianceFlag, expath = examplefilepath)
 
 ## Remove all environment variables. 
