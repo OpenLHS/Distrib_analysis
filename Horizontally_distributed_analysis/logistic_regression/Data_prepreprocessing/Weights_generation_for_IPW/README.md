@@ -60,8 +60,8 @@ Usecase: Weights in our horizontally distributed cox regression examples (see th
 
 ### Generic code
 
-The files in this folder can be used to support an example aggregating the times of a dataset.  
-Assuming a data structure similar to the data nodes `.csv` files in the example folder, this code can be used to execute an aggregation of individuals for a data node.
+The files in this folder can be used to support an example that generates weights for horizontally distribtued data.
+This method assumes a data structure similar to the data nodes `.csv` files in the example folder.
 
 ## Data requirements
 
