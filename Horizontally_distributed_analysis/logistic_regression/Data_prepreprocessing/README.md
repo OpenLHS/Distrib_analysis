@@ -1,6 +1,6 @@
 # Data preprocessing
 
-This folder contains instructions on how to prepare your data before running a horizontally distributed model.
+This folder contains instructions on how to preprocess your data before running a horizontally distributed model. Note that this is optionnal.
 
 ## Weights generation (Inverse Probability Weighting)
 
