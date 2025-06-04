@@ -66,7 +66,7 @@ Assuming a data structure similar to the data nodes `.csv` files in the example 
 ## Data requirements
 
 - Data is expected to be saved in a `.csv` file.
-- The first column of your data file must be the outcome variable (`out1`). # (!) On devrait probablement changer ici le y->out1. À valider aussi dans les fichiers de données si tout est beau.
+- The first column of your data file must be the outcome variable (`out1`).
 - All other columns (predictor variables) must be in the same order and must share the same names across nodes.
 - Each level for categorical variables is expected to have been possible to sample across all nodes. Otherwise, said level should either be removed or merged with another level.
 - Categorical variables must be binarized before running this code. Binarized variables must use the values `0` or `1`, where `1` indicates a success (or having the characteristic).
