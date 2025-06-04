@@ -1,11 +1,8 @@
 # Horizontally distributed linear regression 
 
-This implementation of the linear regression model mimics the method presented in the brief summary.
-
+This implementation of the linear regression model mimics the method based on linear algebra presented in the brief summary.
 
 ## Table of contents
-
-0. [Before using](#Before-using)
 
 1. [Repository structure](#repository-structure)
 
@@ -36,13 +33,6 @@ This implementation of the linear regression model mimics the method presented i
 5. [License](#license)
 
 6. [Copyright](#copyright-griis--université-de-sherbrooke)
-
-## Before using
-
-- Make sure to adjust the number of files `Data_node_call_lin-reg_k.R` according to the number of nodes, and make sure to change the value of `manualk` to the node number.
-- To start over, it is important to delete all "output" files.
-- The code currently works only with complete data. Should that not be the case, the main algorithm will save a copy of your original data (`Backup_Data_Incomplete_k.csv`) and will also save a new .csv file (`Data_node_k.csv`) that contains all complete rows of the original data. As such, it will be as if you were running a complete case analysis.
-- ***OF NOTE, this is PURELY to demonstrate the feasibility of distributed linear regressions. The code here has NOT been optimised NOR made secure in a significant way. A thorough review NEEDS to be undertaken before using this code in any production/research project.***
 
 ## Repository structure
 
@@ -133,7 +123,7 @@ The file `CoordNode_results_distributed_lin_reg.csv` will be generated.
 
 ## Expected outputs
 
-This implementation of the linear regression model mimics the method presented in the brief summary.
+This implementation of the linear regression model mimics the method based on linear algebra presented in the brief summary.
 
 Since this implementation is made for distributed analysis, the following `R` files should not be shared:
 - `Data_node_k.csv`.
