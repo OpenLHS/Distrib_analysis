@@ -69,15 +69,19 @@ There are many ways to run `R` code. The proposed instructions here are focusing
 
 The algorithm currently requires the use of package(s) not present in the base installation. `R` should prompt you to download the packages automatically.
 
-- [survival](https://cran.r-project.org/web/packages/survival/index.html)
-- [MASS](https://cran.r-project.org/web/packages/MASS/index.html)
-- [data.table](https://cran.r-project.org/web/packages/data.table/index.html)
+Data nodes:
 
-Furthermore, in order to quickly see the example results by running either the `Run_Example.R` or the `Run_Pooled_Example.R` files, you will also need the follwing package.
+- [data.table](https://cran.r-project.org/web/packages/data.table/index.html)
+- [survival](https://cran.r-project.org/web/packages/survival/index.html)
+
+Coordination node:
+
+- [MASS](https://cran.r-project.org/web/packages/MASS/index.html)
+- [survival](https://cran.r-project.org/web/packages/survival/index.html)
+
+Furthermore, the examples will be easier to explore and adapt/change if the package `this.path` is also available. Yet this is NOT required and you can safely ignore any warning about this is if you want to use the algorithm "as-is". Should you choose not to use this package, you will then need to manually set your working directory in your `R` instance.
 
 - [this.path](https://cran.r-project.org/package=this.path)
-
-Yet the package `this.path` is NOT required if you want to use the algorithm "as-is". Should you choose not to use this package, you will then need to manually set your working directory in your `R` instance.
 
 If you work in an isolated environment, you might need to download them manually at the adress above and install them for your `RStudio` instance. While describing the process here is out of scope, a web search will yield resources like https://riptutorial.com/r/example/5556/install-package-from-local-source that can be helpful.
 
@@ -116,15 +120,19 @@ There are many ways to run `R` code. The proposed instructions here are focusing
 
 The algorithm currently requires the use of package(s) not present in the base installation. `R` should prompt you to download the packages automatically.
 
-- [survival](https://cran.r-project.org/web/packages/survival/index.html)
-- [MASS](https://cran.r-project.org/web/packages/MASS/index.html)
-- [data.table](https://cran.r-project.org/web/packages/data.table/index.html)
+Data nodes:
 
-Furthermore, in order to quickly see the example results by running either the `Run_Example.R` or the `Run_Pooled_Example.R` files, you will also need the follwing package.
+- [data.table](https://cran.r-project.org/web/packages/data.table/index.html)
+- [survival](https://cran.r-project.org/web/packages/survival/index.html)
+
+Coordination node:
+
+- [MASS](https://cran.r-project.org/web/packages/MASS/index.html)
+- [survival](https://cran.r-project.org/web/packages/survival/index.html)
+
+Furthermore, the examples will be easier to explore and adapt/change if the package `this.path` is also available. Yet this is NOT required and you can safely ignore any warning about this is if you want to use the algorithm "as-is". Should you choose not to use this package, you will then need to manually set your working directory in your `R` instance.
 
 - [this.path](https://cran.r-project.org/package=this.path)
-
-Yet the package `this.path` is NOT required if you want to use the algorithm "as-is". Should you choose not to use this package, you will then need to manually set your working directory in your `R` instance.
 
 If you work in an isolated environment, you might need to download them manually at the adress above and install them for your `RStudio` instance. While describing the process here is out of scope, a web search will yield resources like https://riptutorial.com/r/example/5556/install-package-from-local-source that can be helpful.
 
