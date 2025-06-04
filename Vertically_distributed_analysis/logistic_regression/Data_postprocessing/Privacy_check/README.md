@@ -24,10 +24,6 @@ The allows a covariate-node to verify privacy-preserving properties when disclos
 	
 4. [Expected outputs](#expected-outputs)
 
-	1. [Data node side](#data-node-side)
-	
-	2. [Coordination node side](#coordination-node-side)
-
 5. [License](#license-httpscreativecommonsorglicensesby-nc-sa40)
 
 6. [Copyright](#copyright-griis--université-de-sherbrooke)
