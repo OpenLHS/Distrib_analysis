@@ -74,10 +74,9 @@ If you work in an isolated environment, you might need to download them manually
 ***Make sure `R studio` is not currently running and close it if it is.***
 ***The following assessment is useful for specific settings only, when the covariate-node aims to verify if it can safely share standard errors and p-values associated with continuous covariates. Please refer to original article before using.*** 
 
-1.	Run the distributed algorithm above.
-2.	Open the covariate-node `R` file (`Data_node_privacy_call_log-regV.R`).
-3.  Specify the index of continuous estimates to disclose and run the `R` file (`Data_node_privacy_call_log-regV.R`).
-4.	No files are generated, the results will be available in the `R` console.
+1.	Open the covariate-node `R` file (`Data_node_privacy_call_log-regV.R`).
+2.  Specify the index of continuous estimates to disclose and run the `R` file (`Data_node_privacy_call_log-regV.R`).
+3.	No files are generated, the results will be available in the `R` console.
 
 ## Expected outputs
 
