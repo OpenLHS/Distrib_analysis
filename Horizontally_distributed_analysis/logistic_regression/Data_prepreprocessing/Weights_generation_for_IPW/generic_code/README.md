@@ -41,29 +41,31 @@ In the following procedure, `k` represents the number of the local node, and `t`
 Initialization:
 
 1. Run the local `R` file (`Data_node_call_log-reg_k.R`) for each data node to compute local settings and local beta estimates.  
-The files `Data_node_k_iter_0.csv` and `Predictor_names` will be generated. All files must be sent to the coordination node.
+The files `Data_node_k_iter_0_W_output.csv` and `Local_Settings_k.csv` will be generated. All files must be sent to the coordination node.
 
 2. Run the coordination `R` file (`Coord_node_call_iter_log-reg.R`) to initialise the values of beta.  
-The file `Coord_node_iter_1_primer.csv`  will be generated. This file must be shared with the local nodes.  
-The file `Global_Predictor_names.csv` will also be generated if all nodes have the same data structure and estimation parameters. It does not need to be shared with the local nodes.
+The file `Coord_node_iter_1_W_primer.csv`  will be generated. This file must be shared with the local nodes.  
+The file `Global_Settings.csv` will also be generated if all nodes have the same data structure and estimation parameters. It does not need to be shared with the local nodes.
 
 For the first iteration, data node side:
 
 3. Run the local `R` file (`Data_node_call_log-reg_k.R`) for each data node to compute local aggregates used for derivatives.  
-The file `Data_node_k_iter_1.csv` will be generated. It must be sent to the coordination node.
+The file `Data_node_k_iter_1_W_output.csv` will be generated. It must be sent to the coordination node.
+The file `IPW_node_k_iter_1.csv` will also be generated. It does not need to be shared with the coordination node.
 
 For the first iteration, coordinating node side:
 
-4. Run the coordination `R` file (`Coord_node_call_iter_log-reg.R`)to compute first and second derivative and to update beta estimate.  
-The files `Coord_node_iter_2_primer.csv`, `Coord_node_iter_1_covariance.csv` and `Coord_node_ter_1_results.csv` will be generated. To continue, the coordination node must share the file `Coord_node_iter_2_primer.csv` with the local nodes.
+4. Run the coordination `R` file (`Coord_node_call_iter_log-reg.R`) to compute first and second derivative and to update beta estimate.  
+The file `Coord_node_iter_2_W_primer.csv` will be generated. To continue, the coordination node must share it with the local nodes.
 
 Then, to perform other iterations:
 
 5. Run the local `R` file (`Data_node_call_log-reg_k.R`) for each data node to compute local aggregates used for derivatives.  
-The file `Data_node_k_iter_(t).csv` will be generated. It must be sent to the coordination node.
+The file `Data_node_k_iter_(t)_W_output.csv` will be generated. It must be sent to the coordination node.
+The file `IPW_node_k_iter_(t).csv` will also be generated. It does not need to be shared with the coordination node.
 
-6. Run the coordination `R` file (`Coord_node_call_iter_log-reg.R`)to compute first and second derivative and to update beta estimate.  
-The files `Coord_node_iter_(t+1)_primer.csv`, `Coord_node_iter_(t)_covariance.csv` and `Coord_node_iter_(t)_results.csv` will be generated. To continue, the coordination node must share the file `Coord_node_iter_(t+1)_primer.csv` with the local nodes.
+6. Run the coordination `R` file (`Coord_node_call_iter_log-reg.R`) to compute first and second derivative and to update beta estimate.  
+The file `Coord_node_iter_(t+1)_W_primer.csv` will be generated. To continue, the coordination node must share it with the local nodes.
 
 7. (optional) Compare the results of the previous iteration with the current one to decide if another iteration is pertinent (return to step `5`) or not.
 
@@ -80,20 +82,16 @@ The files `Coord_node_iter_(t+1)_primer.csv`, `Coord_node_iter_(t)_covariance.cs
 
 ## Expected outputs
 
-This implementation of the logistic regression model mimics the following `R` calls: 
-- `glm(formula, data, family="binomial", weights)`, whenever one checks `Coord_node_iter_t_results.csv` and once convergence is attained. 
-
 Since this implementation is made for distributed analysis, the following `R` files should not be shared:
 - `Data_node_k.csv`.
-- `Weights_node_k.csv`.
 
 ### Data node side
 
 | Step | Files created | Shared? |
 | ----------- | ----------- | ----------- |
-| Initialization | `Data_node_k_iter_0_output.csv` <br> `Predictor_names_k.csv` <br> `Backup_Data_node_Incomplete_k.csv`\* <br> `Backup_Weights_node_Incomplete_k.csv`\* | Yes <br> Yes <br> No <br> No |
-| Iteration `1`  | `Data_node_k_iter_1_output.csv` | Yes |
-| Iteration `t`  | `Data_node_k_iter_(t)_output.csv` | Yes |
+| Initialization | `Data_node_k_iter_0_W_output.csv` <br> `Local_Settings_k.csv` <br> `Backup_Data_node_Incomplete_k.csv`\* <br> `Backup_Weights_node_Incomplete_k.csv`\* | Yes <br> Yes <br> No <br> No |
+| Iteration `1`  | `Data_node_k_iter_1_W_output.csv` <br> `IPW_node_k_iter_1.csv` | Yes <br> No |
+| Iteration `t`  | `Data_node_k_iter_(t)_output.csv` <br> `IPW_node_k_iter_t.csv` | Yes <br> No |
 
 \* The algorithm currently only works when there are no missing value. Should there be any missing value in the `Data_node_k.csv` file, the algorithm will perform a complete case analysis. In order to do so, it will save your data to a backup file and will replace `Data_node_k.csv` with only the complete cases.
 
@@ -101,10 +99,9 @@ Since this implementation is made for distributed analysis, the following `R` fi
 
 | Step | Files created | Shared? |
 | ----------- | ----------- | ----------- |
-| Initialization  | `Coord_node_iter_1_primer.csv` <br> `Global_Predictor_names.csv` | Yes <br> No |
-| Iteration `1`   | `Coord_node_iter_2_primer.csv` <br> `Coord_node_iter_1_covariance.csv` <br> `Coord_node_iter_1_results.csv` | Yes <br> Does not apply <br> Does not apply |
-| Iteration `t`   | `Coord_node_iter_(t+1)_primer.csv` <br> `Coord_node_iter_(t)_covariance.csv` <br> `Coord_node_iter_(t)_results.csv` | Yes <br> Does not apply <br> Does not apply |
-
+| Initialization  | `Coord_node_iter_1_primer.csv` <br> `Global_Settings.csv` | Yes <br> No |
+| Iteration `1`   | `Coord_node_iter_2_W_primer.csv` | Yes |
+| Iteration `t`   | `Coord_node_iter_(t+1)_primer.csv` | Yes |
 
 ## License
 
