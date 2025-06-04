@@ -37,7 +37,7 @@ If you work in an isolated environment, you might need to download them manually
 ### Executing the distributed code
 
 ***Make sure `R studio` is not currently running and close it if it is.***  
-***If you are not able to automatically set your working directory (for example, if you do not have access to `this.path`), manually set the variable `manualwd = 1` in `Data_node_call_cox-reg_k.R` and  `Coord_node_call_iter_cox-reg.R`.***
+***If you are not able to automatically set your working directory (for example, if you do not have access to `this.path`), manually set the variable `manualwd = 1` in `Data_node_call_log-reg_k.R` and  `Coord_node_call_iter_log-reg.R`.***
 
 In the following procedure, `k` represents the number of the local node, and `t` represents the iteration number. Note that the iteration number `t` increments everytime the coordination node is reached.
 
