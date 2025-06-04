@@ -1,4 +1,4 @@
-# Horizontally distributed WebDisco-based implementation
+# Horizontally distributed WebDisco-based implementation of a cox regression
 
 ## Before using
 
