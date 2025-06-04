@@ -11,8 +11,11 @@ setwd(this.dir())
 # Retrieve current working directory
 examplefilepath <- paste0(getwd(), "/")
 
+# Retrieve source code
+setwd("../../../example_handler")
+source("Coord_node_lin-reg_ex.R")
+
 # Run coordination node code
-source("../../../example_handler/Coord_node_lin-reg_ex.R")
 linear_regression_example_coordnode_handler(expath = examplefilepath)
 
 ## Remove all environment variables. 

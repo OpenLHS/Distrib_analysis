@@ -14,9 +14,11 @@ library(this.path)
 setwd(this.dir())
 examplefilepath <- paste0(getwd(), "/")
 
+# Retrieve source code
+setwd("../../example_handler")
+source("PoolingOrg_code_lin-reg_ex.R")
+
 # Run pooled code
-setwd(this.dir())
-source("../../example_handler/PoolingOrg_code_lin-reg_ex.R")
 linear_regression_example_pooled_handler(expath = examplefilepath, nnodes = K)
 
 ## Remove all environment variables. 
