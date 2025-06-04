@@ -11,8 +11,8 @@
 1. Logistic_regression_modelling  
 This folder contains generic code and examples of a vertically distributed logistic regression model.
 
-2. Data_preprocessing  
-This folder contains instructions on how to prepare your data before running the code of a horizontally distributed model.
+2. Data_postprocessing  
+This folder contains instructions on how to analyse your data after running the code of a a vertically distributed logistic regression model.
 
 ## Data requirements
 
