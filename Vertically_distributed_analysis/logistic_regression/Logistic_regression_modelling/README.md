@@ -143,7 +143,7 @@ The files `Data_node_k_results.csv` will be generated and contains results assoc
 ***Make sure `R studio` is not currently running and close it if it is.***  
 ***This should only be used with the provided examples (or an example of your own), as it requires to pool all your data sources together.***
 
-1. Navigate to the folder `examples/example_handler/pooled_comparator`. You might need to copy the data and weight files in this folder.
+1. Navigate to the folder `examples/example_handler/pooled_comparator`. You might need to copy the data files in this folder.
 2. Open the file `Solution.R`. It should then appear in `R`.
 3. Make sure that all manual parameters of the coordination `R` file (`Solution.R`) are set properly. 
 4. Select all the code and click `run`.
