@@ -56,6 +56,15 @@ The examples folder contains an example of a vertically partitioned dataset to t
 - Generic_code  
 The generic_code folder contains `R` code files pertaining to the distributed approach. Please read the code and its comments in the `R` file as files may require edition before being used.
 
+### List of examples
+
+1. `random_data_same_folder`  
+   This folder makes it easy to look at the output since everything is happening in the same folder. There is no need to copy files across folders.
+
+### Generic code
+
+The files in this folder can be used to execute a vertically distributed logistic regression analysis. The generic code assumes a data structure with one response-node holding the response-vector (and potentially covariates) and covariate-nodes holding only covariates. This can can be used to execute a covariate-node operation or a response-node operation for a vertically distributed logistic regression.
+
 ## Data requirements
 
 - Data is expected to be saved in a `.csv` file.
@@ -66,16 +75,7 @@ The generic_code folder contains `R` code files pertaining to the distributed ap
 - Categorical variables must be binarized before running this code. Binarized variables must use the values `0` or `1`, where `1` indicates a success (or having the characteristic).
 - It is expected that there are no missing values.
 
-### List of examples
-
-- `random_data_same_folder` contains two datasets corresponding to different nodes in a vertically distributed analysis. They can be copied and used to run examples of the method and compare with the pooled results. 
-
-### Generic code
-
-The files in this folder can be used to execute a vertically distributed logistic regression analysis.
-The generic code assumes a data structure with one response-node holding the response-vector (and potentially covariates) and covariate-nodes holding only covariates.
-
-## Instructions to run the algorithm
+## Instructions to run the examples/algorithm
 
 There are many ways to run `R` code. The proposed instructions here are focusing on using a graphical interface.
 
