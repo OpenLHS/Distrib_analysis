@@ -1,5 +1,7 @@
 # Privacy check (Part 1)
 
+*Please read the following to make sure this step is relevant with the target analysis and coherent for the dataset at hand.*
+
 This code allows a covariate-node to verify privacy-preserving properties when disclosing results such as estimates, standard errors and p-values.
 The privacy check is composed of two parts. This first part should be conducted BEFORE running the VALORIS algorithm in any setting of the decision trees in the original article for which an infinite number of possibilities is indicated (see Original Article for details).
 
