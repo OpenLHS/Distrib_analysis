@@ -1,6 +1,0 @@
-The folders aims at containing different methods to compute weights for individuals which may be used afterwards in a GLM. 
-Currently, only one method is available.
-
-1. Weights_generation_for_IPW 
-: computes the propensity score of an individual and the inverse probability weight associated with that score, using distributed logistic regression.
-: note that most assets from our distributed logistic regression algorithm are reused here.

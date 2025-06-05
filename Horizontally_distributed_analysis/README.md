@@ -13,5 +13,8 @@ This describes the background of the work and presents a survey of the litteratu
 The material pertaining to each method is located in its related folder, including generic code, requirements and examples  .
 Each method folder is self-contained.
 
-### License: https://creativecommons.org/licenses/by-nc-sa/4.0/
-### Copyright: GRIIS / Université de Sherbrooke
+## License
+
+https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+## Copyright: GRIIS / Université de Sherbrooke

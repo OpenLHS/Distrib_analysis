@@ -1,14 +1,4 @@
-# Distributed WebDisco-based implementation
-
-## Repository structure
-
-1. The core article "Lu et al. - 2015 - WebDISCO: A Web Service for Distributed Cox Model.pdf" describes the background of the work and presents the method used.
-
-2. Cox_model  
-This folder contains generic code and examples of the distributed Cox model.
-
-3. Data_preparation  
-This folder contains instructions on how to prepare your data before running the code of the Cox model.
+# Horizontally distributed WebDisco-based implementation of a cox regression
 
 ## Before using
 
@@ -19,6 +9,16 @@ This folder contains instructions on how to prepare your data before running the
 - The code currently works only with complete data. Should that not be the case, the main algorithm will save a copy of your original data (`Backup_Data_Incomplete_k.csv`) and will also save a new .csv file (`Data_node_k.csv`) that contains all complete rows of the original data. As such, it will be as if you were running a complete case analysis.
 - ***OF NOTE, this is PURELY to demonstrate the feasibility of distributed Cox models. The code here has NOT been optimised NOR made secure in a significant way. A thorough review NEEDS to be undertaken before using this code in any production/research project.***
 
+## Repository structure
+
+1. The core article "Lu et al. - 2015 - WebDISCO: A Web Service for Distributed Cox Model.pdf" describes the background of the work and presents the method used.
+
+2. Cox_regression_modelling
+This folder contains generic code and examples of a horizontally distributed Cox model.
+
+3. Data_preprocessing  
+This folder contains instructions on how to prepare your data before running the code of a horizontally distributed Cox model.
+
 ## Data requirements
 
 - Data is expected to be saved in a `.csv` file.
@@ -27,10 +27,13 @@ This folder contains instructions on how to prepare your data before running the
 - All other columns (predictor variables) must be in the same order and must share the same names across nodes.
 - Each level for categorical variables is expected to have been possible to sample across all nodes. Otherwise, said level should either be removed or merged with another level.
 - Categorical variables must be binarized before running this code. Binarized variables must use the values `0` or `1`, where `1` indicates a success (or having the characteristic).
+- It is expected that there are no missing values. Should there be any, they must be coded as `NA` values. In the case, the method will do a complete case analysis.
 - (optional) Weights are expected to be saved in a separated `.csv` file.
 
 Note: While it is not a requirement, the algorithm expects your data to be ordered by time. Should that not be the case, the main algorithm will save a copy of your original data (`Backup_Data_Unordered_k.csv`) and will also save a new `.csv` file (`Data_node_k.csv`) that is ordered by time.
 
-### License: https://creativecommons.org/licenses/by-nc-sa/4.0/
+## License
 
-### Copyright: GRIIS / Université de Sherbrooke
+https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+## Copyright: GRIIS / Université de Sherbrooke
