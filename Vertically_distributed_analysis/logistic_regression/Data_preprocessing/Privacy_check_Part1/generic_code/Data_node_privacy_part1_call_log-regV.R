@@ -1,5 +1,5 @@
 ############### Distributed inference ####################
-############### Covariate-node code - Privacy assessment ###########################
+############### Covariate-node code - Privacy assessment - Part 1 ###########################
 
 ## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 ## Copyright: GRIIS / Université de Sherbrooke
@@ -7,14 +7,6 @@
 # Loading packages and setting up core variables --------------------------
 # Currently, the automated node number allocation currently requires execution in R studio and rstudioapi package
 # https://cran.r-project.org/package=rstudioapi
-
-
-########### IMPORTANT: INDICATE HERE AS VECTOR THE INDEX OF STANDARDS ERRRORS (OR P-VALUES) DISCLOSED.
-###########             THE INDEX COMPONENTS MUST REMAIN BETWEEN 1 AND THE NUMBER OF COVARIATES AT NODE K.
-###########              EXAMPLE: pk=5 and you want to disclose first and last standard errors, then index_se <- c(1,5).
-###########              LEAVE NA IF NONE DISCLOSED.
-index_se <- NA
-
 
 # If you want to skip the automated working directory setting, input 1 here. 
 # If you do so, make sure the working directory is set correctly manualy.
@@ -81,8 +73,8 @@ if (manualk >= 0) {
 
 # Verifying that a valid node number and sequence numbers could be allocated manually or automatically
 if (k >= 0) {
-  source("Data_node_privacy_core_log-regV.R")
-  data_privacy_log_reg(manualwd,k,index_se,path)
+  source("Data_node_privacy_part1_core_log-regV.R")
+  data_privacy_log_reg(manualwd,k,path)
 } else {
   stop("Node numbering was not set properly")
 }
