@@ -1,4 +1,4 @@
-# Data postprocessing
+# Data preprocessing
 
 This folder contains instructions on how to analyse your data before running a vertically distributed logistic regression model.
 
