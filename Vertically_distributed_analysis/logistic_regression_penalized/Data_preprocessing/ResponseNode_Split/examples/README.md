@@ -18,9 +18,7 @@ For any given example, it is possible to compare the distributed results with th
 	
     3. [Installing an example](#Installing-an-example)
 	
-    4. [Executing the distributed code](#Executing-the-distributed-code)
-	
-    5. [Executing the pooled solution code](#Executing-the-pooled-solution-code)
+    4. [Executing the code](#Executing-the-code)
 
 4. [License](#license)
 
