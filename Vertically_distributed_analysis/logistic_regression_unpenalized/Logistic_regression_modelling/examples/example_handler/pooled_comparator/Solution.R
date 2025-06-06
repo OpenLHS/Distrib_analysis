@@ -10,6 +10,11 @@ K <- -1 # Input the number of nodes
 # If you do so, make sure the working directory is set correctly manualy.
 manualwd <- -1
 
+# If you want to manually set the parameter lambda, specify value here.
+# If you do so, please refer to article to ensure adequate settings. 
+# Else, an automated value that complies with the assumptions of the method will be assigned.
+lambda <- 1e-04
+
 # No modifications should be required below this point
 ###########################
 
@@ -41,7 +46,7 @@ if(K<1){
 
 ### Code starts here
 
-# Read data and weights
+# Read and scale data
 for(k in 1:K){
   # Data
   node_data <- read.csv(paste0("Data_node_", k, ".csv"))
@@ -53,14 +58,24 @@ for(k in 1:K){
   }
   
 }
-
-y <- pooled_data[,1]
-y[which(y==0)] <- -1
-pooled_data <- pooled_data[,-1]
 pooled_data <- scale(pooled_data)
 
+# Read outcome
+y <- read.csv(paste0("outcome_data.csv"))[,1]
+n <- length(y)
+
+#Setting parameter lambda (penalty) for the algorithm 
+#Can be adjusted if needed, please refer to article to ensure adequate settings
+if(lambda==-1){
+  if(n<=10000){
+    lambda <- 0.0001
+  }else{lambda <- 1/n}}
+
+if(lambda<=0){
+  stop("The algorithm cannot run because the penalty parameter lambda was set lower or equal to 0.")
+}
+
 # Pooled model
-lambda <- 1e-04
 glmnet_model <- glmnet(pooled_data, (y+1)/2, family=binomial, lambda=lambda, alpha=0, standardize=FALSE)
 
 # Printing pooled models

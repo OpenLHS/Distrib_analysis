@@ -1,10 +1,10 @@
 ############### Distributed inference ####################
-############### Response-node code ###########################
+############### Coordination node code ###########################
 
 ## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 ## Copyright: GRIIS / Université de Sherbrooke
 
-vert_logistic_regression_example_coordnode_handler <- function(man_wd=-1, man_lambda=-1, expath=""){
+vert_logistic_regression_nonpenalized_example_coordnode_handler <- function(man_wd=-1, man_lambda=-1, expath=""){
 
   manualwd <- man_wd
   lambda <- man_lambda
@@ -35,19 +35,18 @@ vert_logistic_regression_example_coordnode_handler <- function(man_wd=-1, man_la
     print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
   }
   
-  # Verifying if there is a coordination node (response-node) data file present
-  nb_node1_files <- length(list.files(path=examplefilepath, pattern="Data_node_1.csv"))
+  # Verifying if there is a response node output file present and if there are data node output files present
+  nb_rnode_files <- length(list.files(path = examplefilepath, pattern="outcome_data.csv"))
   nb_node_output_files <- length(list.files(path=examplefilepath, pattern="Data_node_[[:digit:]]+_init_output.rds"))
-  
-  if (nb_node1_files==1 & nb_node_output_files>0) {
-    source("../../generic_code/Response_node_init_iter_log-regV.R")
+  if (nb_rnode_files==1 & nb_node_output_files>0) {
+    source("../../generic_code/Coord_node_init_iter_log-regV.R")
     coord_log_reg(man_wd = manualwd, man_lambda = lambda, expath = examplefilepath)
   } else {
-    stop("Node 1 data file missing or no output file from other nodes found")
+    stop("Response node data file missing or no output file from other nodes found")
   }
   
   ## Remove all environment variables. 
   ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)
-  rm(list = ls())  
+  rm(list = ls()) 
   
 }

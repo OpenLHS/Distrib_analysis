@@ -21,16 +21,18 @@ examplefilepath <- paste0(getwd(), "/")
 # Retrieve source code
 setwd("../../example_handler")
 source("Data_node_call_log-regV_ex.R")
-source("Response_node_call_iter_log-regV_ex.R")
+source("Coord_node_call_iter_log-regV_ex.R")
 
-# Run covariate node code
-vert_logistic_regression_example_datanode_handler(nodeid = 2, expath = examplefilepath)
+# Run data node code
+vert_logistic_regression_nonpenalized_example_datenode_handler(nodeid = 1, expath = examplefilepath)
+vert_logistic_regression_nonpenalized_example_datenode_handler(nodeid = 2, expath = examplefilepath)
 
-# Run response node code
-vert_logistic_regression_example_coordnode_handler(man_lambda = lambda, expath = examplefilepath)
+# Run coordination node code
+vert_logistic_regression_nonpenalized_example_coordnode_handler(man_lambda = lambda, expath = examplefilepath)
 
-# Run covariate node code for results
-vert_logistic_regression_example_datanode_handler(nodeid = 2, expath = examplefilepath)
+# Run data node code
+vert_logistic_regression_nonpenalized_example_datenode_handler(nodeid = 1, expath = examplefilepath)
+vert_logistic_regression_nonpenalized_example_datenode_handler(nodeid = 2, expath = examplefilepath)
 
 ## Remove all environment variables. 
 ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)

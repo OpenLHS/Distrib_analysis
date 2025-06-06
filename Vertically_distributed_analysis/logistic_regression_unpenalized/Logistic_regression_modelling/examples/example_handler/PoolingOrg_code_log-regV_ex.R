@@ -7,11 +7,12 @@
 # No modifications should be required below this point
 ###########################
 
-vert_logistic_regression_example_pooled_handler <- function(man_wd=-1, man_nnodes=-1, expath=""){
+vert_logistic_regression_nonpenalized_example_pooled_handler <- function(man_wd=-1, man_nnodes=-1, man_lambda=-1, expath=""){
  
   manualwd <- man_wd
   K <- man_nnodes
   examplefilepath <- expath
+  lambda <- man_lambda
   
   if (manualwd != 1) {
     
@@ -36,10 +37,12 @@ vert_logistic_regression_example_pooled_handler <- function(man_wd=-1, man_nnode
   }
   
   if(K<1){
-    stop
+    stop("Cannot run a pooled analysis when the number of node K is less than 1.")
   }
   
-  # Read data and weights
+  ### Code starts here
+  
+  # Read and scale data
   for(k in 1:K){
     # Data
     node_data <- read.csv(paste0(examplefilepath, "Data_node_", k, ".csv"))
@@ -51,12 +54,32 @@ vert_logistic_regression_example_pooled_handler <- function(man_wd=-1, man_nnode
     }
     
   }
-
+  pooled_data <- scale(pooled_data)
+  
+  # Read outcome
+  y <- read.csv(paste0(examplefilepath, "outcome_data.csv"))[,1]
+  n <- length(y)
+  
+  #Setting parameter lambda (penalty) for the algorithm 
+  #Can be adjusted if needed, please refer to article to ensure adequate settings
+  if(lambda==-1){
+    if(n<=10000){
+      lambda <- 0.0001
+    }else{lambda <- 1/n}}
+  
+  if(lambda<=0){
+    stop("The algorithm cannot run because the penalty parameter lambda was set lower or equal to 0.")
+  }
+  
   # Pooled model
-  model_pooled <- glm(data=pooled_data, formula=out1~.,family="binomial")
+  glmnet_model <- glmnet(pooled_data, (y+1)/2, family=binomial, lambda=lambda, alpha=0, standardize=FALSE)
   
   # Printing pooled models
-  print(summary(model_pooled))
+  print(coef(glmnet_model)[,1])
+  
+  ## Remove all environment variables. 
+  ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)
+  rm(list = ls())
   
 }
 

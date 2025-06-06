@@ -4,13 +4,14 @@
 ## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 ## Copyright: GRIIS / Université de Sherbrooke
 
-vert_logistic_regression_example_datanode_handler <- function(man_wd=-1, nodeid=-1, expath=""){
+vert_logistic_regression_nonpenalized_example_datenode_handler <- function(man_wd=-1, nodeid=-1, expath=""){
+  
+  manualwd <- man_wd
+  manualk <- nodeid
+  examplefilepath <- expath
   
   # No modifications should be required below this point
   ###########################
-
-  manualwd <- man_wd
-  manualk <- nodeid
   
   if (manualwd != 1) {
     
@@ -35,16 +36,14 @@ vert_logistic_regression_example_datanode_handler <- function(man_wd=-1, nodeid=
   }
   
   # Veryfiying if there is a coordination node output file present
-  nbprimerfilesA <- length(list.files(path=examplefilepath, pattern="Coord_node_primerA_for_data_node_[[:digit:]]+.csv"))
-  nbprimerfilesB <- length(list.files(path=examplefilepath, pattern="Coord_node_primerB_for_data_node_[[:digit:]]+.rds"))
-  if (nbprimerfilesA == 1 & nbprimerfilesB == 1) {
+  nb_coordnode_files <- length(list.files(path = examplefilepath, pattern="Coord_node_results_distributed_log_regV.csv"))
+  if (nb_coordnode_files==1) {
     source("../../generic_code/Data_node_call_iter_log-regV.R")
     data_call_iter_log_reg(manualwd,manualk,examplefilepath)
-  } else if(nbprimerfilesA == 0 & nbprimerfilesB == 0) {
+  } else {
     source("../../generic_code/Data_node_call_init_log_regV.R")
-    data_call_init_log_reg(manualwd,manualk,examplefilepath)} else {
-      stop("Primer files are missing or repeated.")
-    }
+    data_call_init_log_reg(manualwd,manualk,examplefilepath)
+  }
   
   ## Remove all environment variables. 
   ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)
