@@ -34,7 +34,7 @@ The results can be interpreted as they would with the following `R` calls in a p
 	
 	b. [Covariate-node side](#covariate-node-side)
 
-5. [License](#license-httpscreativecommonsorglicensesby-nc-sa40)
+5. [License](#license)
 
 6. [Copyright](#copyright-griis--université-de-sherbrooke)
 
