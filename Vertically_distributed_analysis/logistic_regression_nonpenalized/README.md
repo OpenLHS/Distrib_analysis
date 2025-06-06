@@ -1,4 +1,4 @@
-# Vertically distributed logistic regression
+# Vertically distributed nonpenalized logistic regression
 
 ## Before using
 
@@ -13,9 +13,6 @@ This folder contains generic code and examples of a vertically distributed logis
 
 2. Data_preprocessing  
 This folder contains instructions on how to analyse your data before running a vertically distributed logistic regression model.
-
-3. Data_postprocessing  
-This folder contains instructions on how to analyse your data after running the code of a a vertically distributed logistic regression model.
 
 ## Data requirements
 

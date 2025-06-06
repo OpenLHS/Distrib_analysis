@@ -1,4 +1,4 @@
-# Vertically distributed logistic regression
+# Vertically distributed penalized logistic regression (VALORIS)
 
 ## Before using
 
@@ -9,13 +9,13 @@
 ## Repository structure
 
 1. Logistic_regression_modelling  
-This folder contains generic code and examples of a vertically distributed logistic regression model.
+This folder contains generic code and examples of a vertically distributed penalized logistic regression model.
 
 2. Data_preprocessing  
-This folder contains instructions on how to analyse your data before running a vertically distributed logistic regression model.
+This folder contains instructions on how to analyse your data before running a vertically distributed penalized logistic regression model.
 
 3. Data_postprocessing  
-This folder contains instructions on how to analyse your data after running the code of a a vertically distributed logistic regression model.
+This folder contains instructions on how to analyse your data after running the code of a a vertically distributed penalized logistic regression model.
 
 ## Data requirements
 

@@ -1,5 +1,5 @@
 # Vertically_distributed_analysis
-Vertically distributed analysis examples and code using R
+Vertically distributed analysis examples and code using R.
 
 ## Repository structure
 
