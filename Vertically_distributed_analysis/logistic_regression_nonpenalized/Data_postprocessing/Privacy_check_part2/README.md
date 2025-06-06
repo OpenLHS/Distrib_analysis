@@ -53,7 +53,7 @@ The covariate-node must use the following files to run the privacy assessment:
 
 There are many ways to run `R` code. The proposed instructions here are focusing on using a graphical interface.
 
-### Installing R and R Studion
+### Installing R and R Studio
 
 1. Go to the page : https://posit.co/download/rstudio-desktop/ and follow the instructions for your operating system
 
