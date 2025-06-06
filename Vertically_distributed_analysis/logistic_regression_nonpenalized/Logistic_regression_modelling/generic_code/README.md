@@ -1,6 +1,6 @@
 # Generic code
 
-The files in this folder can be used to execute a vertically distributed logistic regression analysis. Assuming a data structure similar to the data nodes `.csv` files in the example folder, this code can be used to execute a data node operation or a coordination node operation for a vertically distributed logistic regression model.
+The files in this folder can be used to execute a vertically distributed logistic regression analysis. Assuming a data structure similar to the data nodes `.csv` files in the example folder, this code can be used to execute a response-node operation or a covariaten-ode operation for a vertically distributed logistic regression model.
 
 ## Data requirements
 
