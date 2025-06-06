@@ -22,9 +22,7 @@ This code allows the  response node split its data in two parts:
 	
 	3. [Installing an example](#installing-an-example)
 	
-	4. [Executing the distributed code](#executing-the-distributed-code)
-	
-	5. [Executing the pooled solution code](#executing-the-pooled-solution-code)
+	4. [Executing the code](#executing-the-code)
 	
 4. [Expected outputs](#expected-outputs)
 
