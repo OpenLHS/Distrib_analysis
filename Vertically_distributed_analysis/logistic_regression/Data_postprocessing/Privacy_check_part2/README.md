@@ -1,6 +1,15 @@
-# Privacy check
+# Privacy check (Part 2)
+
+*Please read the following to make sure this step is relevant with the target analysis and coherent for the dataset at hand.*
 
 The allows a covariate-node to verify privacy-preserving properties when disclosing results such as estimates, standard errors and p-values.
+The algorithm VALORIS is assumed to have been run (see Original paper for details).
+
+**For the following setting, this Privacy check (Part 2) should additionally be run before sharing standard errors and/or p-values**:
+- Covariate-node does not assume that the response-node cleared intermediary quantities, and there are 4 or more continuous covariates at the covariate-node. 
+
+
+
 
 ## Table of contents
 
