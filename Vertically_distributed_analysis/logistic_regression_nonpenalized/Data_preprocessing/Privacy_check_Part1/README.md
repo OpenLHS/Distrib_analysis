@@ -25,7 +25,7 @@ The privacy check is composed of two parts. This first part should be conducted 
 	
 	2. [Installing the required packages](#installing-the-required-packages)
 	
-	3. [Executing the distributed code](#executing-the-code)
+	3. [Executing the code](#executing-the-code)
 	
 4. [Expected outputs](#expected-outputs)
 
