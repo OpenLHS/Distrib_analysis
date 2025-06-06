@@ -24,7 +24,7 @@ The results can be interpreted as they would with the following `R` calls in a p
 	
 	3. [Installing an example](#installing-an-example)
 	
-	4. [Executing the distributed algorithm code](#executing-the-distributed-code)
+	4. [Executing the distributed code](#executing-the-distributed-code)
 	
 	5. [Executing the pooled solution code](#executing-the-pooled-solution-code)
 	
