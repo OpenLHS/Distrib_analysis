@@ -85,14 +85,14 @@ However, it is expected that all data nodes and the coordination node have acces
 
 ### Data node side
 
-| Step | Files created | Shared with covariate-node k? |
+| Step | Files created | Sharedk? |
 | ----------- | ----------- | ----------- |
 | Initialization | `Data_node_k_init_output.rds` | Yes |
 | Single iteration | `Data_node_k_results.csv` | Does not apply |
 
 ### Coordination node side
 
-| Step | Files created | Shared with response-node? |
+| Step | Files created | Shared? |
 | ----------- | ----------- | ----------- |
 | Single iteration | `Coord_node_results_distributed_log_regV.csv` | Yes |
 
