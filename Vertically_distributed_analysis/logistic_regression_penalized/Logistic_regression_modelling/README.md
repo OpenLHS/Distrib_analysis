@@ -16,7 +16,7 @@ The results can be interpreted as they would with the following `R` calls in a p
 
 2. [Data requirements](#Data-requirements)
 
-3. [Instructions to run the algorithm](#instructions-to-run-the-algorithm)
+3. [Instructions to run the examples/algorithm](#instructions-to-run-the-examplesalgorithm)
 
 	1. [Installing R and R Studio](#installing-r-and-r-studio)
 	
