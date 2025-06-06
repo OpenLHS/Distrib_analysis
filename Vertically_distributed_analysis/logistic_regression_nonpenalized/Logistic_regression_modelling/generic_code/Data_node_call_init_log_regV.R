@@ -1,5 +1,5 @@
 ############### Distributed inference ####################
-############### data-node code ###########################
+############### Covariate-node code ###########################
 
 ## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 ## Copyright: GRIIS / Université de Sherbrooke

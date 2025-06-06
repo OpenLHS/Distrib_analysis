@@ -28,7 +28,7 @@ For any given example, it is possible to compare the distributed results with th
 
 ## Examples
 
-1. `random_data_same_folder` contains two datasets corresponding to different nodes in a vertically distributed analysis and a single column dataset corresponding to the outcome variable.. They can be copied and used to run examples of the method and compare with the pooled results. 
+1. `random_data_same_folder` contains two datasets corresponding to different nodes in a vertically distributed analysis. They can be copied and used to run examples of the method and compare with the pooled results. 
 
 ## Example handler
 
@@ -46,11 +46,22 @@ There are many ways to run `R` code. The proposed instructions here are focusing
 
 The algorithm currently requires the use of package(s) not present in the base installation. `R` should prompt you to download the packages automatically.
 
-Data nodes:
-- There are no package not present in the base installation that are a requirement for this code to run.
+Covariate-nodes:
+- [Matrix](https://cran.r-project.org/web/packages/Matrix/index.html)
+- [Rcpp](https://cran.r-project.org/web/packages/Rcpp/index.html)
+- [RcppArmadillo](https://cran.r-project.org/web/packages/RcppArmadillo/index.html)
+- [nleqslv](https://cran.r-project.org/web/packages/nleqslv/index.html)
 
-Coord node:
-- [CVXR](https://cran.r-project.org/web/packages/CVXR/index.html)
+Response-node:
+- [Matrix](https://cran.r-project.org/web/packages/Matrix/index.html)
+- [glmnet](https://cran.r-project.org/web/packages/glmnet/index.html)
+- [Rcpp](https://cran.r-project.org/web/packages/Rcpp/index.html)
+- [RcppArmadillo](https://cran.r-project.org/web/packages/RcppArmadillo/index.html)
+- [Rmpfr](https://cran.r-project.org/web/packages/Rmpfr/index.html)
+- [pracma](https://cran.r-project.org/web/packages/pracma/index.html)
+- [RcppEigen](https://cran.r-project.org/web/packages/RcppEigen/index.html)
+
+Note that it might be necessary to install `Rtools` prior to using functions from `Rcpp`, `RcppArmadillo` and `RcppEigen` packages: https://cran.r-project.org/bin/windows/Rtools/.
 
 Furthermore, the examples will be easier to explore and adapt/change if the package `this.path` is also available. Yet this is NOT required and you can safely ignore any warning about this is if you want to use the algorithm "as-is". Should you choose not to use this package, you will then need to manually set your working directory in your `R` instance.
 

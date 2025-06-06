@@ -5,7 +5,9 @@ The files in this folder can be used to execute a vertically distributed logisti
 ## Data requirements
 
 - Data is expected to be saved in a `.csv` file.
-- The outcome variable must be saved in its own file and be named `outcome_data.csv`. It is expected that the outcome variable has been extracted and taken out of its respective dataset before running this method.
+- The code is written so that the binary response output is coded using `0` and `1`. Make sure to follow this structure with your dataset.
+- The response-node must be named `Data_node_1.csv`.
+- The first column of the data file for the response-node should be the response vector with column name `out1`. Any additional covariate at the response-node (if applies) are put in the same data file as additional columns.
 - Rows (individuals) must be in the same order in all data files across all nodes, including the response-node and covariate-nodes.
 - Categorical variables must be binarized before running this code. Binarized variables must use the values `0` or `1`, where `1` indicates a success (or having the characteristic).
 - It is expected that there are no missing values.
@@ -22,11 +24,22 @@ There are many ways to run `R` code. The proposed instructions here are focusing
 
 The algorithm currently requires the use of package(s) not present in the base installation. `R` should prompt you to download the packages automatically.
 
-Data nodes:
-- There are no package not present in the base installation that are a requirement for this code to run.
+Covariate-nodes:
+- [Matrix](https://cran.r-project.org/web/packages/Matrix/index.html)
+- [Rcpp](https://cran.r-project.org/web/packages/Rcpp/index.html)
+- [RcppArmadillo](https://cran.r-project.org/web/packages/RcppArmadillo/index.html)
+- [nleqslv](https://cran.r-project.org/web/packages/nleqslv/index.html)
 
-Coord node:
-- [CVXR](https://cran.r-project.org/web/packages/CVXR/index.html)
+Response-node:
+- [Matrix](https://cran.r-project.org/web/packages/Matrix/index.html)
+- [glmnet](https://cran.r-project.org/web/packages/glmnet/index.html)
+- [Rcpp](https://cran.r-project.org/web/packages/Rcpp/index.html)
+- [RcppArmadillo](https://cran.r-project.org/web/packages/RcppArmadillo/index.html)
+- [Rmpfr](https://cran.r-project.org/web/packages/Rmpfr/index.html)
+- [pracma](https://cran.r-project.org/web/packages/pracma/index.html)
+- [RcppEigen](https://cran.r-project.org/web/packages/RcppEigen/index.html)
+
+Note that it might be necessary to install `Rtools` prior to using functions from `Rcpp`, `RcppArmadillo` and `RcppEigen` packages: https://cran.r-project.org/bin/windows/Rtools/.
 
 Furthermore, the examples will be easier to explore and adapt/change if the package `this.path` is also available. Yet this is NOT required and you can safely ignore any warning about this is if you want to use the algorithm "as-is". Should you choose not to use this package, you will then need to manually set your working directory in your `R` instance.
 
@@ -43,22 +56,24 @@ If you work in an isolated environment, you might need to download them manually
 ***Make sure `R studio` is not currently running and close it if it is.***  
 ***If you are not able to automatically set your working directory (for example, if you do not have access to `this.path`), manually set the variable `manualwd = 1` in `Response_node_call_iter_log-regV.R` and  `Data_node_call_log-regV.R`.***
 
-In the following procedure, `k` represents the number of the local node.
+In the following procedure, `k` represents the number of the local node. In the Datafiles, Node `1` must be associated with the response-node. 
 
 Initialization:
 
-1. Run the data node `R` file (`Data_node_call_log-regV.R`) for each data node to compute local gram matrices.   
+1. Run the covariate-node `R` file (`Data_node_call_log-regV.R`) for each covariate-node to compute local gram matrices.  
 The file `Data_node_k_init_output.rds` will be generated and must be sent to the response-node.
 
-For the single iteration, coordination node side:
+For the single iteration, response-node side:
 
-2. Run the coordination node `R` file (`Coord_node_call_iter_log-regV.R`) to compute the optimal dual parameters and to obtain parameter estimates for the intercept.
-The file `Coord_node_results_distributed_log_regV.csv` will be generated and contains those results.  This file must be shared with each local node k.  
+2. Run the response-node `R` file (`Response_node_call_iter_log-regV.R`) to compute intermediary quantities for the covariate-nodes,
+to obtain the unscaled intercept estimate at the response-node and, if any, to obtain parameter estimates and standard errors asssociated with covariates at the response-node.  
+The files `Coord_node_primerA_for_data_node_k.csv` and `Coord_node_primerB_for_data_node_k.rds` will be generated. These files must be shared with respective local node k.  
+The file `Data_node_1_results.csv` will also be generated and contains results associated with the response-node. 
 
-For the single iteration, data node side:
+For the single iteration, covariate-node side:
 
-3. Run the data node `R` file (`Data_node_call_log-regV.R`) for each data node to compute parameter estimates and standard errors associated with the covariates it holds.  
-The files `Data_node_k_results.csv` will be generated and contains results associated with the data node. 
+3. Run the covariate-node `R` file (`Data_node_call_log-regV.R`) for each covariate-node to compute parameter estimates and standard errors associated with the covariates it holds.  
+The files `Data_node_k_results.csv` will be generated and contains results associated with the covariate-node. 
 
 ### Executing the pooled solution code
 
@@ -73,28 +88,29 @@ The files `Data_node_k_results.csv` will be generated and contains results assoc
 
 ## Expected outputs
 
-This implementation of the Vertical Logistic Regression leads to valid estimates for the logistic regression model (with no penalization).
+This implementation of the Vertical Logistic Regression leads to valid estimates and standard errors for the logistic regression model (with no penalization).
 The results can be interpreted as they would with the following `R` calls in a pooled setting: 
-- `glmnet_model <- glmnet(scale(x), y, family=binomial, lambda=lambda, alpha=0, standardize=FALSE)`
+- `glm(formula, data, family = “binomial”)`
 
-Since this implementation is made for distributed analysis, the following `.csv` files should not be shared:
+Since this implementation is made for distributed analysis, the following `R` files should not be shared:
 - `Data_node_k.csv`.
 
-However, it is expected that all data nodes and the coordination node have access to the following `.csv` file:
-- `outcome_data.csv`.
-
-### Data node side
+### Response-node side
 
 | Step | Files created | Shared with covariate-node k? |
 | ----------- | ----------- | ----------- |
-| Initialization | `Data_node_k_init_output.rds` | Yes |
-| Single iteration | `Data_node_k_results.csv` | Does not apply |
+| Single iteration | `Data_node_1_results.csv`\* <br> `Coord_node_primerA_for_data_node_k.csv` <br> `Coord_node_primerB_for_data_node_k.rds` | No <br> Yes <br> Yes |
 
-### Coordination node side
+\*The file `Data_node_1_results.csv` contains the scaled intercept coefficient and standard error, along with the coefficients (parameter estimates) and standard errors in their original scales (if any covariate at the response-node). The two-sided p-values are also provided.
+
+### Covariate-node side
 
 | Step | Files created | Shared with response-node? |
 | ----------- | ----------- | ----------- |
-| Single iteration | `Coord_node_results_distributed_log_regV.csv` | Yes |
+| Initialization | `Data_node_k_init_output.rds` | Yes |
+| Single iteration | `Data_node_k_results.csv`\* | No |
+
+\*The file `Data_node_k_results.csv` contains the coefficients (parameter estimates) and standard errors in their original scales. The two-sided p-values are also provided.
 
 ## License
 

@@ -1,12 +1,11 @@
 # Data preprocessing
 
-This folder contains instructions on how to split the response node's data, which must be done before running this vertically distributed logistic regression model.
+This folder contains instructions on how to analyse your data before running a vertically distributed logistic regression model.
 
-## Response node split
+## Privacy check (part 1)
 
-This code allows the  response node split its data in two parts:
-- `outcome_data.csv`, a single column dataset which corresponds to the outcome variable.
-- `Data_node_k.csv`, which corresponds to all other predictors available at the response node.
+This code allows a covariate-node to verify privacy-preserving properties when disclosing results such as estimates, standard errors and p-values.
+The privacy check is composed of two parts. This first part should be conducted BEFORE running the VALORIS algorithm in any setting of the decision trees in the original article for which an infinite number of possibilities is indicated (see Original Article for details).
 
 ## License
 

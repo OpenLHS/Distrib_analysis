@@ -1,5 +1,5 @@
 ############### Distributed inference ####################
-############### Data-node code ###########################
+############### Covariate-node code ###########################
 
 ## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 ## Copyright: GRIIS / Université de Sherbrooke
@@ -44,14 +44,16 @@ if (manualwd != 1) {
 path <- paste0(getwd(), "/")
   
 # Veryfiying if there is a coordination node output file present
-nb_coordnode_files <- length(list.files(path = path, pattern="Coord_node_results_distributed_log_regV.csv"))
-if (nb_coordnode_files==1) {
+nbprimerfilesA <- length(list.files(pattern="Coord_node_primerA_for_data_node_[[:digit:]]+.csv"))
+nbprimerfilesB <- length(list.files(pattern="Coord_node_primerB_for_data_node_[[:digit:]]+.rds"))
+if (nbprimerfilesA == 1 & nbprimerfilesB == 1) {
   source("Data_node_call_iter_log-regV.R")
   data_call_iter_log_reg(manualwd,manualk,path)
-} else {
+} else if(nbprimerfilesA == 0 & nbprimerfilesB == 0) {
   source("Data_node_call_init_log_regV.R")
-  data_call_init_log_reg(manualwd,manualk,path)
-  }
+  data_call_init_log_reg(manualwd,manualk,path)} else {
+    stop("Primer files are missing or repeated.")
+}
 
 ## Remove all environment variables. 
 ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)
