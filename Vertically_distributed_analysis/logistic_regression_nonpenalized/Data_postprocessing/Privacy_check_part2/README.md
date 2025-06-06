@@ -25,15 +25,11 @@ The algorithm VALORIS is assumed to have been run (see Original paper for detail
 	
 	2. [Installing the required packages](#installing-the-required-packages)
 	
-	3. [Installing an example](#installing-an-example)
-	
-	4. [Executing the distributed code](#executing-the-distributed-code)
-	
-	5. [Executing the pooled solution code](#executing-the-pooled-solution-code)
-	
+	3. [Executing the code](#executing-the-code)
+		
 4. [Expected outputs](#expected-outputs)
 
-5. [License](#license-httpscreativecommonsorglicensesby-nc-sa40)
+5. [License](#license)
 
 6. [Copyright](#copyright-griis--université-de-sherbrooke)
 
