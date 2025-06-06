@@ -42,7 +42,7 @@ The results can be interpreted as they would with the following `R` calls in a p
 ## Before using
 
 - The implementation was tested to operate using `R` version 4.4.1.
-- To start over, it is important to deletee all "output" files.
+- To start over, it is important to delete all "output" files.
 - The code currently works only with complete data.
 - ***OF NOTE, as mentioned in the original paper, our current implementation can lead to time-consuming computations at the response-node for large sample sizes `n`. Other box-constrained algorithms could be investigated to optimize those operations.***
 
