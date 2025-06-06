@@ -1,53 +1,6 @@
-# Response node split
+# Generic code
 
-This code allows the  response node split its data in two parts:
-- `outcome_data.csv`, a single column dataset which corresponds to the outcome variable.
-- `Data_node_k.csv`, which corresponds to all other predictors available at the response node.
-
-## Table of contents
-
-1. [Repository structure](#repository-structure)
-
-	1. [List of examples](#list-of-examples)
-
-	2. [Generic code](#generic-code)
-
-2. [Data requirements](#Data-requirements)
-
-3. [Instructions to run the examples/algorithm](#instructions-to-run-the-examplesalgorithm)
-
-	1. [Installing R and R Studio](#installing-r-and-r-studio)
-	
-	2. [Installing the required packages](#installing-the-required-packages)
-	
-	3. [Installing an example](#installing-an-example)
-	
-	4. [Executing the distributed code](#executing-the-distributed-code)
-	
-	5. [Executing the pooled solution code](#executing-the-pooled-solution-code)
-	
-4. [Expected outputs](#expected-outputs)
-
-5. [License](#license-httpscreativecommonsorglicensesby-nc-sa40)
-
-6. [Copyright](#copyright-griis--université-de-sherbrooke)
-
-## Repository structure
-
-- Examples
-The examples folder contains a few examples. Each example is self-contained.
-
-- Generic_code  
-The generic_code folder contains examplar `R` code files. Please read the code and its comments in the `R` file as files may require edition before being used.
-
-### List of examples
-
-1. `random_data_same_folder`  
-This folder makes it easy to look at the output since everything is happening in the same folder. There is no need to copy files across folders.
-
-### Generic code
-
-The files in this folder can be used to support an example splitting the data available at the reponse node.
+The files in this folder can be used to execute a vertically distributed logistic regression analysis. Assuming a data structure similar to the data nodes `.csv` files in the example folder, this code can be used to execute a data node operation or a coordination node operation for a vertically distributed logistic regression model.
 
 ## Data requirements
 
