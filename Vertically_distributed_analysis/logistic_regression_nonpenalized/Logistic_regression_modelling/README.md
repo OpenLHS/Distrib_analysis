@@ -10,29 +10,29 @@ The results can be interpreted as they would with the following `R` calls in a p
 
 1. [Repository structure](#repository-structure)
 
-	a. [List of examples](#list-of-examples)
+	1. [List of examples](#list-of-examples)
 	
-	b. [Generic code](#generic-code)
+	2. [Generic code](#generic-code)
 
 2. [Data requirements](#Data-requirements)
 
 3. [Instructions to run the algorithm](#instructions-to-run-the-algorithm)
 
-	a. [Installing R and R Studio](#installing-r-and-r-studio)
+	1. [Installing R and R Studio](#installing-r-and-r-studio)
 	
-	b. [Installing the required packages](#installing-the-required-packages)
+	2. [Installing the required packages](#installing-the-required-packages)
 	
-	c. [Installing an example](#installing-an-example)
+	3. [Installing an example](#installing-an-example)
 	
-	d. [Executing the distributed algorithm code](#executing-the-distributed-code)
+	4. [Executing the distributed algorithm code](#executing-the-distributed-code)
 	
-	e. [Executing the pooled solution code](#executing-the-pooled-solution-code)
+	5. [Executing the pooled solution code](#executing-the-pooled-solution-code)
 	
 4. [Expected outputs](#expected-outputs)
 
-	a. [Response-node side](#response-node-side)
+	1. [Response-node side](#response-node-side)
 	
-	b. [Covariate-node side](#covariate-node-side)
+	2. [Covariate-node side](#covariate-node-side)
 
 5. [License](#license-httpscreativecommonsorglicensesby-nc-sa40)
 
