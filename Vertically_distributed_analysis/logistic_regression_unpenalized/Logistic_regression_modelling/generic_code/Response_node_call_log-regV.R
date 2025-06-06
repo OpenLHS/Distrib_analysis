@@ -13,7 +13,7 @@
 # If you do so, make sure the working directory is set correctly manually.
 manualwd <- -1
 
-# If you want to override the node numbering based on filename, input 0 or a positive integer here
+# If you want to override the response node numbering based on filename, input 0 or a positive integer here
 manualk <- -1
 
 # No modifications should be required below this point
@@ -53,7 +53,7 @@ if (manualk >= 0) {
 } else {
   
   # List all the data files conforming the the pattern below. There should be only 1
-  datafileslist <- list.files(path=examplefilepath, pattern="Data_node_[[:digit:]]+.csv")
+  datafileslist <- list.files(path=path, pattern="Data_node_[[:digit:]]+.csv")
   
   # Assuming there is only one data file found
   if (length(datafileslist) == 1) {
@@ -75,7 +75,7 @@ if (manualk >= 0) {
 nb_rnode_files <- length(list.files(path = path, pattern="outcome_data.csv"))
 
 if (nb_rnode_files==0) {
-  source("Response_node_init_log-regV.R")
+  source("Response_node_core_log-regV.R")
   response_core_log_reg(manualwd,k,path)
 } else {
     stop("There is already a response node output. There is no need to rerun this file.")

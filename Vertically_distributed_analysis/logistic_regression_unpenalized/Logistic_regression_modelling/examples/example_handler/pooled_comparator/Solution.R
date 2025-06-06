@@ -44,7 +44,7 @@ if(K<1){
 # Read data and weights
 for(k in 1:K){
   # Data
-  node_data <- read.csv(paste0(examplefilepath, "Data_node_", k, ".csv"))
+  node_data <- read.csv(paste0("Data_node_", k, ".csv"))
   
   if(k==1){
     pooled_data <- node_data
@@ -54,11 +54,17 @@ for(k in 1:K){
   
 }
 
+y <- pooled_data[,1]
+y[which(y==0)] <- -1
+pooled_data <- pooled_data[,-1]
+pooled_data <- scale(pooled_data)
+
 # Pooled model
-model_pooled <- glm(data=pooled_data, formula=out1~.,family="binomial")
+lambda <- 1e-04
+glmnet_model <- glmnet(pooled_data, (y+1)/2, family=binomial, lambda=lambda, alpha=0, standardize=FALSE)
 
 # Printing pooled models
-print(summary(model_pooled))
+print(coef(glmnet_model)[,1])
 
 ## Remove all environment variables. 
 ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)

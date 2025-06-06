@@ -16,7 +16,7 @@ node_data <- scale(as.matrix(node_data))
 n <- nrow(node_data)
 
 # Read outcome data
-y <- read.csv(paste0(examplefilepath, "outcome_data.csv"))
+y <- as.matrix(read.csv(paste0(examplefilepath, "outcome_data.csv")))
 
 # Read coordination node outputs
 outputs <- read.csv(paste0(examplefilepath, "Coord_node_results_distributed_log_regV.csv"))

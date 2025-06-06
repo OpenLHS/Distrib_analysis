@@ -32,6 +32,14 @@ if (manualwd != 1) {
   print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
 }
 
+# Extract response data
+y <- as.vector(read.csv(file=paste0(examplefilepath, "outcome_data.csv"))[,1])
+n <- length(y)
+
+# Extract nodes' Gram matrices
+K <- length(list.files(path=examplefilepath, pattern="Data_node_[[:digit:]]+_init_output.rds"))
+Global_Gram <- readRDS(paste0(examplefilepath, "Data_node_", 1, "_init_output.rds"))
+
 #Setting parameter lambda (penalty) for the algorithm 
 #Can be adjusted if needed, please refer to article to ensure adequate settings
 if(lambda==-1){
@@ -42,14 +50,6 @@ if(lambda==-1){
 if(lambda<=0){
   stop("The algorithm cannot run because the penalty parameter lambda was set lower or equal to 0.")
 }
-
-# Extract response data
-y <- read.csv(file=paste0(examplefilepath, "outcome_data.csv"))
-
-# Extract nodes' Gram matrices
-K <- length(list.files(path=examplefilepath, pattern="Data_node_[[:digit:]]+_init_output.rds"))
-Global_Gram <- readRDS(paste0(examplefilepath, "Data_node_", 1, "_init_output.rds"))
-n <- nrow(Global_Gram)
 
 for(k in 2:K){
   node_Gram <- readRDS(paste0(examplefilepath, "Data_node_", k, "_init_output.rds"))
