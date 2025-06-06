@@ -30,11 +30,11 @@ The results can be interpreted as they would with the following `R` calls in a p
 	
 4. [Expected outputs](#expected-outputs)
 
-	1. [Response-node side](#response-node-side)
+	1. [Data node side](#data-node-side)
 	
-	2. [Covariate-node side](#covariate-node-side)
+	2. [Coordination node side](#coordination-node-side)
 
-5. [License](#license-httpscreativecommonsorglicensesby-nc-sa40)
+5. [License](#license)
 
 6. [Copyright](#copyright-griis--université-de-sherbrooke)
 
@@ -63,13 +63,13 @@ The generic_code folder contains `R` code files pertaining to the distributed ap
 
 ### Generic code
 
-The files in this folder can be used to execute a vertically distributed logistic regression analysis. The generic code assumes a data structure with one response-node holding the response-vector (and potentially covariates) and covariate-nodes holding only covariates. This can can be used to execute a covariate-node operation or a response-node operation for a vertically distributed logistic regression.
+The files in this folder can be used to execute a vertically distributed logistic regression analysis. Assuming a data structure similar to the data nodes `.csv` files in the example folder, this code can be used to execute a data node operation of a coordination node operation for a vertically distributed logistic regression model.
 
 ## Data requirements
 
 - Data is expected to be saved in a `.csv` file.
 - The outcome variable must be saved in its own file and be named `outcome_data.csv`. It is expected that the outcome variable has been extracted and taken out of its respective dataset before running this method.
-- Rows (individuals) must be in the same order in all data files across all nodes, including the response-node and covariate-nodes.
+- Rows (individuals) must be in the same order in all data files across all nodes, including the file `outcome_data.csv`.
 - Categorical variables must be binarized before running this code. Binarized variables must use the values `0` or `1`, where `1` indicates a success (or having the characteristic).
 - It is expected that there are no missing values.
 
@@ -104,14 +104,14 @@ If you work in an isolated environment, you might need to download them manually
 ### Executing the distributed code
 
 ***Make sure `R studio` is not currently running and close it if it is.***  
-***If you are not able to automatically set your working directory (for example, if you do not have access to `this.path`), manually set the variable `manualwd = 1` in `Response_node_call_iter_log-regV.R` and  `Data_node_call_log-regV.R`.***
+***If you are not able to automatically set your working directory (for example, if you do not have access to `this.path`), manually set the variable `manualwd = 1` in `Coord_node_call_iter_log-regV.R` and  `Data_node_call_log-regV.R`.***
 
 In the following procedure, `k` represents the number of the local node.
 
 Initialization:
 
 1. Run the data node `R` file (`Data_node_call_log-regV.R`) for each data node to compute local gram matrices.   
-The file `Data_node_k_init_output.rds` will be generated and must be sent to the response-node.
+The file `Data_node_k_init_output.rds` will be generated and must be sent to the coordination node.
 
 For the single iteration, coordination node side:
 
@@ -148,14 +148,14 @@ However, it is expected that all data nodes and the coordination node have acces
 
 ### Data node side
 
-| Step | Files created | Shared with covariate-node k? |
+| Step | Files created | Shared? |
 | ----------- | ----------- | ----------- |
 | Initialization | `Data_node_k_init_output.rds` | Yes |
 | Single iteration | `Data_node_k_results.csv` | Does not apply |
 
 ### Coordination node side
 
-| Step | Files created | Shared with response-node? |
+| Step | Files created | Shared? |
 | ----------- | ----------- | ----------- |
 | Single iteration | `Coord_node_results_distributed_log_regV.csv` | Yes |
 
