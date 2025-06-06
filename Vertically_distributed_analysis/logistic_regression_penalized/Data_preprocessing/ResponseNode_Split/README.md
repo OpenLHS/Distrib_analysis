@@ -26,7 +26,7 @@ This code allows the  response node split its data in two parts:
 	
 4. [Expected outputs](#expected-outputs)
 
-5. [License](#license-httpscreativecommonsorglicensesby-nc-sa40)
+5. [License](#license)
 
 6. [Copyright](#copyright-griis--université-de-sherbrooke)
 
