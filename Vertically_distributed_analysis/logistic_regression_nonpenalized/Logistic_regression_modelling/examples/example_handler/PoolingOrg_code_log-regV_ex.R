@@ -7,6 +7,9 @@
 # No modifications should be required below this point
 ###########################
 
+# Loading packages and setting up core variables --------------------------
+library(glmnet)
+
 vert_logistic_regression_nonpenalized_example_pooled_handler <- function(man_wd=-1, man_nnodes=-1, man_lambda=-1, expath=""){
  
   manualwd <- man_wd

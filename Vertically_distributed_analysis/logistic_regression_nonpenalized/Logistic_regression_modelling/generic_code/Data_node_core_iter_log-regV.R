@@ -28,7 +28,7 @@ lambda <- outputs[1,3]
 local_betahat <- 1/(lambda*n) * t(node_data) %*% diag(alpha_hat) %*% y
 
 # Export results
-write.csv(x=local_betahat, file=paste0(examplefilepath, "Results_node", k, ".csv"), row.names = FALSE)
+write.csv(x=local_betahat, file=paste0(examplefilepath, "Data_node_", k, "_results.csv"), row.names = FALSE)
 
 ## Remove all environment variables. 
 ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)

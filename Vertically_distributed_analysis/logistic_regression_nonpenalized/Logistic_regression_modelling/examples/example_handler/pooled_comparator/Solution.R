@@ -18,6 +18,9 @@ lambda <- 1e-04
 # No modifications should be required below this point
 ###########################
 
+# Loading packages and setting up core variables --------------------------
+library(glmnet)
+
 if (manualwd != 1) {
   
   # Set working directory automatically

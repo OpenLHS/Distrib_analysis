@@ -4,6 +4,9 @@
 ## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 ## Copyright: GRIIS / Université de Sherbrooke
 
+# Loading packages and setting up core variables --------------------------
+library(CVXR)
+
 coord_log_reg <- function(man_wd=-1, man_lambda, expath = "") {
 
 manualwd <- man_wd
