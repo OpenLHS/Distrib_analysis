@@ -13,10 +13,8 @@
 # If you do so, make sure the working directory is set correctly manually.
 manualwd <- -1
 
-# If you want to manually set the parameter lambda, specify value here.
-# If you do so, please refer to article to ensure adequate settings. 
-# Else, an automated value that complies with the assumptions of the method will be assigned.
-lambda <- -1
+# If you want to override the node numbering based on filename, input 0 or a positive integer here
+manualk <- -1
 
 # No modifications should be required below this point
 ###########################
@@ -46,16 +44,42 @@ if (manualwd != 1) {
 # Once the working directory as been set, save it so we can pass it to other files
 path <- paste0(getwd(), "/")
   
-# Verifying if there is a coordination node (response-node) data file present
-nb_node1_files <- length(list.files(path=path, pattern="Data_node_1.csv"))
-nb_node_output_files <- length(list.files(path=path, pattern="Data_node_[[:digit:]]+_init_output.rds"))
-
-if (nb_node1_files==1 & nb_node_output_files>0) {
-  source("Response_node_init_iter_log-regV.R")
-  coord_log_reg(man_wd = manualwd, man_lambda = lambda, expath = path)
+k <- -1
+# If there is a manual override, the node number (k) is set to the manual value --------------------------
+if (manualk >= 0) {
+  k <- manualk
+  
+  # If there is no valid override number, there will be an attempt to extract the node number from the data file name
 } else {
-  stop("Node 1 data file missing or no output file from other nodes found")
+  
+  # List all the data files conforming the the pattern below. There should be only 1
+  datafileslist <- list.files(path=examplefilepath, pattern="Data_node_[[:digit:]]+.csv")
+  
+  # Assuming there is only one data file found
+  if (length(datafileslist) == 1) {
+    
+    filename <- datafileslist[[1]]
+    lastunders <- max(unlist(gregexpr("_",filename)))
+    lenmainfilename <- nchar(filename)-4
+    autok <- strtoi(substring(filename,lastunders+1,lenmainfilename))
+    
+    k <- autok
+    
+    # If there is more than one data file in the folder, the script will halt.
+  } else {
+    stop("There is more than one data file in this folder, the response node number cannot be automatically identified")
   }
+}
+
+# Verifying if there is a response node output file present
+nb_rnode_files <- length(list.files(path = path, pattern="outcome_data.csv"))
+
+if (nb_rnode_files==0) {
+  source("Response_node_init_log-regV.R")
+  response_core_log_reg(manualwd,k,path)
+} else {
+    stop("There is already a response node output. There is no need to rerun this file.")
+} 
 
 ## Remove all environment variables. 
 ## If you want to see the variable that were create, simply don't execute that line (and clear them manually after)

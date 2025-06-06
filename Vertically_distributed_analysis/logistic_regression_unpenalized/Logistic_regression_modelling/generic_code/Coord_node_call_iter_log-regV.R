@@ -1,5 +1,5 @@
 ############### Distributed inference ####################
-############### Data-node code ###########################
+############### Coordination node code ###########################
 
 ## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 ## Copyright: GRIIS / Université de Sherbrooke
@@ -8,20 +8,23 @@
 # Currently, the automated node number allocation currently requires execution in R studio and rstudioapi package
 # https://cran.r-project.org/package=rstudioapi
 
+
 # If you want to skip the automated working directory setting, input 1 here. 
-# If you do so, make sure the working directory is set correctly manualy.
+# If you do so, make sure the working directory is set correctly manually.
 manualwd <- -1
 
-# If you want to override the node numbering based on filename, input 0 or a positive integer here
-manualk <- -1
+# If you want to manually set the parameter lambda, specify value here.
+# If you do so, please refer to article to ensure adequate settings. 
+# Else, an automated value that complies with the assumptions of the method will be assigned.
+lambda <- -1
 
 # No modifications should be required below this point
 ###########################
 
 if (manualwd != 1) {
-
-  # Set working directory automatically
   
+  # Set working directory automatically
+
   # this.path package is available
   if (require(this.path)) {
     setwd(this.dir())
@@ -43,14 +46,14 @@ if (manualwd != 1) {
 # Once the working directory as been set, save it so we can pass it to other files
 path <- paste0(getwd(), "/")
   
-# Veryfiying if there is a coordination node output file present
-nb_coordnode_files <- length(list.files(path = path, pattern="Coord_node_results_distributed_log_regV.csv"))
-if (nb_coordnode_files==1) {
-  source("Data_node_call_iter_log-regV.R")
-  data_call_iter_log_reg(manualwd,manualk,path)
+# Verifying if there is a response node output file present and if there are data node output files present
+nb_rnode_files <- length(list.files(path = path, pattern="outcome_data.csv"))
+nb_node_output_files <- length(list.files(path=path, pattern="Data_node_[[:digit:]]+_init_output.rds"))
+if (nb_rnode_files==1 & nb_node_output_files>0) {
+  source("Coord_node_init_iter_log-regV.R")
+  coord_log_reg(man_wd = manualwd, man_lambda = lambda, expath = path)
 } else {
-  source("Data_node_call_init_log_regV.R")
-  data_call_init_log_reg(manualwd,manualk,path)
+  stop("Response node data file missing or no output file from other nodes found")
   }
 
 ## Remove all environment variables. 
