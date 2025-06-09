@@ -485,9 +485,9 @@ lambda <- 0.0001
 glm.model <- glm((y+1)/2 ~ X, family="binomial")
 
 # Format and save output for comparison
-output_glm <- cbind(names(glm.model$coefficients), glm.model$coefficients)
-output_glm <- rbind(output_glm[-1,], output_glm[1,])
-write.csv(output_glm, file = "glm_output.csv", row.names = FALSE)
+output_glm <- summary(glm.model)
+output_glm <- output_glm$coefficients[,1:2]
+write.csv(output_glm, file = "glm_output.csv", row.names = TRUE)
 
 #-------------------------------------------------------------------------------
 # Second comparison: Using glmnet()
