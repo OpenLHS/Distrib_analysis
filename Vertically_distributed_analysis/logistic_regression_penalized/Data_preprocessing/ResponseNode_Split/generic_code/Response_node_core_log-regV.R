@@ -43,7 +43,7 @@ if(any(is.na(response_node))){
 
 # Makes sure that the first column is the outcome variable (out1).
 if(colnames(response_node)[1]!="out1"){
-  stop("The outcome variable (out1) does not appear. Make sure the first column corresponds to the response vector and is denoted out1.") 
+  stop("The outcome variable (out1) does not appear as the first column of the dataset. \n Make sure the first column corresponds to the response vector and is denoted out1.") 
 }
 
 # Makes sure the outcome variable is properly coded as 0s and 1s.
