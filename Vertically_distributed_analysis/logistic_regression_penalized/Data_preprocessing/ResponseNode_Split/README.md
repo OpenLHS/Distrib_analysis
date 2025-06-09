@@ -89,7 +89,7 @@ If you work in an isolated environment, you might need to download them manually
 
 | Step | Files created | Shared? |
 | ----------- | ----------- | ----------- |
-| Single iteration | `outcome_data.csv` <br> `Data_node_k.csv`\* <br> `Backup_Data_node_k.csv` | Yes <br> No <br> No |
+| Single iteration | `outcome_data.csv` <br> `Data_node_k.csv`\* <br> `Backup_Data_node_k.csv`\* | Yes <br> No <br> No |
 
 \* After running the code, the file `Backup_Data_node_k.csv` will correspond to the original data, whereas the file `Data_node_k.csv` will contain only the predictors in the original data.
 
