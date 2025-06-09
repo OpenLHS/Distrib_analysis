@@ -1,6 +1,6 @@
 # Response node split
 
-This code allows the  response node split its data in two parts:
+This code allows the  response node to split its data in two parts:
 - `outcome_data.csv`, a single column dataset which corresponds to the outcome variable.
 - `Data_node_k.csv`, which corresponds to all other predictors available at the response node.
 
