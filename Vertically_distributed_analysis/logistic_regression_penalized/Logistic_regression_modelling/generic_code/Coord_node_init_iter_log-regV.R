@@ -39,6 +39,18 @@ if (manualwd != 1) {
 y <- as.vector(read.csv(file=paste0(examplefilepath, "outcome_data.csv"))[,1])
 n <- length(y)
 
+# Verify if there is any missing value in the outcome column
+if(any(is.na(y))){
+  stop("The dataset 'outcome_data.csv' seems to contain NA value(s). The method cannot be applied.
+    You can verify with other participating nodes if the individual(s) concerned should be removed from all datasets to proceed with complete-case analysis.")
+}
+
+# Makes sure the outcome variable is properly coded as -1s and 1s.
+if(!all(unique(y) %in% c(-1,1))){
+  stop("The outcome variable (see file 'outcome_data.csv) contains values that are different from -1 and 1, which isn't allowed at this point. 
+       The response node might need to re-run the preprocessing files.")
+}
+
 # Extract nodes' Gram matrices
 K <- length(list.files(path=examplefilepath, pattern="Data_node_[[:digit:]]+_init_output.rds"))
 Global_Gram <- readRDS(paste0(examplefilepath, "Data_node_", 1, "_init_output.rds"))
