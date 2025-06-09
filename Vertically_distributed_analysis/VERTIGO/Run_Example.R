@@ -28,13 +28,13 @@ epsilon <- 1e-6
 #     |> partial gradient
 # - CC: 
 #     |> alpha_s 
-SaveAll <- TRUE
+SaveAll <- FALSE
 
 # Should we save all quantities available at the local nodes?
-SaveNodes <- TRUE
+SaveNodes <- FALSE
 
 # Should we save all quantities available at the CC?
-SaveCC <- TRUE
+SaveCC <- FALSE
 
 #-------------------------------------------------------------------------------
 # Inputs
@@ -206,7 +206,7 @@ if(SaveNodes){
   write.csv(e_1_list, file = "Outputs/Node1/List_e_1_s.csv", row.names = FALSE)
   
   # Node 2
-  write.csv(e_2_list, file = "Outouts/Node2/List_e_2_s.csv", row.names = FALSE)
+  write.csv(e_2_list, file = "Outputs/Node2/List_e_2_s.csv", row.names = FALSE)
   
   # Node 3
   write.csv(e_3_list, file = "Outputs/Node3/List_e_3_s.csv", row.names = FALSE)
@@ -215,7 +215,7 @@ if(SaveNodes){
 if(SaveCC){
   # CC
   write.csv(e_1_list, file = "Outputs/Coord/List_e_1_s.csv", row.names = FALSE)
-  write.csv(e_2_list, file = "Outouts/Coord/List_e_2_s.csv", row.names = FALSE)
+  write.csv(e_2_list, file = "Outputs/Coord/List_e_2_s.csv", row.names = FALSE)
   write.csv(e_3_list, file = "Outputs/Coord/List_e_3_s.csv", row.names = FALSE)
 }
 
@@ -430,9 +430,9 @@ invXVX <- solve(XVX)
 std.error <- sqrt(diag(invXVX))
 
 # Format and save output
-beta <- c(beta_node_1, beta_node_2[-length(beta_node_2)], beta_0)
+beta <- c(beta_node_1, beta_node_2, beta_node_3[-length(beta_node_3)], beta_0)
 output <- cbind(beta, std.error)
-rownames(output) <- c(colnames(node_data1), colnames(node_data2), "intercept")
+rownames(output) <- c(colnames(node_data1), colnames(node_data2), colnames(node_data3), "intercept")
 write.csv(output, file = "VERTIGO_CI_output.csv", row.names = FALSE)
 
 if(SaveCC){
@@ -441,8 +441,6 @@ if(SaveCC){
   write.csv(invXVX, file = "Outputs/Coord/invXVX.csv", row.names = FALSE)
   write.csv(beta, file = "Outputs/Coord/beta_hat.csv", row.names = FALSE)
 }
-
-
 
 #==============================================================================================================================================================
 # End of "Algorithm 4: VERTIGO-CI Original"
@@ -486,7 +484,10 @@ lambda <- 0.0001
 # Model through glm()
 glm.model <- glm((y+1)/2 ~ X, family="binomial")
 
-# Save output for comparison
+# Format and save output for comparison
+output_glm <- cbind(names(glm.model$coefficients), glm.model$coefficients)
+output_glm <- rbind(output_glm[-1,], output_glm[1,])
+write.csv(output_glm, file = "glm_output.csv", row.names = FALSE)
 
 #-------------------------------------------------------------------------------
 # Second comparison: Using glmnet()
@@ -504,4 +505,6 @@ glmnet.model <- glmnet(X, (y+1)/2, family = "binomial", alpha = 0, lambda = lamb
   penalty.factor = rep(1, ncol(X)) # Penalize all coefficients, including intercept
 )
 
-# Save output for comparison
+# Format and save output for comparison
+output_glmnet <- cbind(glmnet.model$beta@Dimnames[[1]], glmnet.model$beta@x)
+write.csv(output_glmnet, file = "glmnet_output.csv", row.names = FALSE)
