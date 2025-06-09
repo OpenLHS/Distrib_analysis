@@ -433,7 +433,7 @@ std.error <- sqrt(diag(invXVX))
 beta <- c(beta_node_1, beta_node_2, beta_node_3[-length(beta_node_3)], beta_0)
 output <- cbind(beta, std.error)
 rownames(output) <- c(colnames(node_data1), colnames(node_data2), colnames(node_data3), "intercept")
-write.csv(output, file = "VERTIGO_CI_output.csv", row.names = FALSE)
+write.csv(output, file = "VERTIGO_CI_output.csv", row.names = TRUE)
 
 if(SaveCC){
   # CC
@@ -487,6 +487,7 @@ glm.model <- glm((y+1)/2 ~ X, family="binomial")
 # Format and save output for comparison
 output_glm <- summary(glm.model)
 output_glm <- output_glm$coefficients[,1:2]
+output_glm <- rbind(output_glm[-1,], output_glm[1,])
 write.csv(output_glm, file = "glm_output.csv", row.names = TRUE)
 
 #-------------------------------------------------------------------------------
