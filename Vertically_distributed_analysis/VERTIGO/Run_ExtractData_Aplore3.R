@@ -52,7 +52,7 @@ df <- df %>%
 # Create data nodes
 datanode1 <- df[,1]
 datanode2 <- df[,2:5]
-datanode3 <- df[,6:8]
+datanode3 <- df[,6:7]
 
 # Save to .csv
 write.csv(datanode1, file = "Data_node_1.csv", row.names = FALSE)
