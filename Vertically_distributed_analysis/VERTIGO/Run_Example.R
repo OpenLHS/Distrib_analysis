@@ -28,13 +28,15 @@ epsilon <- 1e-6
 #     |> partial gradient
 # - CC: 
 #     |> alpha_s 
-SaveAll <- FALSE
+SaveAll <- TRUE
 
 # Should we save all quantities available at the local nodes?
-SaveNodes <- FALSE
+# If set to "TRUE", everything will be saved in "Outputs/Nodeek/"
+SaveNodes <- TRUE
 
 # Should we save all quantities available at the CC?
-SaveCC <- FALSE
+# If set to "TRUE", everything will be saved in "Outputs/Coord/"
+SaveCC <- TRUE
 
 #-------------------------------------------------------------------------------
 # Inputs
