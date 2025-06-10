@@ -27,8 +27,8 @@ library(tidyverse)    # For data manipulation
 # Transform factors to numeric variables
 df <- burn1000 %>% 
   select(-id) %>%
-  mutate(death = case_when(death=="Alive"~0,
-                           death=="Dead"~1)) %>% 
+  mutate(death = case_when(death=="Alive"~1,
+                           death=="Dead"~0)) %>% 
   mutate(gender = case_when(gender=="Male"~0,
                             gender=="Female"~1)) %>% 
   mutate(race = case_when(race=="White"~0,
