@@ -45,6 +45,10 @@ y <- df %>%
   mutate(y = 2*death-1) %>% 
   select(-death)
 
+# Remove outcome from the dataset
+df <- df %>% 
+  select(-death)
+
 # Create data nodes
 datanode1 <- df[,1]
 datanode2 <- df[,2:5]
