@@ -46,11 +46,12 @@ y <- df %>%
   select(-death)
 
 # Create data nodes
-datanode1 <- df[1:200,]
-datanode2 <- df[201:500,]
-datanode3 <- df[501:1000,]
+datanode1 <- df[,1]
+datanode2 <- df[,2:5]
+datanode3 <- df[,6:8]
 
 # Save to .csv
 write.csv(datanode1, file = "Data_node_1.csv", row.names = FALSE)
 write.csv(datanode2, file = "Data_node_2.csv", row.names = FALSE)
 write.csv(datanode3, file = "Data_node_3.csv", row.names = FALSE)
+write.csv(y, file = "outcome_data.csv", row.names = FALSE)
