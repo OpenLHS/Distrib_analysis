@@ -6,6 +6,9 @@
 # DATE:    June 2025
 # UPDATE:  --  
 
+# License: https://creativecommons.org/licenses/by-nc-sa/4.0/
+# Copyright: GRIIS / Université de Sherbrooke
+
 ###############################################################################################################################################################
 
 rm(list=ls())
