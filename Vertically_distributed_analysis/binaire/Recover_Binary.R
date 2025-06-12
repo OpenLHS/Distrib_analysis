@@ -11,12 +11,6 @@
 rm(list=ls())
 
 #-------------------------------------------------------------------------------
-# LOAD LIBRARIES AND DATA
-#-------------------------------------------------------------------------------
-
-library(glmnet)
-
-#-------------------------------------------------------------------------------
 # Useful functions
 #-------------------------------------------------------------------------------
 # Function to convert an integer to binary vector of length p, with MSB first
@@ -71,7 +65,7 @@ Ur <- round(U,3)
 XBr <- round(XB,3)
 
 # Find which rows if U might be the true rows of X
-matchindex <- (sapply(XB,function(x){which(Ur==x)}))
+matchindex <- (sapply(XBr,function(x){which(Ur==x)}))
 is.na(matchindex) <- lengths(matchindex) == 0
 index_identified <- unlist(matchindex)
 
