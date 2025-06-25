@@ -13,6 +13,26 @@ vert_logistic_regression_example_coordnode_handler <- function(man_wd=-1, man_la
   # No modifications should be required below this point
   ###########################
   
+  ask_yes_no <- function(prompt = "Would you like to continue? [Y/N]: ") {
+    repeat {
+      answer <- readline(prompt)
+      answer <- toupper(trimws(answer))
+      if (answer %in% c("Y", "YES")) {
+        return(TRUE)
+      } else if (answer %in% c("N", "NO")) {
+        return(FALSE)
+      } else {
+        cat("Please enter Y or N.\n")
+      }
+    }
+  }
+  
+  if(ask_yes_no(prompt = "Do you want to run the privacy assessment on the response variable? [Y/N]: ")){
+    privacy <- 1  
+  } else {
+    privacy <- 0
+  }
+  
   if (manualwd != 1) {
     
     # Set working directory automatically
@@ -41,7 +61,7 @@ vert_logistic_regression_example_coordnode_handler <- function(man_wd=-1, man_la
   
   if (nb_node1_files==1 & nb_node_output_files>0) {
     source("../../generic_code/Response_node_init_iter_log-regV.R")
-    coord_log_reg(man_wd = manualwd, man_lambda = lambda, expath = examplefilepath)
+    coord_log_reg(man_wd = manualwd, man_lambda = lambda, expath = examplefilepath, privacy_switch = privacy)
   } else {
     stop("Node 1 data file missing or no output file from other nodes found")
   }
