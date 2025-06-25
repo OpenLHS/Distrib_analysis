@@ -44,8 +44,8 @@ if (manualwd != 1) {
 path <- paste0(getwd(), "/")
   
 # Veryfiying if there is a coordination node output file present
-nbprimerfilesA <- length(list.files(pattern="Coord_node_primerA_for_data_node_[[:digit:]]+.csv"))
-nbprimerfilesB <- length(list.files(pattern="Coord_node_primerB_for_data_node_[[:digit:]]+.rds"))
+nbprimerfilesA <- length(list.files(path=examplefilepath, pattern=paste0("Coord_node_primerA_for_data_node_", manualk, ".csv")))
+nbprimerfilesB <- length(list.files(path=examplefilepath, pattern=paste0("Coord_node_primerB_for_data_node_", manualk, ".rds")))
 if (nbprimerfilesA == 1 & nbprimerfilesB == 1) {
   source("Data_node_call_iter_log-regV.R")
   data_call_iter_log_reg(manualwd,manualk,path)

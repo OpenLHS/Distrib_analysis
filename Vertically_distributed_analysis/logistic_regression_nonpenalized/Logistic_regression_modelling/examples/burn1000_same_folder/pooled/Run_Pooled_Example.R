@@ -4,7 +4,7 @@
 ## Copyright: GRIIS / Université de Sherbrooke
 
 # Set number of nodes 
-K <- 2
+K <- 3
 
 # No modifications should be required below this point
 ###################################################### 
