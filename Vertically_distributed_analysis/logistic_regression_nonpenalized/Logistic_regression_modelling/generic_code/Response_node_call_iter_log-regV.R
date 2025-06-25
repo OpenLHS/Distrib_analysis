@@ -8,7 +8,6 @@
 # Currently, the automated node number allocation currently requires execution in R studio and rstudioapi package
 # https://cran.r-project.org/package=rstudioapi
 
-
 # If you want to skip the automated working directory setting, input 1 here. 
 # If you do so, make sure the working directory is set correctly manually.
 manualwd <- -1
@@ -20,6 +19,26 @@ lambda <- -1
 
 # No modifications should be required below this point
 ###########################
+
+ask_yes_no <- function(prompt = "Would you like to continue? [Y/N]: ") {
+  repeat {
+    answer <- readline(prompt)
+    answer <- toupper(trimws(answer))
+    if (answer %in% c("Y", "YES")) {
+      return(TRUE)
+    } else if (answer %in% c("N", "NO")) {
+      return(FALSE)
+    } else {
+      cat("Please enter Y or N.\n")
+    }
+  }
+}
+
+if(ask_yes_no(prompt = "Do you want to run the privacy assessment on the response variable? [Y/N]: ")){
+  privacy <- 1  
+} else {
+  privacy <- 0
+}
 
 if (manualwd != 1) {
   
@@ -52,7 +71,7 @@ nb_node_output_files <- length(list.files(path=path, pattern="Data_node_[[:digit
 
 if (nb_node1_files==1 & nb_node_output_files>0) {
   source("Response_node_init_iter_log-regV.R")
-  coord_log_reg(man_wd = manualwd, man_lambda = lambda, expath = path)
+  coord_log_reg(man_wd = manualwd, man_lambda = lambda, expath = path, privacy_switch = privacy)
 } else {
   stop("Node 1 data file missing or no output file from other nodes found")
   }

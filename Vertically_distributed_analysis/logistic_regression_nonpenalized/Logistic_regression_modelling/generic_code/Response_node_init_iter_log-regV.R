@@ -4,7 +4,7 @@
 ## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 ## Copyright: GRIIS / Université de Sherbrooke
 
-coord_log_reg <- function(man_wd=-1, man_lambda, expath = "") {
+coord_log_reg <- function(man_wd=-1, man_lambda, expath = "", privacy_switch) {
 
 manualwd <- man_wd
 lambda <- man_lambda
@@ -277,6 +277,16 @@ alpha_u <- alpha_u1
 # Remove environment massive matrices and vector not needed anymore
 rm(hessian_grad_part1,alpha_u1,stepnewton)
 
+# If Privacy-check switch is on for response-node data, run privacy check
+if(privacy_switch==1){
+  source("Response_node_optionnal_confidentiality.R")
+  for (k in 2:K) {
+    node_k <- readRDS(paste0(examplefilepath,"Data_node_", k, "_init_output.rds"))
+    K_k <- reconstruct_from_upper_tri(node_k, n)
+    flippable_ys_nodek <- privacy_check_ck2(K_k,alpha_u,y,lambda,n)
+    rm(K_k)
+  }  
+}
 
 # Exporting quantities to be sent to covariate-nodes -----------------------
 
