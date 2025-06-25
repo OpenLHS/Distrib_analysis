@@ -101,7 +101,7 @@ cppFunction('
  
 # Main privacy check function
   
-  privacy_check_ck2 <- function(K_k,alpha_tilde,y,lambda,n){
+  privacy_check_ck2 <- function(K_k,alpha_tilde,y,lambda,n,k){
     # Compute which entries of y are flippable
     # K_k: gram matrix of node k
     # alpha_tilde: optimal alpha from the dual optimization procedure

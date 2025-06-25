@@ -7,6 +7,7 @@
 # Loading packages and setting up core variables --------------------------
 # Currently, the automated node number allocation currently requires execution in R studio and rstudioapi package
 # https://cran.r-project.org/package=rstudioapi
+library(tcltk)
 
 # If you want to skip the automated working directory setting, input 1 here. 
 # If you do so, make sure the working directory is set correctly manually.
@@ -20,24 +21,50 @@ lambda <- -1
 # No modifications should be required below this point
 ###########################
 
-ask_yes_no <- function(prompt = "Would you like to continue? [Y/N]: ") {
-  repeat {
-    answer <- readline(prompt)
-    answer <- toupper(trimws(answer))
-    if (answer %in% c("Y", "YES")) {
-      return(TRUE)
-    } else if (answer %in% c("N", "NO")) {
-      return(FALSE)
-    } else {
-      cat("Please enter Y or N.\n")
-    }
+popup_window <- function(prompt){
+  # Create pop up box
+  popup <- tktoplevel()
+  tkwm.title(popup, "Choose an Option")
+  
+  label <- tklabel(popup, text = prompt)
+  tkpack(label, padx = 20, pady = 10)
+  
+  user_choice <- tclVar("")
+  
+  # Define how the user-response is registered
+  on_true <- function() {
+    tclvalue(user_choice) <- "TRUE"
+    tkdestroy(popup)
   }
-}
-
-if(ask_yes_no(prompt = "Do you want to run the privacy assessment on the response variable? [Y/N]: ")){
-  privacy <- 1  
-} else {
-  privacy <- 0
+  on_false <- function() {
+    tclvalue(user_choice) <- "FALSE"
+    tkdestroy(popup)
+  }
+  on_cancel <- function() {
+    tclvalue(user_choice) <- "NULL"
+    tkdestroy(popup)
+  }
+  
+  # Define behavior of buttons
+  tkpack(tkbutton(popup, text = "Yes", command = on_true), side = "left", padx = 10)
+  tkpack(tkbutton(popup, text = "No", command = on_false), side = "left", padx = 10)
+  tkpack(tkbutton(popup, text = "Cancel", command = on_cancel), side = "left", padx = 10)
+  
+  tkwait.window(popup)
+  
+  result <- tclvalue(user_choice)
+  
+  # Transorm user-response into the privacy assessment boolean
+  if(result=="NULL" | result==""){
+    stop("User need to specify if the privacy assessment on the response variable should be run or not.")
+  } else if(result=="TRUE"){
+    privacy = 1
+  } else {
+    privacy = 0
+  }
+  
+  return(privacy)
+  
 }
 
 if (manualwd != 1) {
@@ -61,6 +88,9 @@ if (manualwd != 1) {
 } else {
   print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
 }
+
+# Ask user if we should run the privacy assessment on Y
+privacy <- popup_window("Do you want to run the privacy assessment on the response variable?")
 
 # Once the working directory as been set, save it so we can pass it to other files
 path <- paste0(getwd(), "/")

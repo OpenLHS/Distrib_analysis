@@ -4,6 +4,8 @@
 ## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 ## Copyright: GRIIS / Université de Sherbrooke
 
+library(tcltk)
+
 vert_logistic_regression_example_coordnode_handler <- function(man_wd=-1, man_lambda=-1, expath=""){
 
   manualwd <- man_wd
@@ -13,24 +15,50 @@ vert_logistic_regression_example_coordnode_handler <- function(man_wd=-1, man_la
   # No modifications should be required below this point
   ###########################
   
-  ask_yes_no <- function(prompt = "Would you like to continue? [Y/N]: ") {
-    repeat {
-      answer <- readline(prompt)
-      answer <- toupper(trimws(answer))
-      if (answer %in% c("Y", "YES")) {
-        return(TRUE)
-      } else if (answer %in% c("N", "NO")) {
-        return(FALSE)
-      } else {
-        cat("Please enter Y or N.\n")
-      }
+  popup_window <- function(prompt){
+    # Create pop up box
+    popup <- tktoplevel()
+    tkwm.title(popup, "Choose an Option")
+    
+    label <- tklabel(popup, text = prompt)
+    tkpack(label, padx = 20, pady = 10)
+    
+    user_choice <- tclVar("")
+    
+    # Define how the user-response is registered
+    on_true <- function() {
+      tclvalue(user_choice) <- "TRUE"
+      tkdestroy(popup)
     }
-  }
-  
-  if(ask_yes_no(prompt = "Do you want to run the privacy assessment on the response variable? [Y/N]: ")){
-    privacy <- 1  
-  } else {
-    privacy <- 0
+    on_false <- function() {
+      tclvalue(user_choice) <- "FALSE"
+      tkdestroy(popup)
+    }
+    on_cancel <- function() {
+      tclvalue(user_choice) <- "NULL"
+      tkdestroy(popup)
+    }
+    
+    # Define behavior of buttons
+    tkpack(tkbutton(popup, text = "Yes", command = on_true), side = "left", padx = 10)
+    tkpack(tkbutton(popup, text = "No", command = on_false), side = "left", padx = 10)
+    tkpack(tkbutton(popup, text = "Cancel", command = on_cancel), side = "left", padx = 10)
+    
+    tkwait.window(popup)
+    
+    result <- tclvalue(user_choice)
+    
+    # Transorm user-response into the privacy assessment boolean
+    if(result=="NULL" | result==""){
+      stop("User need to specify if the privacy assessment on the response variable should be run or not.")
+    } else if(result=="TRUE"){
+      privacy = 1
+    } else {
+      privacy = 0
+    }
+    
+    return(privacy)
+    
   }
   
   if (manualwd != 1) {
@@ -54,6 +82,9 @@ vert_logistic_regression_example_coordnode_handler <- function(man_wd=-1, man_la
   } else {
     print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
   }
+  
+  # Ask user if we should run the privacy assessment on Y
+  privacy <- popup_window("Do you want to run the privacy assessment on the response variable?")
   
   # Verifying if there is a coordination node (response-node) data file present
   nb_node1_files <- length(list.files(path=examplefilepath, pattern="Data_node_1.csv"))

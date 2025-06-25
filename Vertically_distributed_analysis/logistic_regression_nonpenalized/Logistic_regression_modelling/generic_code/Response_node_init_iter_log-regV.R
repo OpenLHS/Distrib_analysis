@@ -283,7 +283,7 @@ if(privacy_switch==1){
   for (k in 2:K) {
     node_k <- readRDS(paste0(examplefilepath,"Data_node_", k, "_init_output.rds"))
     K_k <- reconstruct_from_upper_tri(node_k, n)
-    flippable_ys_nodek <- privacy_check_ck2(K_k,alpha_u,y,lambda,n)
+    flippable_ys_nodek <- privacy_check_ck2(K_k,alpha_u,y,lambda,n,k)
     rm(K_k)
   }  
 }
