@@ -30,6 +30,8 @@ For any given example, it is possible to compare the distributed results with th
 
 1. `random_data_same_folder` contains two datasets corresponding to different nodes in a vertically distributed analysis. They can be copied and used to run examples of the method and compare with the pooled results. 
 
+2. `burn1000_same_folder` contains three datasets corresponding to different nodes in a vertically distributed analysis. They can be copied and used to run examples of the method and compare with the pooled results. 
+
 ## Example handler
 
 This folder contains slightly modified `R` files that allows anyone to quickly run the proposed method from within any of the example folder.

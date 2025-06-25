@@ -59,7 +59,12 @@ The generic_code folder contains `R` code files pertaining to the distributed ap
 ### List of examples
 
 1. `random_data_same_folder`  
-   This folder makes it easy to look at the output since everything is happening in the same folder. There is no need to copy files across folders.
+   This folder makes it easy to look at the output since everything is happening in the same folder. There is no need to copy files across folders.  
+   There is 1 covariate-node and 1 response node in this example.
+   
+2. `burn1000_same_folder`  
+	The dataset provided is taken from the R package [aplore3](https://cran.r-project.org/web/packages/aplore3/index.html) (Hosmer, D.W., Lemeshow, S. and Sturdivant, R.X. (2013) Applied Logistic Regression, 3rd ed., New York: Wiley). It is the burn1000 dataset.  
+	There are 2 covariate-nodes and 1 respose node in this example.
 
 ### Generic code
 
