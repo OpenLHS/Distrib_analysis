@@ -1,4 +1,4 @@
-# Vertically distributed penalized logistic regression
+# Vertically distributed penalized logistic regression (RidgeLog-V)
 
 ## Before using
 

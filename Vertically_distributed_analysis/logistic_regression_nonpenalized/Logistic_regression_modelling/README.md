@@ -1,4 +1,4 @@
-# Vertically distributed penalized Logistic Regression (VALORIS)
+# Vertically distributed penalized logistic regression (VALORIS)
 
 This implementation of the Vertical Logistic Regression leads to valid estimates and standard errors for the logistic regression model (with no penalization).
 The results can be interpreted as they would with the following `R` calls in a pooled setting: 
@@ -102,6 +102,11 @@ Response-node:
 - [pracma](https://cran.r-project.org/web/packages/pracma/index.html)
 - [RcppEigen](https://cran.r-project.org/web/packages/RcppEigen/index.html)
 
+Response-node (when running the privacy assessment):
+- [lpSolve](https://cran.r-project.org/web/packages/lpSolve/index.html)
+- [ROI](https://cran.r-project.org/web/packages/ROI/index.html)
+- [ROI.plugin.glpk](https://cran.r-project.org/web/packages/ROI.plugin.glpk/index.html)
+
 Note that it might be necessary to install `Rtools` prior to using functions from `Rcpp`, `RcppArmadillo` and `RcppEigen` packages: https://cran.r-project.org/bin/windows/Rtools/.
 
 Furthermore, the examples will be easier to explore and adapt/change if the package `this.path` is also available. Yet this is NOT required and you can safely ignore any warning about this is if you want to use the algorithm "as-is". Should you choose not to use this package, you will then need to manually set your working directory in your `R` instance.
@@ -131,7 +136,8 @@ For the single iteration, response-node side:
 2. Run the response-node `R` file (`Response_node_call_iter_log-regV.R`) to compute intermediary quantities for the covariate-nodes,
 to obtain the unscaled intercept estimate at the response-node and, if any, to obtain parameter estimates and standard errors asssociated with covariates at the response-node.  
 The files `Coord_node_primerA_for_data_node_k.csv` and `Coord_node_primerB_for_data_node_k.rds` will be generated. These files must be shared with respective local node k.  
-The file `Data_node_1_results.csv` will also be generated and contains results associated with the response-node. 
+The file `Data_node_1_results.csv` will also be generated and contains results associated with the response-node.  
+When running this code, you will also be asked  on the console if you want to run the privacy assessment for the response variable.
 
 For the single iteration, covariate-node side:
 
@@ -165,6 +171,8 @@ Since this implementation is made for distributed analysis, the following `R` fi
 | Single iteration | `Data_node_1_results.csv`\* <br> `Coord_node_primerA_for_data_node_k.csv` <br> `Coord_node_primerB_for_data_node_k.rds` | No <br> Yes <br> Yes |
 
 \*The file `Data_node_1_results.csv` contains the scaled intercept coefficient and standard error, along with the coefficients (parameter estimates) and standard errors in their original scales (if any covariate at the response-node). The two-sided p-values are also provided.
+
+*If you chose to run the privacy assessment for the response variable, you will see `Flippable coordinate signs: X / N` in the console, where `N` is the sample size and `X` is the number of responses that could be recovered as both `-1` and `1`.*
 
 ### Covariate-node side
 

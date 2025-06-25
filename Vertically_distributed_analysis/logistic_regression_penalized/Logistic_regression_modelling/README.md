@@ -1,4 +1,4 @@
-# Vertically distributed penalized Logistic Regression
+# Vertically distributed penalized logistic regression (RidgeLog-V)
 
 This implementation of the Vertical Logistic Regression leads to valid estimates for the logistic regression model (with no penalization).
 The results can be interpreted as they would with the following `R` calls in a pooled setting: 

@@ -79,7 +79,8 @@ If you work in an isolated environment, you might need to download them manually
 
 1.	Navigate to the folder `distributed`.
 2.	Open the file `Run_Example.R`. It should then appear in `R`.
-3.	Select all the code and click `run`.
+3.	Select all the code and click `run`.  
+When running this code, you will also be asked  on the console if you want to run the privacy assessment for the response variable.
 4.	All iterations results will be saved in `.csv` files.
 
 ### Executing the pooled solution code

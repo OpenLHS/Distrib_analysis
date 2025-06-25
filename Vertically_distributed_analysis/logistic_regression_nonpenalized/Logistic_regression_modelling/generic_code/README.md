@@ -68,7 +68,8 @@ For the single iteration, response-node side:
 2. Run the response-node `R` file (`Response_node_call_iter_log-regV.R`) to compute intermediary quantities for the covariate-nodes,
 to obtain the unscaled intercept estimate at the response-node and, if any, to obtain parameter estimates and standard errors asssociated with covariates at the response-node.  
 The files `Coord_node_primerA_for_data_node_k.csv` and `Coord_node_primerB_for_data_node_k.rds` will be generated. These files must be shared with respective local node k.  
-The file `Data_node_1_results.csv` will also be generated and contains results associated with the response-node. 
+The file `Data_node_1_results.csv` will also be generated and contains results associated with the response-node.  
+When running this code, you will also be asked  on the console if you want to run the privacy assessment for the response variable.
 
 For the single iteration, covariate-node side:
 
@@ -102,6 +103,8 @@ Since this implementation is made for distributed analysis, the following `R` fi
 | Single iteration | `Data_node_1_results.csv`\* <br> `Coord_node_primerA_for_data_node_k.csv` <br> `Coord_node_primerB_for_data_node_k.rds` | No <br> Yes <br> Yes |
 
 \*The file `Data_node_1_results.csv` contains the scaled intercept coefficient and standard error, along with the coefficients (parameter estimates) and standard errors in their original scales (if any covariate at the response-node). The two-sided p-values are also provided.
+
+*If you chose to run the privacy assessment for the response variable, you will see `Flippable coordinate signs: X / N` in the console, where `N` is the sample size and `X` is the number of responses that could be recovered as both `-1` and `1`.*
 
 ### Covariate-node side
 
