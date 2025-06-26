@@ -310,30 +310,29 @@ for (k in 2:K) {
 
 
 # Exporting final results at response-node (if any covariates)  ---------------------------- 
-covariate_names_response <- logical(0)
+covariate_names_response <- "NA"
 ### Compute coefficients for response-node (if any covariates)
 beta_node_1 <- (1/lambda)*arma_mm(t(cov_node_1), alpha_u*y)
 if(p_response_node>0){
-beta_node_1_adjusted <- c(NA,beta_node_1[-1]/sapply(as.data.frame(node_1_complete[,-1]), sd))
-covariate_names_response <- colnames(node_1_complete)[-1]}else{
-  beta_node_1_adjusted <- NA
-}
+  beta_node_1_adjusted <- c(beta_node_1[-1]/sapply(as.data.frame(node_1_complete[,-1]), sd))
+  covariate_names_response <- colnames(node_1_complete)[-1]}else{
+    beta_node_1_adjusted <- NA
+  }
 
 ### Produce standard error and two-sided p-values for response-node (if any covariates)
 err_node_1 <- sqrt(rep((1/(lambda/n)),ncol(cov_node_1))-(1/((lambda^2)/(n^2)))*(as.vector(diag(t(cov_node_1)%*%S_inv%*%cov_node_1))))
 if(p_response_node>0){
-err_node_1_adjusted <- c(NA,err_node_1[-1]/sapply(as.data.frame(node_1_complete[,-1]), sd))
-p_vals_1 <- 2*(1 - pnorm(abs(beta_node_1_adjusted)[-1]/err_node_1_adjusted[-1]))}else{
-  err_node_1_adjusted <- NA
-  p_vals_1 <- logical(0)
-}
+  err_node_1_adjusted <- c(err_node_1[-1]/sapply(as.data.frame(node_1_complete[,-1]), sd))
+  p_vals_1 <- 2*(1 - pnorm(abs(beta_node_1_adjusted)/err_node_1_adjusted))}else{
+    err_node_1_adjusted <- NA
+    p_vals_1 <- NA
+  }
 
 
-
+data.frame(coefs=beta_node_1_adjusted,std_error=err_node_1_adjusted,two_sided_pvalue=p_vals_1)
 ### Export results
-write.csv(data.frame(coefs_scaled=c(beta_node_1[1],rep(NA,p_response_node)), std_error_scaled=c(err_node_1[1],rep(NA,p_response_node)),
-                     coefs=beta_node_1_adjusted,std_error=err_node_1_adjusted,two_sided_pvalue=c(NA,p_vals_1)),
-          file=paste0(examplefilepath, "Data_node_1_results.csv"), row.names=c("intercept",covariate_names_response))
+write.csv(data.frame(coefs=beta_node_1_adjusted,std_error=err_node_1_adjusted,two_sided_pvalue=p_vals_1),
+          file=paste0(examplefilepath, "Data_node_1_results.csv"), row.names=covariate_names_response)
 
 
 ## Remove all environment variables. 
