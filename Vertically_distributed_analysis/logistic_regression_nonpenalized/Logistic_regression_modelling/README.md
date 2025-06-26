@@ -142,7 +142,7 @@ For the single iteration, response-node side:
 to obtain the unscaled intercept estimate at the response-node and, if any, to obtain parameter estimates and standard errors asssociated with covariates at the response-node.  
 The files `Coord_node_primerA_for_data_node_k.csv` and `Coord_node_primerB_for_data_node_k.rds` will be generated. These files must be shared with respective local node k.  
 The file `Data_node_1_results.csv` will also be generated and contains results associated with the response-node.  
-When running this code, you will also be asked  on the console if you want to run the privacy assessment for the response variable.
+When running this code, you will also be asked in a separate window if you want to run the privacy assessment for the response variable.
 
 For the single iteration, covariate-node side:
 
