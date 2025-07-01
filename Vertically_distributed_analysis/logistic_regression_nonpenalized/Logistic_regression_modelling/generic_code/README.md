@@ -28,16 +28,20 @@ Covariate-nodes:
 - [Matrix](https://cran.r-project.org/web/packages/Matrix/index.html)
 - [Rcpp](https://cran.r-project.org/web/packages/Rcpp/index.html)
 - [RcppArmadillo](https://cran.r-project.org/web/packages/RcppArmadillo/index.html)
-- [nleqslv](https://cran.r-project.org/web/packages/nleqslv/index.html)
 
 Response-node:
-- [Matrix](https://cran.r-project.org/web/packages/Matrix/index.html)
 - [glmnet](https://cran.r-project.org/web/packages/glmnet/index.html)
+- [Matrix](https://cran.r-project.org/web/packages/Matrix/index.html)
+- [pracma](https://cran.r-project.org/web/packages/pracma/index.html)
 - [Rcpp](https://cran.r-project.org/web/packages/Rcpp/index.html)
 - [RcppArmadillo](https://cran.r-project.org/web/packages/RcppArmadillo/index.html)
-- [Rmpfr](https://cran.r-project.org/web/packages/Rmpfr/index.html)
-- [pracma](https://cran.r-project.org/web/packages/pracma/index.html)
 - [RcppEigen](https://cran.r-project.org/web/packages/RcppEigen/index.html)
+- [Rmpfr](https://cran.r-project.org/web/packages/Rmpfr/index.html)
+
+Response-node (additionnal packages required when running the privacy assessment):
+- [lpSolve](https://cran.r-project.org/web/packages/lpSolve/index.html)
+- [ROI](https://cran.r-project.org/web/packages/ROI/index.html)
+- [ROI.plugin.glpk](https://cran.r-project.org/web/packages/ROI.plugin.glpk/index.html)
 
 Note that it might be necessary to install `Rtools` prior to using functions from `Rcpp`, `RcppArmadillo` and `RcppEigen` packages: https://cran.r-project.org/bin/windows/Rtools/.
 
@@ -56,7 +60,7 @@ If you work in an isolated environment, you might need to download them manually
 ***Make sure `R studio` is not currently running and close it if it is.***  
 ***If you are not able to automatically set your working directory (for example, if you do not have access to `this.path`), manually set the variable `manualwd = 1` in `Response_node_call_iter_log-regV.R` and  `Data_node_call_log-regV.R`.***
 
-In the following procedure, `k` represents the number of the local node. In the Datafiles, Node `1` must be associated with the response-node. 
+In the following procedure, `k` represents the number of the covariate-node. In the Datafiles, Node `1` must be associated with the response-node. 
 
 Initialization:
 
@@ -102,7 +106,7 @@ Since this implementation is made for distributed analysis, the following `R` fi
 | ----------- | ----------- | ----------- |
 | Single iteration | `Data_node_1_results.csv`\* <br> `Coord_node_primerA_for_data_node_k.csv` <br> `Coord_node_primerB_for_data_node_k.rds` | No <br> Yes <br> Yes |
 
-\*The file `Data_node_1_results.csv` contains the scaled intercept coefficient and standard error, along with the coefficients (parameter estimates) and standard errors in their original scales (if any covariate at the response-node). The two-sided p-values are also provided.
+\*The file `Data_node_1_results.csv` contains the coefficients (parameter estimates) and standard errors in their original scales (if there are any covariate at the response-node). The two-sided p-values are also provided.
 
 *If you chose to run the privacy assessment for the response variable, you will see `Flippable coordinate signs: X / N` in the console, where `N` is the sample size and `X` is the number of responses that could be recovered as both `-1` and `1`.*
 

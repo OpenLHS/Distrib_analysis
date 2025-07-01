@@ -52,16 +52,20 @@ Covariate-nodes:
 - [Matrix](https://cran.r-project.org/web/packages/Matrix/index.html)
 - [Rcpp](https://cran.r-project.org/web/packages/Rcpp/index.html)
 - [RcppArmadillo](https://cran.r-project.org/web/packages/RcppArmadillo/index.html)
-- [nleqslv](https://cran.r-project.org/web/packages/nleqslv/index.html)
 
 Response-node:
-- [Matrix](https://cran.r-project.org/web/packages/Matrix/index.html)
 - [glmnet](https://cran.r-project.org/web/packages/glmnet/index.html)
+- [Matrix](https://cran.r-project.org/web/packages/Matrix/index.html)
+- [pracma](https://cran.r-project.org/web/packages/pracma/index.html)
 - [Rcpp](https://cran.r-project.org/web/packages/Rcpp/index.html)
 - [RcppArmadillo](https://cran.r-project.org/web/packages/RcppArmadillo/index.html)
-- [Rmpfr](https://cran.r-project.org/web/packages/Rmpfr/index.html)
-- [pracma](https://cran.r-project.org/web/packages/pracma/index.html)
 - [RcppEigen](https://cran.r-project.org/web/packages/RcppEigen/index.html)
+- [Rmpfr](https://cran.r-project.org/web/packages/Rmpfr/index.html)
+
+Response-node (additionnal packages required when running the privacy assessment):
+- [lpSolve](https://cran.r-project.org/web/packages/lpSolve/index.html)
+- [ROI](https://cran.r-project.org/web/packages/ROI/index.html)
+- [ROI.plugin.glpk](https://cran.r-project.org/web/packages/ROI.plugin.glpk/index.html)
 
 Note that it might be necessary to install `Rtools` prior to using functions from `Rcpp`, `RcppArmadillo` and `RcppEigen` packages: https://cran.r-project.org/bin/windows/Rtools/.
 
