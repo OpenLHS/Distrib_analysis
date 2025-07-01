@@ -35,8 +35,11 @@ if (manualwd != 1) {
   print("The automated working directory setup has been bypassed. If there is an error, this might be the cause.")
 }
 
+# Once the working directory as been set, save it so we can pass it to other files
+path <- paste0(getwd(), "/")
+
 if(K<1){
-  stop
+  stop("The number of nodes K cannot be smaller than 1.")
 }
 
 ### Code starts here
@@ -44,7 +47,7 @@ if(K<1){
 # Read data and weights
 for(k in 1:K){
   # Data
-  node_data <- read.csv(paste0(examplefilepath, "Data_node_", k, ".csv"))
+  node_data <- read.csv(paste0(path, "Data_node_", k, ".csv"))
   
   if(k==1){
     pooled_data <- node_data
