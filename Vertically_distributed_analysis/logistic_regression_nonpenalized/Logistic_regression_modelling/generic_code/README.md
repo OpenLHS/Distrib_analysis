@@ -4,9 +4,9 @@ The files in this folder can be used to execute a vertically distributed logisti
 
 ## Before using
 
-- ***OF NOTE: ***  
+- ***OF NOTE:***  
 	-  ***As mentioned in the original paper, our current implementation can lead to time-consuming computations at the response-node for large sample sizes `n`. Other box-constrained algorithms could be investigated to optimize those operations.***
-	-***When the privacy check for the response-node is run, a `.csv` file is created containing the indexes of the line-level entries in the response vector for which a flip was not found by the solver (if any). It would be recommended to try more sophisticated solvers to verify if a solution exists for those indexes (or increase the number of columns used in the null-matrix during the privacy assessment - see privacy source code (`Reponse_node_optionnal_confidentiality.R`) if needed), as a solution might very well exist but was simply not found by our basic implementation.
+	- ***When the privacy check for the response-node is run, a `.csv` file is created containing the indexes of the line-level entries in the response vector for which a flip was not found by the solver (if any). It would be recommended to try more sophisticated solvers to verify if a solution exists for those indexes (or increase the number of columns used in the null-matrix during the privacy assessment - see privacy source code (`Reponse_node_optionnal_confidentiality.R`) if needed), as a solution might very well exist but was simply not found by our basic implementation.***
 
 ## Data requirements
 
