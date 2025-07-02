@@ -2,6 +2,12 @@
 
 The files in this folder can be used to execute a vertically distributed logistic regression analysis. Assuming a data structure similar to the data nodes `.csv` files in the example folder, this code can be used to execute a response-node operation or a covariaten-ode operation for a vertically distributed logistic regression model.
 
+## Before using
+
+- ***OF NOTE: ***  
+	-  ***As mentioned in the original paper, our current implementation can lead to time-consuming computations at the response-node for large sample sizes `n`. Other box-constrained algorithms could be investigated to optimize those operations.***
+	-***When the privacy check for the response-node is run, a `.csv` file is created containing the indexes of the line-level entries in the response vector for which a flip was not found by the solver (if any). It would be recommended to try more sophisticated solvers to verify if a solution exists for those indexes (or increase the number of columns used in the null-matrix during the privacy assessment - see privacy source code (`Reponse_node_optionnal_confidentiality.R`) if needed), as a solution might very well exist but was simply not found by our basic implementation.
+
 ## Data requirements
 
 - Data is expected to be saved in a `.csv` file.
@@ -39,9 +45,9 @@ Response-node:
 - [Rmpfr](https://cran.r-project.org/web/packages/Rmpfr/index.html)
 
 Response-node (additionnal packages required when running the privacy assessment):
-- [lpSolve](https://cran.r-project.org/web/packages/lpSolve/index.html)
 - [ROI](https://cran.r-project.org/web/packages/ROI/index.html)
 - [ROI.plugin.glpk](https://cran.r-project.org/web/packages/ROI.plugin.glpk/index.html)
+- [ROI.plugin.symphony](https://cran.r-project.org/web/packages/ROI.plugin.symphony/index.html)
 
 Note that it might be necessary to install `Rtools` prior to using functions from `Rcpp`, `RcppArmadillo` and `RcppEigen` packages: https://cran.r-project.org/bin/windows/Rtools/.
 
@@ -104,9 +110,11 @@ Since this implementation is made for distributed analysis, the following `R` fi
 
 | Step | Files created | Shared with covariate-node k? |
 | ----------- | ----------- | ----------- |
-| Single iteration | `Data_node_1_results.csv`\* <br> `Coord_node_primerA_for_data_node_k.csv` <br> `Coord_node_primerB_for_data_node_k.rds` | No <br> Yes <br> Yes |
+| Single iteration | `Data_node_1_results.csv`\* <br> `Coord_node_primerA_for_data_node_k.csv` <br> `Coord_node_primerB_for_data_node_k.rds` <br> `Index_NoFlip_k.csv`\*\* | No <br> Yes <br> Yes <br> No |
 
 \*The file `Data_node_1_results.csv` contains the coefficients (parameter estimates) and standard errors in their original scales (if there are any covariate at the response-node). The two-sided p-values are also provided.
+
+\*\* The file `Index_NoFlip_k.csv` will only be created  if there is at least one entry in the response vector for which no flip was found by the solver. As mentionned previously, more investigation is required for those entries as a solution might very well exist but was simply not found by our basic implementation.
 
 *If you chose to run the privacy assessment for the response variable, you will see `Flippable coordinate signs: X / N` in the console, where `N` is the sample size and `X` is the number of responses that could be recovered as both `-1` and `1`.*
 

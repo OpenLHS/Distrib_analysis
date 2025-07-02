@@ -63,9 +63,9 @@ Response-node:
 - [Rmpfr](https://cran.r-project.org/web/packages/Rmpfr/index.html)
 
 Response-node (additionnal packages required when running the privacy assessment):
-- [lpSolve](https://cran.r-project.org/web/packages/lpSolve/index.html)
 - [ROI](https://cran.r-project.org/web/packages/ROI/index.html)
 - [ROI.plugin.glpk](https://cran.r-project.org/web/packages/ROI.plugin.glpk/index.html)
+- [ROI.plugin.symphony](https://cran.r-project.org/web/packages/ROI.plugin.symphony/index.html)
 
 Note that it might be necessary to install `Rtools` prior to using functions from `Rcpp`, `RcppArmadillo` and `RcppEigen` packages: https://cran.r-project.org/bin/windows/Rtools/.
 
