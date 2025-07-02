@@ -188,9 +188,10 @@ for (k in 2:K) {
 #Setting parameters lambda (penalty) and epsilon (convergence) for the algorithm 
 #Can be adjusted if needed, please refer to article to ensure adequate settings
 if(lambda==-1){
-if(n<=10000){
-  lambda <- 0.0001
-}else{lambda <- 1/n}}
+  if(n<=10000){
+    lambda <- 0.0001
+  }else{lambda <- 1/n}
+}
 
 if(lambda<=0){
   stop("The algorithm cannot run because the penalty parameter lambda was set lower or equal to 0.")

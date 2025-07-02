@@ -7,11 +7,9 @@
 
 # Libraries and rcpp functions needed for the procedure -----------------------
 
-### LIBRARY
-
-  library(ROI)
-  library(ROI.plugin.glpk)
-  library(ROI.plugin.symphony)
+library(ROI)
+library(ROI.plugin.glpk)
+library(ROI.plugin.symphony)
 
 # Privacy check for response data -----------------------
  
@@ -31,18 +29,12 @@ privacy_check_ck2 <- function(V,alpha_tilde,y,n,i0){
   # initial solution to the system c_k = 1/(lambda n) K_k (\diag alpha) y
   x0 <- (alpha_tilde * y)
   i <- i0
-  
-  #number_of_sols_found <- 0
  
   if (abs(x0[i]) < 1e-8 | feasible_flip[i] == TRUE ) {
     feasible_flip[i] <- TRUE  # zero: already sign-flippable
     next
   }
-  
-  # Sign flip constraint: (x0[i] + (V b)[i]) * x0[i] < 0
-  # -> V[i, ] %*% b < -x0[i]  if x0[i] > 0
-  # -> V[i, ] %*% b > -x0[i]  if x0[i] < 0
-  
+
   direction <- if (x0[i] > 0) "<=" else ">="
   
   # Inequality: sign flip
@@ -76,44 +68,51 @@ privacy_check_ck2 <- function(V,alpha_tilde,y,n,i0){
 
 privacy_check_ck2_complete <- function(V,alpha_tilde,y,n,k){
 
-#Determine the number of columns of the null matrix used (this number could be modified according to memory access)
-if(ncol(V)>1200){
-  V_used <- V[,1:1200]
-}else{V_used <- V}
-
-#Initialize index and count number of flips
-count <- 0
-nbsol <- 0
-index_nosol <- numeric(0)
-index <- 1:n
-i0 <- index[which.max(alpha_tilde[index])]
-
-#Run over all line-level values in Y
-while(length(index)!=0){
-  d_sol <- privacy_check_ck2(V_used,alpha_tilde,y,n,i0)
-  if (!is.null(d_sol)) {
-    count <- count+sum(sign(y[index])!=sign(d_sol[index]))
-    index <- index [!index %in% c(i0)]
-    index <- index[which((sign(y[index])==sign(d_sol[index])))]
-    nbsol <- nbsol + 1
-  }else{
-    index_nosol <- c(index_nosol,i0)
-    index <- index [!index %in% c(i0)]
+  #Determine the number of columns of the null matrix used (this number could be modified according to memory access)
+  if(ncol(V)>1200){
+    V_used <- V[,1:1200]
+  }else{V_used <- V}
+  
+  #Initialize index and count number of flips
+  count <- 0
+  nbsol <- 0
+  index_nosol <- numeric(0)
+  index <- 1:n
+  i0 <- index[which.max(alpha_tilde[index])]
+  
+  # Create progress bar so user know the method isn't stuck
+  progressbar <- txtProgressBar(min=0, max = n, style = 3)
+  
+  #Run over all line-level values in Y
+  while(length(index)!=0){
+    d_sol <- privacy_check_ck2(V_used,alpha_tilde,y,n,i0)
+    if (!is.null(d_sol)) {
+      count <- count+sum(sign(y[index])!=sign(d_sol[index]))
+      index <- index [!index %in% c(i0)]
+      index <- index[which((sign(y[index])==sign(d_sol[index])))]
+      nbsol <- nbsol + 1
+    }else{
+      index_nosol <- c(index_nosol,i0)
+      index <- index [!index %in% c(i0)]
+    }
+    if(length(index)!=0){
+    i0 <- index[which.max(alpha_tilde[index])]  
+    }
+    # Update progress bar
+    setTxtProgressBar(progressbar, n-length(index)) 
   }
-  if(length(index)!=0){
-  i0 <- index[which.max(alpha_tilde[index])]  
+  # close progress bar
+  close(progressbar) 
+  
+  #Print results of flips vs no flips
+  cat(sprintf(paste0("Flippable coordinate signs with covariate-node ", k,"'s data: %d / %d\n"), count, n))
+  cat(sprintf("Number of distinct candidates: %d\n", nbsol))
+  
+  if(count!=n){
+    write.csv(data.frame(index_noflip=index_nosol),
+              file=paste0(examplefilepath, "Index_NoFlip_",k ,".csv"), row.names=FALSE)
   }
-}
-
-#Print results of flips vs no flips
-cat(sprintf(paste0("Flippable coordinate signs with covariate-node ", k,"'s data: %d / %d\n"), count, n))
-cat(sprintf("Number of distinct candidates: %d\n", nbsol))
-
-if(count!=n){
-write.csv(data.frame(index_noflip=index_nosol),
-          file=paste0(examplefilepath, "Index_NoFlip_",k ,".csv"), row.names=FALSE)
-}
-rm(V_used)
-return(NULL)
+  rm(V_used)
+  return(NULL)
 }
 
