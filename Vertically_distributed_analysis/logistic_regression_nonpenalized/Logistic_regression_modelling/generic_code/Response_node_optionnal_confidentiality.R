@@ -118,6 +118,8 @@ cppFunction('
     
     number_of_sols_found <- 0
     
+    pg <- txtProgressBar(min=0, max = n, style = 3)
+    
     for (i in 1:n) {
       if (abs(x0[i]) < 1e-8 | feasible_flip[i] == TRUE ) {
         feasible_flip[i] <- TRUE  # zero: already sign-flippable
@@ -168,8 +170,10 @@ cppFunction('
           number_of_sols_found = number_of_sols_found+1
         }
       }
-
+      setTxtProgressBar(pg, i) # Update progress bar
     }
+    close(pg)
+    
     cat(sprintf(paste0("Flippable coordinate signs with covariate-node ", k,"'s data: %d / %d\n"), sum(feasible_flip), n))
     cat(sprintf("Number of distinct candidates: %d\n", number_of_sols_found))
     return(list(feasible_flip = feasible_flip, number_of_sols_found = number_of_sols_found ))
