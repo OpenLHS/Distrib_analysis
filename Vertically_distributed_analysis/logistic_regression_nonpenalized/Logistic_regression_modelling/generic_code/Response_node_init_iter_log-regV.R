@@ -277,17 +277,6 @@ alpha_u <- alpha_u1
 # Remove environment massive matrices and vector not needed anymore
 rm(hessian_grad_part1,alpha_u1,stepnewton)
 
-# If Privacy-check switch is on for response-node data, run privacy check
-if(privacy_switch==1){
-  source("Response_node_optionnal_confidentiality.R")
-  for (k in 2:K) {
-    node_k <- readRDS(paste0(examplefilepath,"Data_node_", k, "_init_output.rds"))
-    K_k <- reconstruct_from_upper_tri(node_k, n)
-    print(paste0("Privacy check with data from covariate node ", k, "."))
-    flippable_ys_nodek <- privacy_check_ck2(K_k,alpha_u,y,lambda,n,k)
-    rm(K_k)
-  }  
-}
 
 # Exporting quantities to be sent to covariate-nodes -----------------------
 
@@ -297,6 +286,12 @@ S_inv <- inv_sympd_matrix((diag(1/as.vector((X_beta/
                                                (1+X_beta))*(1-(X_beta/(1+X_beta))))))+(1/(lambda/n))*K_all)
 
 ### Produce and export system of equation results and noisy inverse of S for each nodes
+
+# If Privacy-check switch is on for response-node data, import privacy check function
+if(privacy_switch==1){
+  source("Response_node_optionnal_confidentiality.R")
+}
+
 for (k in 2:K) {
   gram_k <- reconstruct_from_upper_tri(readRDS(paste0(examplefilepath, "Data_node_", k, "_init_output.rds")), n)
   c_system_k <- (1/lambda)*arma_mm(gram_k,(alpha_u*y))
@@ -305,6 +300,13 @@ for (k in 2:K) {
   write.csv(data.frame(c_system_k,lambda_shared),
             file=paste0(examplefilepath, "Coord_node_primerA_for_data_node_",k ,".csv"), row.names=FALSE)
   null_addition_k <- nullspace_sym_pd(gram_k, tol = 1e-8)
+  
+  # If Privacy-check switch is on for response-node data, run privacy check
+  if(privacy_switch==1){
+      print(paste0("Privacy check with data from covariate node ", k, "."))
+      flippable_ys_nodek <- privacy_check_ck2_complete(null_addition_k,alpha_u,y,n,k)
+    }  
+  
   null_addition_k <- t(t(null_addition_k)*rnorm(ncol(null_addition_k)))
   saveRDS(extract_upper_tri(0.1*null_addition_k%*%t(null_addition_k)+S_inv), file = paste0(examplefilepath, "Coord_node_primerB_for_data_node_",k,".rds"), compress = TRUE)
 }
