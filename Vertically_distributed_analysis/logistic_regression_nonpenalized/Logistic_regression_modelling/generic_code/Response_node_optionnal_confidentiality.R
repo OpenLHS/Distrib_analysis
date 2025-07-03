@@ -12,9 +12,9 @@ library(ROI.plugin.glpk)
 library(ROI.plugin.symphony)
 
 # Privacy check for response data -----------------------
- 
+
 # Main privacy check function
-  
+
 privacy_check_ck2 <- function(V,alpha_tilde,y,n,i0){
   # Compute which entries of y are flippable
   # V: Matrix in null-space of gram matrix of node k
@@ -29,12 +29,12 @@ privacy_check_ck2 <- function(V,alpha_tilde,y,n,i0){
   # initial solution to the system c_k = 1/(lambda n) K_k (\diag alpha) y
   x0 <- (alpha_tilde * y)
   i <- i0
- 
+  
   if (abs(x0[i]) < 1e-8 | feasible_flip[i] == TRUE ) {
     feasible_flip[i] <- TRUE  # zero: already sign-flippable
     next
   }
-
+  
   direction <- if (x0[i] > 0) "<=" else ">="
   
   # Inequality: sign flip
@@ -56,22 +56,16 @@ privacy_check_ck2 <- function(V,alpha_tilde,y,n,i0){
   L <- OP(objective = rep(0,ncol(V)), 
           constraints = L_constraint(L = A_total, dir = dir_total, rhs = rhs_total))
   gc()
-
-    res2 <- ROI_solve(L, solver = "symphony")
-
+  
+  res2 <- ROI_solve(L, solver = "symphony")
+  
   if(res2$status$code == 0){
     sol <- x0 + V%*% solution(res2)
     return(sol)
   }else{return(NULL)}
 }
 
-
 privacy_check_ck2_complete <- function(V,alpha_tilde,y,n,k){
-
-  #Determine the number of columns of the null matrix used (this number could be modified according to memory access)
-  if(ncol(V)>1200){
-    V_used <- V[,1:1200]
-  }else{V_used <- V}
   
   #Initialize index and count number of flips
   count <- 0
@@ -84,22 +78,63 @@ privacy_check_ck2_complete <- function(V,alpha_tilde,y,n,k){
   progressbar <- txtProgressBar(min=0, max = n, style = 3)
   
   #Run over all line-level values in Y
-  while(length(index)!=0){
-    d_sol <- privacy_check_ck2(V_used,alpha_tilde,y,n,i0)
-    if (!is.null(d_sol)) {
-      count <- count+sum(sign(y[index])!=sign(d_sol[index]))
-      index <- index [!index %in% c(i0)]
-      index <- index[which((sign(y[index])==sign(d_sol[index])))]
-      nbsol <- nbsol + 1
-    }else{
-      index_nosol <- c(index_nosol,i0)
-      index <- index [!index %in% c(i0)]
+  if(ncol(V)>1200){
+    while(length(index)!=0){
+      iter <- 0
+      ncol_used <- 1200
+      d_sol <- NULL
+      while(is.null(d_sol) & ncol_used!=ncol(V)){
+        ncol_used <- 1200+iter*100
+        if(ncol_used>ncol(V)){
+          ncol_used <- ncol(V)
+        }
+        V_used <- V[,1:ncol_used]
+        gc()
+        iter <- iter+1
+        d_sol <- privacy_check_ck2(V_used,alpha_tilde,y,n,i0)
+      }
+      rm(V_used)
+      if (!is.null(d_sol)) {
+        count <- count+sum(sign(y[index])!=sign(d_sol[index]))
+        if(length(index_nosol)!=0){
+          count <- count+sum(sign(y[index_nosol])!=sign(d_sol[index_nosol]))
+          index_nosol <- index_nosol[which(sign(y[index_nosol])==sign(d_sol[index_nosol]))]
+        }
+        index <- index [!index %in% c(i0)]
+        index <- index[which((sign(y[index])==sign(d_sol[index])))]
+        nbsol <- nbsol + 1
+      }else{
+        index_nosol <- c(index_nosol,i0)
+        index <- index [!index %in% c(i0)]
+      }
+      if(length(index)!=0){
+        i0 <- index[which.max(alpha_tilde[index])]  
+      }
+      # Update progress bar
+      setTxtProgressBar(progressbar, n-length(index)) 
     }
-    if(length(index)!=0){
-    i0 <- index[which.max(alpha_tilde[index])]  
+  }else{
+    while(length(index)!=0){
+      d_sol <- privacy_check_ck2(V,alpha_tilde,y,n,i0)
+      if (!is.null(d_sol)) {
+        count <- count+sum(sign(y[index])!=sign(d_sol[index]))
+        if(length(index_nosol)!=0){
+          count <- count+sum(sign(y[index_nosol])!=sign(d_sol[index_nosol]))
+          index_nosol <- index_nosol[which(sign(y[index_nosol])==sign(d_sol[index_nosol]))]
+        }
+        index <- index [!index %in% c(i0)]
+        index <- index[which((sign(y[index])==sign(d_sol[index])))]
+        nbsol <- nbsol + 1
+      }else{
+        index_nosol <- c(index_nosol,i0)
+        index <- index [!index %in% c(i0)]
+      }
+      if(length(index)!=0){
+        i0 <- index[which.max(alpha_tilde[index])]  
+      }
+      # Update progress bar
+      setTxtProgressBar(progressbar, n-length(index)) 
     }
-    # Update progress bar
-    setTxtProgressBar(progressbar, n-length(index)) 
   }
   # close progress bar
   close(progressbar) 
@@ -112,7 +147,6 @@ privacy_check_ck2_complete <- function(V,alpha_tilde,y,n,k){
     write.csv(data.frame(index_noflip=index_nosol),
               file=paste0(examplefilepath, "Index_NoFlip_",k ,".csv"), row.names=FALSE)
   }
-  rm(V_used)
   return(NULL)
 }
 
