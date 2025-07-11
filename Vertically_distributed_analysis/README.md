@@ -1,10 +1,10 @@
 # Vertically_distributed_analysis
-Vertically distributed analysis examples and code using R
+Vertically distributed analysis examples and code using R.
 
 ## Repository structure
 
 1. Methods  
-The material pertaining to each method is located in its related folder, including generic code, requirements and examples  .
+The material pertaining to each method is located in its related folder, including generic code, requirements and examples.
 Each method folder is self-contained.
 
 ## License
