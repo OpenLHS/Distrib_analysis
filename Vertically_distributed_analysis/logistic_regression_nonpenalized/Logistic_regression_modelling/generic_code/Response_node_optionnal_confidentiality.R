@@ -73,39 +73,44 @@ privacy_check_ck2_complete <- function(V,alpha_tilde,y,n,k){
   index_nosol <- numeric(0)
   index <- 1:n
   i0 <- index[which.max(alpha_tilde[index])]
+  
+  # Set number of columns used for partial nullspace
   n_col_sampled <- 1000
   
   # Create progress bar so user know the method isn't stuck
   progressbar <- txtProgressBar(min=0, max = n, style = 3)
   
-  #Run over all line-level values in Y
+  # Run over all line-level values in Y
   if(ncol(V)>n_col_sampled){
     while(length(index)!=0){
       d_sol <- NULL
-      col_sampled <- sample(x = 1:ncol(V), size = n_col_sampled, replace = FALSE)
+      col_sampled <- sample(x = 1:ncol(V), size = n_sampled, replace = FALSE)
       V_used <- V[,col_sampled]
       gc()
       d_sol <- privacy_check_ck2(V_used,alpha_tilde,y,n,i0)
-      }
       rm(V_used)
       if (!is.null(d_sol)) {
-        count <- count+sum(sign(y[index])!=sign(d_sol[index]))
+        count <- count+sum(sign(y[index])!=sign(d_sol[index])) 
         if(length(index_nosol)!=0){
-          count <- count+sum(sign(y[index_nosol])!=sign(d_sol[index_nosol]))
+          count <- count+sum(sign(y[index_nosol])!=sign(d_sol[index_nosol])) 
           index_nosol <- index_nosol[which(sign(y[index_nosol])==sign(d_sol[index_nosol]))]
         }
         index <- index [!index %in% c(i0)]
         index <- index[which((sign(y[index])==sign(d_sol[index])))]
         nbsol <- nbsol + 1
       }else{
-        index_nosol <- c(index_nosol,i0)
-        index <- index [!index %in% c(i0)]
+        index_nosol <- c(index_nosol,i0) 
+        index <- index [!index %in% c(i0)] 
       }
       if(length(index)!=0){
-        i0 <- index[which.max(alpha_tilde[index])]  
+        i0 <- index[which.max(alpha_tilde[index])] 
       }
       # Update progress bar
       setTxtProgressBar(progressbar, n-length(index)) 
+      
+      # Update partial files of IDs
+      write.csv(x = index, file = paste0("partial_index_left_",k,".csv"), row.names = FALSE)
+      write.csv(x = index_nosol, file = paste0("partial_index_nosol_",k,".csv"), row.names = FALSE)
     }
   }else{
     while(length(index)!=0){
@@ -128,12 +133,13 @@ privacy_check_ck2_complete <- function(V,alpha_tilde,y,n,k){
       }
       # Update progress bar
       setTxtProgressBar(progressbar, n-length(index)) 
-
-      # Update files of IDs
-      write.csv(x = index, file = paste0("index_left_", k, ".csv", row.names = FALSE)
-      write.csv(x = index_nosol, file = paste0("index_nosol_current_", k, ".csv""", row.names = FALSE)
+      
+      # Update partial files of IDs
+      write.csv(x = index, file = paste0(examplefilepath, "partial_index_left_",k,".csv"), row.names = FALSE)
+      write.csv(x = index_nosol, file = paste0(examplefilepath, "partial_index_nosol_",k,".csv"), row.names = FALSE)
     }
   }
+  
   # close progress bar
   close(progressbar) 
   
