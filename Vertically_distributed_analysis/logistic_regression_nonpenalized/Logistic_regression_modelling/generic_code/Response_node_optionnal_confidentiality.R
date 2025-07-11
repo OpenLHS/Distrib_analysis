@@ -73,25 +73,19 @@ privacy_check_ck2_complete <- function(V,alpha_tilde,y,n,k){
   index_nosol <- numeric(0)
   index <- 1:n
   i0 <- index[which.max(alpha_tilde[index])]
+  n_col_sampled <- 1000
   
   # Create progress bar so user know the method isn't stuck
   progressbar <- txtProgressBar(min=0, max = n, style = 3)
   
   #Run over all line-level values in Y
-  if(ncol(V)>1200){
+  if(ncol(V)>n_col_sampled){
     while(length(index)!=0){
-      iter <- 0
-      ncol_used <- 1200
       d_sol <- NULL
-      while(is.null(d_sol) & ncol_used!=ncol(V)){
-        ncol_used <- 1200+iter*100
-        if(ncol_used>ncol(V)){
-          ncol_used <- ncol(V)
-        }
-        V_used <- V[,1:ncol_used]
-        gc()
-        iter <- iter+1
-        d_sol <- privacy_check_ck2(V_used,alpha_tilde,y,n,i0)
+      col_sampled <- sample(x = 1:ncol(V), size = n_col_sampled, replace = FALSE)
+      V_used <- V[,col_sampled]
+      gc()
+      d_sol <- privacy_check_ck2(V_used,alpha_tilde,y,n,i0)
       }
       rm(V_used)
       if (!is.null(d_sol)) {
@@ -134,6 +128,10 @@ privacy_check_ck2_complete <- function(V,alpha_tilde,y,n,k){
       }
       # Update progress bar
       setTxtProgressBar(progressbar, n-length(index)) 
+
+      # Update files of IDs
+      write.csv(x = index, file = paste0("index_left_", k, ".csv", row.names = FALSE)
+      write.csv(x = index_nosol, file = paste0("index_nosol_current_", k, ".csv""", row.names = FALSE)
     }
   }
   # close progress bar
