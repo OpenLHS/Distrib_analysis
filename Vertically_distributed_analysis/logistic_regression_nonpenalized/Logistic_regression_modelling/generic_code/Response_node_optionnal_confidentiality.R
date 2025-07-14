@@ -107,10 +107,6 @@ privacy_check_ck2_complete <- function(V,alpha_tilde,y,n,k){
       }
       # Update progress bar
       setTxtProgressBar(progressbar, n-length(index)) 
-      
-      # Update partial files of IDs
-      write.csv(x = index, file = paste0("partial_index_left_",k,".csv"), row.names = FALSE)
-      write.csv(x = index_nosol, file = paste0("partial_index_nosol_",k,".csv"), row.names = FALSE)
     }
   }else{
     while(length(index)!=0){
@@ -133,10 +129,6 @@ privacy_check_ck2_complete <- function(V,alpha_tilde,y,n,k){
       }
       # Update progress bar
       setTxtProgressBar(progressbar, n-length(index)) 
-      
-      # Update partial files of IDs
-      write.csv(x = index, file = paste0(examplefilepath, "partial_index_left_",k,".csv"), row.names = FALSE)
-      write.csv(x = index_nosol, file = paste0(examplefilepath, "partial_index_nosol_",k,".csv"), row.names = FALSE)
     }
   }
   
