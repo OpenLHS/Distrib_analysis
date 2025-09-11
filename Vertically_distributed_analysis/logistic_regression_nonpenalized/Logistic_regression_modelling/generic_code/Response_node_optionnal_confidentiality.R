@@ -84,7 +84,7 @@ privacy_check_ck2_complete <- function(V,alpha_tilde,y,n,k){
   if(ncol(V)>n_col_sampled){
     while(length(index)!=0){
       d_sol <- NULL
-      col_sampled <- sample(x = 1:ncol(V), size = n_sampled, replace = FALSE)
+      col_sampled <- sample(x = 1:ncol(V), size = n_col_sampled, replace = FALSE)
       V_used <- V[,col_sampled]
       gc()
       d_sol <- privacy_check_ck2(V_used,alpha_tilde,y,n,i0)
@@ -124,13 +124,13 @@ privacy_check_ck2_complete <- function(V,alpha_tilde,y,n,k){
       
       # New parameters for 2nd search
       retries_per_i0 <- 10
-      n_sampled <- n_sampled*1.2
+      n_col_sampled <- n_col_sampled*1.2
       
       current_retry <- 1
       
       while(length(index_after)!=0){
         d_sol <- NULL
-        col_sampled <- sample(x = 1:ncol(V), size = n_sampled, replace = FALSE)
+        col_sampled <- sample(x = 1:ncol(V), size = n_col_sampled, replace = FALSE)
         V_used <- V[,col_sampled]
         gc()
         d_sol <- privacy_check_ck2(V_used,alpha_tilde,y,n,i0)
@@ -149,7 +149,7 @@ privacy_check_ck2_complete <- function(V,alpha_tilde,y,n,k){
             i0 <- index_after[which.max(alpha_tilde[index_after])] 
             current_retry <- 1 # reset flag
           }
-        
+          
           # Update partial files of IDs
           write.csv(x = index_after, file = paste0("partial_index_after_left_",k,".csv"), row.names = FALSE)
           write.csv(x = index_after_nosol, file = paste0("partial_index_after_nosol_",k,".csv"), row.names = FALSE)
@@ -176,7 +176,7 @@ privacy_check_ck2_complete <- function(V,alpha_tilde,y,n,k){
           }
           
         }
-  
+        
       }
     }
     
