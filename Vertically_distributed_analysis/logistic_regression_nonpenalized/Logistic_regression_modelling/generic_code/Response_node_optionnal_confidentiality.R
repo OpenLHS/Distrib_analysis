@@ -208,7 +208,7 @@ privacy_check_ck2_complete <- function(V,alpha_tilde,y,n,k){
     }
     
     # If index_nosol is un-empty, try again (!) needs a if, will need a print to test
-    if(length(index_nosolol)!=0){
+    if(length(index_nosol)!=0){
       print("Entering 2nd search stage")
       
       # Reset parameters for 2nd search
