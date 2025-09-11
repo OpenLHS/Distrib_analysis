@@ -112,6 +112,74 @@ privacy_check_ck2_complete <- function(V,alpha_tilde,y,n,k){
       write.csv(x = index, file = paste0("partial_index_left_",k,".csv"), row.names = FALSE)
       write.csv(x = index_nosol, file = paste0("partial_index_nosol_",k,".csv"), row.names = FALSE)
     }
+    
+    # If index_nosol is un-empty, try again (!) needs a if, will need a print to test
+    print("Entering 2nd search stage")
+    
+    # Reset parameters for 2nd search
+    index_after_nosol <- numeric(0)
+    index_after <- index_nosol
+    i0 <- index[which.max(alpha_tilde[index_after])]
+    
+    # New parameters for 2nd search
+    retries_per_i0 <- 10
+    n_sampled <- n_sampled*1.5
+    
+    current_retry <- 1
+    
+    while(length(index_after)!=0){
+      d_sol <- NULL
+      col_sampled <- sample(x = 1:ncol(V), size = n_sampled, replace = FALSE)
+      V_used <- V[,col_sampled]
+      gc()
+      d_sol <- privacy_check_ck2(V_used,alpha_tilde,y,n,i0)
+      rm(V_used)
+      if (!is.null(d_sol)) { # solution found!
+        count <- count+sum(sign(y[index_after])!=sign(d_sol[index_after])) 
+        if(length(index_after_nosol)!=0){ # on valide si on a reussi a flipper des indices qu'on avait pas flipper par le passé
+          count <- count+sum(sign(y[index_after_nosol])!=sign(d_sol[index_after_nosol])) 
+          index_after_nosol <- index_after_nosol[which(sign(y[index_after_nosol])==sign(d_sol[index_after_nosol]))]
+        }
+        index_after <- index_after [!index_after %in% c(i0)]
+        index_after <- index_after[which((sign(y[index_after])==sign(d_sol[index_after])))] # on garde les indices qui n'ont pas flip
+        nbsol <- nbsol + 1
+        
+        if(length(index_after)!=0){ # on prépare le prochain i0
+          i0 <- index_after[which.max(alpha_tilde[index_after])] 
+          current_retry <- 1 # reset flag
+        }
+      
+        # Update partial files of IDs
+        write.csv(x = index_after, file = paste0("partial_index_after_left_",k,".csv"), row.names = FALSE)
+        write.csv(x = index_after_nosol, file = paste0("partial_index_after_nosol_",k,".csv"), row.names = FALSE)
+        
+      }else{ # no solution found...
+        if(current_retry==retries_per_i0){ # we tried but didn't find any solution
+          index_after_nosol <- c(index_after_nosol,i0) # si on n'a pas reussi, on place i0 dans l'index des sans solutions
+          index_after <- index_after [!index_after %in% c(i0)] # on enlève i0 de la liste d'indices a considerer
+          
+          if(length(index_after)!=0){ # on prépare le prochain i0
+            i0 <- index_after[which.max(alpha_tilde[index_after])] 
+            current_retry <- 1 # reset flag
+          }
+          
+          # Update partial files of IDs
+          write.csv(x = index_after, file = paste0("partial_index_after_left_",k,".csv"), row.names = FALSE)
+          write.csv(x = index_after_nosol, file = paste0("partial_index_after_nosol_",k,".csv"), row.names = FALSE)
+          
+          # Reset counter
+          current_retry <- 1
+          
+        } else{ # no solution found for our current try. Let's try again!
+          current_retry <- current_retry + 1
+        }
+        
+      }
+
+    }
+    
+    
+    
   }else{
     while(length(index)!=0){
       d_sol <- privacy_check_ck2(V,alpha_tilde,y,n,i0)
@@ -138,12 +206,75 @@ privacy_check_ck2_complete <- function(V,alpha_tilde,y,n,k){
       write.csv(x = index, file = paste0(examplefilepath, "partial_index_left_",k,".csv"), row.names = FALSE)
       write.csv(x = index_nosol, file = paste0(examplefilepath, "partial_index_nosol_",k,".csv"), row.names = FALSE)
     }
+    
+    # If index_nosol is un-empty, try again (!) needs a if, will need a print to test
+    print("Entering 2nd search stage")
+    
+    # Reset parameters for 2nd search
+    index_after_nosol <- numeric(0)
+    index_after <- index_nosol
+    i0 <- index[which.max(alpha_tilde[index_after])]
+    
+    # New parameters for 2nd search
+    retries_per_i0 <- 10
+    
+    current_retry <- 1
+    
+    while(length(index_after)!=0){
+      d_sol <- privacy_check_ck2(V,alpha_tilde,y,n,i0)
+      if (!is.null(d_sol)) { # solution found!
+        count <- count+sum(sign(y[index_after])!=sign(d_sol[index_after])) 
+        if(length(index_after_nosol)!=0){ # on valide si on a reussi a flipper des indices qu'on avait pas flipper par le passé
+          count <- count+sum(sign(y[index_after_nosol])!=sign(d_sol[index_after_nosol])) 
+          index_after_nosol <- index_after_nosol[which(sign(y[index_after_nosol])==sign(d_sol[index_after_nosol]))]
+        }
+        index_after <- index_after [!index_after %in% c(i0)]
+        index_after <- index_after[which((sign(y[index_after])==sign(d_sol[index_after])))] # on garde les indices qui n'ont pas flip
+        nbsol <- nbsol + 1
+        
+        if(length(index_after)!=0){ # on prépare le prochain i0
+          i0 <- index_after[which.max(alpha_tilde[index_after])] 
+          current_retry <- 1 # reset flag
+        }
+        
+        # Update partial files of IDs
+        write.csv(x = index_after, file = paste0("partial_index_after_left_",k,".csv"), row.names = FALSE)
+        write.csv(x = index_after_nosol, file = paste0("partial_index_after_nosol_",k,".csv"), row.names = FALSE)
+        
+      }else{ # no solution found...
+        if(current_retry==retries_per_i0){ # we tried but didn't find any solution
+          index_after_nosol <- c(index_after_nosol,i0) # si on n'a pas reussi, on place i0 dans l'index des sans solutions
+          index_after <- index_after [!index_after %in% c(i0)] # on enlève i0 de la liste d'indices a considerer
+          
+          if(length(index_after)!=0){ # on prépare le prochain i0
+            i0 <- index_after[which.max(alpha_tilde[index_after])] 
+            current_retry <- 1 # reset flag
+          }
+          
+          # Update partial files of IDs
+          write.csv(x = index_after, file = paste0("partial_index_after_left_",k,".csv"), row.names = FALSE)
+          write.csv(x = index_after_nosol, file = paste0("partial_index_after_nosol_",k,".csv"), row.names = FALSE)
+          
+          # Reset counter
+          current_retry <- 1
+          
+        } else{ # no solution found for our current try. Let's try again!
+          current_retry <- current_retry + 1
+        }
+        
+      }
+      
+    }
+    
+    
   }
   
   # close progress bar
   close(progressbar) 
   
-  #Print results of flips vs no flips
+  #
+  
+  # Print results of flips vs no flips
   cat(sprintf(paste0("Flippable coordinate signs with covariate-node ", k,"'s data: %d / %d\n"), count, n))
   cat(sprintf("Number of distinct candidates: %d\n", nbsol))
   
