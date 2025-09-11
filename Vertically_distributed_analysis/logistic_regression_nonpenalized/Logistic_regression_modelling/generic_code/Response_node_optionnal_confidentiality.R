@@ -124,7 +124,7 @@ privacy_check_ck2_complete <- function(V,alpha_tilde,y,n,k){
       
       # New parameters for 2nd search
       retries_per_i0 <- 10
-      n_sampled <- n_sampled*1.5
+      n_sampled <- n_sampled*1.2
       
       current_retry <- 1
       
