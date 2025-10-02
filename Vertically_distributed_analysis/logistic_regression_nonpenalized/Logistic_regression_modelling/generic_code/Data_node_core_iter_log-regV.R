@@ -62,7 +62,7 @@ node_data_k_unscale <- (as.matrix(read.csv(paste0(examplefilepath,"Data_node_",k
 node_data_k <- scale(node_data_k_unscale)
 
 c_system_k <- as.matrix(read.csv(paste0(examplefilepath,"Coord_node_primerA_for_data_node_",k ,".csv"))[,1])
-lambda <- as.numeric(read.csv(paste0(examplefilepath,"Coord_node_primerA_for_data_node_",k ,".csv"))[1,2])
+eta <- as.numeric(read.csv(paste0(examplefilepath,"Coord_node_primerA_for_data_node_",k ,".csv"))[1,2])
 
 S_inv <- reconstruct_from_upper_tri(readRDS(paste0(examplefilepath,"Coord_node_primerB_for_data_node_",k ,".rds")), nrow(node_data_k))
 
@@ -75,7 +75,7 @@ beta_node_k <- solve(t(node_data_k_indep),c_system_k[q$pivot[seq(q$rank)]])
 beta_node_k_adjusted <- beta_node_k/sapply(as.data.frame(node_data_k_unscale), sd)
 
 #Computations of standard errors
-err_node_k <- sqrt(rep((1/(lambda)),ncol(node_data_k))-(1/((lambda^2)))*
+err_node_k <- sqrt(rep((1/(n*eta)),ncol(node_data_k))-(1/((n^2)*(eta^2)))*
                   (as.vector(diag(t(node_data_k)%*%S_inv%*%node_data_k))))
 err_node_k_adjusted <- err_node_k/sapply(as.data.frame(node_data_k_unscale), sd)
 p_vals <- 2*(1 - pnorm(abs(beta_node_k_adjusted)/err_node_k_adjusted))
