@@ -151,11 +151,7 @@ privacy_check_ck2_complete <- function(V,alpha_tilde,y,n,k,examplefilepath,man_s
             current_retry <- 1 
           }
           
-          # Update partial files of IDs
-          write.csv(x = index_after, file = paste0(examplefilepath, "partial_index_after_left_",k,".csv"), row.names = FALSE)
-          write.csv(x = index_after_nosol, file = paste0(examplefilepath, "partial_index_after_nosol_",k,".csv"), row.names = FALSE)
-          
-        }else{ .
+        }else{
           if(current_retry==retries_per_i0){ 
             index_after_nosol <- c(index_after_nosol,i0) 
             index_after <- index_after [!index_after %in% c(i0)] 
@@ -164,10 +160,6 @@ privacy_check_ck2_complete <- function(V,alpha_tilde,y,n,k,examplefilepath,man_s
               i0 <- index_after[which.max(alpha_tilde[index_after])] 
               current_retry <- 1
             }
-            
-            # Update partial files of IDs
-            write.csv(x = index_after, file = paste0(examplefilepath, "partial_index_after_left_",k,".csv"), row.names = FALSE)
-            write.csv(x = index_after_nosol, file = paste0(examplefilepath, "partial_index_after_nosol_",k,".csv"), row.names = FALSE)
             
             # Reset counter
             current_retry <- 1
