@@ -156,8 +156,8 @@ privacy_check_ck2_complete <- function(V,alpha_tilde,y,n,k,examplefilepath,man_s
           }
           
           # Update partial files of IDs
-          write.csv(x = index_after, file = paste0("partial_index_after_left_",k,".csv"), row.names = FALSE)
-          write.csv(x = index_after_nosol, file = paste0("partial_index_after_nosol_",k,".csv"), row.names = FALSE)
+          write.csv(x = index_after, file = paste0(examplefilepath, "partial_index_after_left_",k,".csv"), row.names = FALSE)
+          write.csv(x = index_after_nosol, file = paste0(examplefilepath, "partial_index_after_nosol_",k,".csv"), row.names = FALSE)
           
         }else{ .
           if(current_retry==retries_per_i0){ 
