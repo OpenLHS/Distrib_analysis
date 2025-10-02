@@ -18,6 +18,16 @@ manualwd <- -1
 # Else, an automated value that complies with the assumptions of the method will be assigned.
 lambda <- -1
 
+# If you want to manually set the parameter eta, specify value here.
+# If you do so, please refer to article to ensure adequate settings. 
+# Else, an automated value that complies with the assumptions of the method will be assigned.
+eta <- -1
+
+# If you want to use a specific seed for the privacy check, specify it here.
+# If you do so, all nodes will use the same seed for their privacy check.
+# Else, no seed will be used
+manualseed <- -1
+
 # No modifications should be required below this point
 ###########################
 
@@ -101,7 +111,7 @@ nb_node_output_files <- length(list.files(path=path, pattern="Data_node_[[:digit
 
 if (nb_node1_files==1 & nb_node_output_files>0) {
   source("Response_node_init_iter_log-regV.R")
-  coord_log_reg(man_wd = manualwd, man_lambda = lambda, expath = path, privacy_switch = privacy)
+  coord_log_reg(man_wd = manualwd, man_lambda = lambda, man_eta = eta, expath = path, privacy_switch = privacy, man_seed = manualseed)
 } else {
   stop("Node 1 data file missing or no output file from other nodes found")
   }

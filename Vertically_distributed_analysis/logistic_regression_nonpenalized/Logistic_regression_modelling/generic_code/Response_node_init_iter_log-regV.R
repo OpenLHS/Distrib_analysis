@@ -4,10 +4,12 @@
 ## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 ## Copyright: GRIIS / Université de Sherbrooke
 
-coord_log_reg <- function(man_wd=-1, man_lambda, expath = "", privacy_switch) {
+coord_log_reg <- function(man_wd=-1, man_lambda, man_eta, expath = "", privacy_switch, man_seed) {
 
+manualseed <- man_seed
 manualwd <- man_wd
 lambda <- man_lambda
+eta <- man_eta
 examplefilepath <- expath
 
 if (manualwd != 1) {
@@ -188,13 +190,21 @@ for (k in 2:K) {
 #Setting parameters lambda (penalty) and epsilon (convergence) for the algorithm 
 #Can be adjusted if needed, please refer to article to ensure adequate settings
 if(lambda==-1){
-  if(n<=10000){
-    lambda <- 0.0001
+  if((1/n)>=5*10^(-6)){
+    lambda <- 5*10^(-6)
   }else{lambda <- 1/n}
 }
 
 if(lambda<=0){
   stop("The algorithm cannot run because the penalty parameter lambda was set lower or equal to 0.")
+}
+
+if(eta==-1){
+  eta <- 10^(-7)
+}
+
+if(eta<=0){
+  stop("The algorithm cannot run because the penalty parameter eta was set lower or equal to 0.")
 }
 
 if(n<=10000){
@@ -284,7 +294,7 @@ rm(hessian_grad_part1,alpha_u1,stepnewton)
 ### Produce the inverse matrix of S for standard errors
 X_beta <- exp((1/lambda)*arma_mm(K_all,(alpha_u*y)))
 S_inv <- inv_sympd_matrix((diag(1/as.vector((X_beta/
-                                               (1+X_beta))*(1-(X_beta/(1+X_beta))))))+(1/(lambda/n))*K_all)
+                                               (1+X_beta))*(1-(X_beta/(1+X_beta))))))+(1/(n*eta))*K_all)
 
 ### Produce and export system of equation results and noisy inverse of S for each nodes
 
@@ -296,16 +306,16 @@ if(privacy_switch==1){
 for (k in 2:K) {
   gram_k <- reconstruct_from_upper_tri(readRDS(paste0(examplefilepath, "Data_node_", k, "_init_output.rds")), n)
   c_system_k <- (1/lambda)*arma_mm(gram_k,(alpha_u*y))
-  lambda_shared <- lambda/n
-  length(lambda_shared) <- length(c_system_k)
-  write.csv(data.frame(c_system_k,lambda_shared),
+  eta_shared <- eta
+  length(eta_shared) <- length(c_system_k)
+  write.csv(data.frame(c_system_k,eta_shared),
             file=paste0(examplefilepath, "Coord_node_primerA_for_data_node_",k ,".csv"), row.names=FALSE)
   null_addition_k <- nullspace_sym_pd(gram_k, tol = 1e-8)
   
   # If Privacy-check switch is on for response-node data, run privacy check
   if(privacy_switch==1){
       print(paste0("Privacy check with data from covariate node ", k, "."))
-      flippable_ys_nodek <- privacy_check_ck2_complete(null_addition_k,alpha_u,y,n,k)
+      flippable_ys_nodek <- privacy_check_ck2_complete(null_addition_k,alpha_u,y,n,k,examplefilepath,manualseed)
     }  
   
   null_addition_k <- t(t(null_addition_k)*rnorm(ncol(null_addition_k)))
@@ -324,7 +334,7 @@ if(p_response_node>0){
   }
 
 ### Produce standard error and two-sided p-values for response-node (if any covariates)
-err_node_1 <- sqrt(rep((1/(lambda/n)),ncol(cov_node_1))-(1/((lambda^2)/(n^2)))*(as.vector(diag(t(cov_node_1)%*%S_inv%*%cov_node_1))))
+err_node_1 <- sqrt(rep((1/(n*eta)),ncol(cov_node_1))-(1/((n^2)*(eta^2)))*(as.vector(diag(t(cov_node_1)%*%S_inv%*%cov_node_1))))
 if(p_response_node>0){
   err_node_1_adjusted <- c(err_node_1[-1]/sapply(as.data.frame(node_1_complete[,-1]), sd))
   p_vals_1 <- 2*(1 - pnorm(abs(beta_node_1_adjusted)/err_node_1_adjusted))}else{
