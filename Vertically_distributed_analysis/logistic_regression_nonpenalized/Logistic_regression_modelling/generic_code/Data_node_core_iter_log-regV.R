@@ -60,6 +60,7 @@ if (manualwd != 1) {
 #Import covariate-node data and intermediary quantities from response-node
 node_data_k_unscale <- (as.matrix(read.csv(paste0(examplefilepath,"Data_node_",k, ".csv"))))
 node_data_k <- scale(node_data_k_unscale)
+n <- nrow(node_data_k)
 
 c_system_k <- as.matrix(read.csv(paste0(examplefilepath,"Coord_node_primerA_for_data_node_",k ,".csv"))[,1])
 eta <- as.numeric(read.csv(paste0(examplefilepath,"Coord_node_primerA_for_data_node_",k ,".csv"))[1,2])
