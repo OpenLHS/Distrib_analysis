@@ -4,8 +4,9 @@
 ## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 ## Copyright: GRIIS / Université de Sherbrooke
 
-coord_log_reg <- function(man_wd=-1, man_lambda, expath = "", privacy_switch) {
+coord_log_reg <- function(man_wd=-1, man_lambda, expath = "", privacy_switch, man_seed = NULL) {
 
+manualseed <- man_seed
 manualwd <- man_wd
 lambda <- man_lambda
 examplefilepath <- expath
@@ -305,7 +306,7 @@ for (k in 2:K) {
   # If Privacy-check switch is on for response-node data, run privacy check
   if(privacy_switch==1){
       print(paste0("Privacy check with data from covariate node ", k, "."))
-      flippable_ys_nodek <- privacy_check_ck2_complete(null_addition_k,alpha_u,y,n,k)
+      flippable_ys_nodek <- privacy_check_ck2_complete(null_addition_k,alpha_u,y,n,k,examplefilepath,manualseed)
     }  
   
   null_addition_k <- t(t(null_addition_k)*rnorm(ncol(null_addition_k)))
