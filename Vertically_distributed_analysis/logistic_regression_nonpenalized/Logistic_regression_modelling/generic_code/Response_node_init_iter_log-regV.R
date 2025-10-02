@@ -4,7 +4,7 @@
 ## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 ## Copyright: GRIIS / Université de Sherbrooke
 
-coord_log_reg <- function(man_wd=-1, man_lambda, man_eta, expath = "", privacy_switch, man_seed = NULL) {
+coord_log_reg <- function(man_wd=-1, man_lambda, man_eta, expath = "", privacy_switch, man_seed) {
 
 manualseed <- man_seed
 manualwd <- man_wd

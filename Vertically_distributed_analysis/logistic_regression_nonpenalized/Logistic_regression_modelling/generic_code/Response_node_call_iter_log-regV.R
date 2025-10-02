@@ -25,8 +25,8 @@ eta <- -1
 
 # If you want to use a specific seed for the privacy check, specify it here.
 # If you do so, all nodes will use the same seed for their privacy check.
-# If commented, no seed will be used
-manualseed <- 34
+# Else, no seed will be used
+manualseed <- -1
 
 # No modifications should be required below this point
 ###########################

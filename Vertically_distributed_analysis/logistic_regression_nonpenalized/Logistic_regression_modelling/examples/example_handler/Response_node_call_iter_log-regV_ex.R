@@ -6,11 +6,13 @@
 
 library(tcltk)
 
-vert_logistic_regression_example_coordnode_handler <- function(man_wd=-1, man_lambda=-1, expath=""){
+vert_logistic_regression_example_coordnode_handler <- function(man_wd=-1, man_lambda=-1, man_eta=-1, expath="", man_seed){
 
   manualwd <- man_wd
   lambda <- man_lambda
+  eta <- man_eta
   examplefilepath <- expath
+  manualseed <- man_seed
   
   # No modifications should be required below this point
   ###########################
@@ -92,7 +94,7 @@ vert_logistic_regression_example_coordnode_handler <- function(man_wd=-1, man_la
   
   if (nb_node1_files==1 & nb_node_output_files>0) {
     source("../../generic_code/Response_node_init_iter_log-regV.R")
-    coord_log_reg(man_wd = manualwd, man_lambda = lambda, expath = examplefilepath, privacy_switch = privacy)
+    coord_log_reg(man_wd = manualwd, man_lambda = lambda, man_eta = eta, expath = examplefilepath, privacy_switch = privacy, man_seed = manualseed)
   } else {
     stop("Node 1 data file missing or no output file from other nodes found")
   }

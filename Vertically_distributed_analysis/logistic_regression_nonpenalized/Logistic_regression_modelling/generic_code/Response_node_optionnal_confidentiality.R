@@ -68,7 +68,7 @@ privacy_check_ck2 <- function(V,alpha_tilde,y,n,i0){
 privacy_check_ck2_complete <- function(V,alpha_tilde,y,n,k,examplefilepath,man_seed){
   
   #If a seed is provided by the user, use it. 
-  if(!is.null(man_seed)){
+  if(man_seed!=-1){
     set.seed(man_seed)
   }
   
