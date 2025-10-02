@@ -114,7 +114,7 @@ privacy_check_ck2_complete <- function(V,alpha_tilde,y,n,k,examplefilepath,man_s
       setTxtProgressBar(progressbar, n-length(index)) 
     }
     
-    # If index_nosol is un-empty, try again (!) needs a if, will need a print to test
+    # If index_nosol is un-empty, try again
     if(length(index_nosol)!=0){
       print("Entering 2nd search stage")
       
