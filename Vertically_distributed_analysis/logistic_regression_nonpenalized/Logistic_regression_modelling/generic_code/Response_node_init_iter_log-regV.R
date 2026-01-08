@@ -53,26 +53,6 @@ cppFunction('arma::vec arma_mm(const arma::mat& m, const arma::vec& v) {
        return m * v;
    };', depends = "RcppArmadillo")
 
-### Solve linear system with symmetric positive definite matrix and a vector
-cppFunction('
-  arma::mat solve_system_spd(const arma::mat& A, const arma::mat& B) {
-
-    // Options pour solve() pour matrice symétrique définie positive
-    arma::solve_opts::opts opts = arma::solve_opts::likely_sympd;
-
-    // Résoudre le système linéaire Ax = B avec Armadillo
-    return arma::solve(A, B, opts);
-  }
-', depends = "RcppArmadillo")
-
-### Inverse symmetric positive definite matrix
-cppFunction('
-  arma::mat inv_sympd_matrix(const arma::mat& A) {
-    // Calculer linverse dune matrice symétrique définie positive
-    return arma::inv_sympd(A);
-  }
-', depends = "RcppArmadillo")
-
 ### Extract upper triangle from symmetric matrix
 cppFunction('
   arma::vec extract_upper_tri(const arma::mat& A) {
@@ -109,13 +89,6 @@ cppFunction('
   }
 ', depends = "RcppArmadillo")
 
-### Efficient L2 norm of a vector
-cppFunction(depends = "RcppArmadillo", code = '
-double l2_norm_rcpp(const arma::vec& x) {
-    return arma::norm(x, 2);
-    }
-  ')
-
 ### Define the nullspace function using Eigen
 cppFunction(depends = "RcppEigen", code = '
   Eigen::MatrixXd nullspace_sym_pd(Eigen::MatrixXd A, double tol = 1e-10) {
@@ -138,6 +111,346 @@ cppFunction(depends = "RcppEigen", code = '
     return nullspace;
   }
 ')
+
+### Rank function for Gram matrices
+rank_psd_chol <- function(A) {
+  R <- suppressWarnings(chol(A, pivot = TRUE, tol = -1))
+  return(attr(R, "rank"))
+}
+
+### Inverse of a matrix S using Woodbury
+Rcpp::sourceCpp(code = '
+// [[Rcpp::depends(RcppEigen)]]
+#include <RcppEigen.h>
+ 
+// [[Rcpp::export]]
+Eigen::MatrixXd S_inv_woodbury(const Eigen::VectorXd& v, const Eigen::MatrixXd& Y, double eta){
+    // Computes Sinv = (Diag(v)^{-1} + (1/(n*eta))*Y*Y^T)^{-1} using Woodbury.
+    // For A = Diag(v)^{-1}, it computes
+    // Sortie =  A^(-1) -  A^(-1) Y (n*eta*I + Y^top A^(-1) Y)^(-1) Y^top A^(-1)
+    // v: n-vector (should be strictly positive)
+    // Y: n x k
+    const int n = static_cast<int>(v.size());
+ 
+    // Compute a_vect
+    Eigen::VectorXd a_vect = (1/v.array());
+ 
+ 
+ 
+    // M = eta*I + Y^top A Y (k x k)
+    Eigen::MatrixXd AY = Y.array().colwise() / a_vect.array();  // A^{-1}Y
+    Eigen::MatrixXd Mat_M = Y.transpose() * AY;
+    Mat_M.diagonal().array() += eta*n;
+ 
+    // Construct Cholesky decomposition of M
+    Eigen::LLT<Eigen::MatrixXd> llt(Mat_M);
+    Eigen::MatrixXd Minv =
+    llt.solve(Eigen::MatrixXd::Identity(Mat_M.rows(), Mat_M.cols()));
+    
+ 
+ 
+    // compute -A^(-1) Y (eta*I + Y^top A^(-1) Y)^(-1) Y^top A^(-1) = M_inv * Y^top A^(-1)
+    Eigen::MatrixXd Sortie = -AY * Minv * AY.transpose();
+ 
+    // compute A^(-1) -  A^(-1) Y (eta*I + Y^top A^(-1) Y)^(-1) Y^top A^(-1)
+    Sortie.diagonal().array() += 1.0/a_vect.array();
+    return(Sortie);
+}
+'
+)
+
+###Solve parameter of dual optimization problem
+Rcpp::sourceCpp(code = '
+// [[Rcpp::depends(RcppEigen)]]
+#include <RcppEigen.h>
+#include <random>
+
+using VecLD = Eigen::Matrix<long double, Eigen::Dynamic, 1>;
+
+// [[Rcpp::export]]
+double fix_lambda(const int& n){
+    double lambda = 0.000005;
+    if(n>200000){
+        lambda = 1.0/n;
+    }
+    return(lambda);
+}
+
+double fix_epsilon(const int& n, const int& p, const double& lambda){
+    double epsilon = 0.0;
+    if(n<=10000){
+        epsilon = 2.0*lambda/( sqrt((p+1.0)*(p*(n-1.0)+n) ) *n);
+    }else{
+        epsilon = 10.0*lambda/( sqrt((p+1.0)*(p*(n-1.0)+n) ) *n );
+    }
+    return(epsilon);
+}
+
+double objective_fct(const Eigen::VectorXd& alpha, const Eigen::MatrixXd& Yk){
+    // Compute the objective function J lambda (alpha)
+    // Yk is a matrix such that Yk Yk^top = 1/lambda diag(y) ( XXt + 11^top) diag(y)
+    
+    double t1 = 0.5 * (Yk.transpose() * alpha).squaredNorm();
+    int n = static_cast<int>(alpha.size());
+    
+    double temp2 =0;
+    for(int i =0; i <n; i++){
+        temp2 += (1.0-alpha(i)) * std::log(1.0-alpha(i)) + alpha(i)  * std::log(alpha(i));
+    }
+    return(t1 + temp2);
+}
+
+long double objective_fct_high_prec(const Eigen::VectorXd& alpha, const Eigen::MatrixXd& Yk){
+    // Compute the objective function
+    
+    VecLD v_ld = (Yk.transpose() * alpha).cast<long double>();
+    long double t1 = 0.5 * v_ld.squaredNorm();
+    int n = static_cast<int>(alpha.size());
+    
+    long double temp2 =0.0;
+    for(int i =0; i <n; i++){
+        temp2 += (1.0-alpha(i)) * std::log(1.0-alpha(i)) + alpha(i)  * std::log(alpha(i));
+    }
+    return(t1 + temp2);
+}
+
+Eigen::VectorXd grad_fct(const Eigen::VectorXd& alpha, const int& n, const double& lambda, const Eigen::MatrixXd& Ky){
+    // compute the gradient of objective_fct
+    // equals to nabla J lambda (alpha)
+    // Ky = diag(y) (K + 1_n 1_n top) diag(y)
+    
+    Eigen::VectorXd grad(n);
+    // First compute Ky alpha and store result inthe vector result
+    Eigen::VectorXd result = Ky * alpha;
+    
+    for(int i=0; i<n; i++){
+        grad(i) = result(i)/(lambda) + std::log(alpha(i)/(1-alpha(i)));
+    }
+    return(grad);
+}
+
+Eigen::VectorXd Newton_Update(const Eigen::VectorXd& alpha, const int& n, const Eigen::MatrixXd& Yk, const Eigen::VectorXd& grad_c){
+    // compute the Newton Update using Woodbury identity.
+    
+    Eigen::VectorXd Dalpha_inv(alpha.size());
+    Dalpha_inv.array() = 1.0 / (alpha.array() * (1.0 - alpha.array()));
+    
+    Eigen::MatrixXd Xs =  Yk.array().colwise() / Dalpha_inv.array().sqrt();
+    Eigen::MatrixXd Mat_M = Xs.transpose() * Xs;
+    Mat_M.diagonal().array() += 1.0;
+    
+    // Construct Cholesky decomposition of M
+    Eigen::LLT<Eigen::MatrixXd> llt;
+    llt.compute(Mat_M);
+    
+    Eigen::VectorXd grand_alpha = grad_c.array()/ sqrt(Dalpha_inv.array());
+    Eigen::VectorXd rhs = Xs.transpose() * grand_alpha;
+    Eigen::VectorXd x = llt.solve(rhs);
+    
+    Eigen::VectorXd grad_2 = grad_c - Yk * x;
+    Eigen::VectorXd sortie = grad_2.array()/Dalpha_inv.array();
+    
+    return(sortie);
+}
+
+// [[Rcpp::export]]
+Eigen::MatrixXd gram_factor_pivoted_cholesky(const Eigen::MatrixXd& G,int max_rank, double tol = 1e-12) {
+    const Eigen::Index n = G.rows();
+
+    // Diagonal residuals residual_diag = diag(G - L L^T). Initially diag(G).
+    Eigen::VectorXd residual_diag = G.diagonal();
+    double traceG = residual_diag.sum();
+
+    // Permutation vector (we pivot by swapping indices)
+    std::vector<Eigen::Index> piv(n); // piv(n) is a vector that is used to separate “used” from “unused” indices as the factorization grows. At iteration k, as a column l is selected among piv(k:n), it is brought in position k so that piv(0:k) contains indices of pivots (columns) that have already been chosen.
+    
+    for (Eigen::Index i = 0; i < n; ++i) piv[i] = i; // initialization of the pivot vector
+
+    Eigen::MatrixXd L = Eigen::MatrixXd::Zero(n, max_rank); // matrix that will be outputed, to be progressively build.
+
+    double resid_trace = traceG;
+    int k = 0;
+
+    while (k < max_rank && resid_trace > tol * traceG) {
+        // Find pivot: index with largest residual diagonal
+        Eigen::Index jmax = k; // will contain the index such that piv(jmax) has the largest residual diagnoal among remaining pivots stored in piv(k:n)
+        double rmax = residual_diag(piv[k]); // will contain the largest residual diagonal among remaining pivots stored in piv(k:n)
+        
+        for (Eigen::Index j = k + 1; j < n; ++j) {
+            double val = residual_diag(piv[j]);
+            if (val > rmax) { rmax = val; jmax = j; }
+        }
+        if (rmax <= 0.0) break; // no more PSD mass
+
+        // Swap pivot into position k
+        std::swap(piv[k], piv[jmax]); // bring the pivot at position piv[jmax] in position piv[k] so that piv(0:k) contains the indices that have already been selected.
+
+        Eigen::Index pk = piv[k]; // pk now denotes the index of the pivot
+        double diagk = residual_diag(pk);
+        double Lkk = std::sqrt(diagk);
+        L(pk, k) = Lkk;
+
+        // Compute column k for all remaining pivot indices i >= k
+        for (Eigen::Index t = k + 1; t < n; ++t) {
+            Eigen::Index pi = piv[t];
+
+            // Compute: (G(pi, pk) - sum_{m<k} L(pi,m)*L(pk,m)) / Lkk
+            double s = G(pi, pk);
+            for (int m = 0; m < k; ++m) {
+                s -= L(pi, m) * L(pk, m);
+            }
+            double Lik = s / Lkk;
+            L(pi, k) = Lik;
+
+            // Update residual diagonal r(pi) -= Lik^2
+            residual_diag(pi) -= Lik * Lik;
+            if (residual_diag(pi) < 0.0) residual_diag(pi) = 0.0; // numerical guard
+        }
+
+        // Update residual trace (sum of remaining diagonals)
+        resid_trace = 0.0;
+        for (Eigen::Index t = k + 1; t < n; ++t) resid_trace += residual_diag(piv[t]);
+
+        ++k;
+    }
+
+    // Return only computed rank k columns
+    return L.leftCols(k);
+}
+
+// [[Rcpp::export]]
+Eigen::VectorXd find_alpha_chap(Eigen::MatrixXd& K,Eigen::VectorXd& y, const int& p_covariates, double lambda){
+    // K is the sum of all the local gram matrix, excluding the constant 11 top
+    // p_covariate is the total number of covariates
+    // the gram matrix K is modified within this algorithm to save mempory space!!!
+    
+    // Defining the parameter lambda to be used during the optimization
+    const int n = static_cast<int>(y.size());
+    
+    // Defining the parameter tau for the armijo criteria in the optimization producedure
+    const double tau = 0.00000001;
+    
+    // Defining the parameter eps for defining the box contraint
+    double eps = 1e-14;
+
+    
+    // Initialisations pour lalgorithme dopimisation de Alpha
+    K.array() += 1.0; // K is now the gram matrix + 1n 1n top
+    K.array().colwise() *= y.array();               // right multiply by diag(y): scale columns
+    K.array().rowwise() *= y.transpose().array();   // left multiply by diag(y): scale rows
+    // La matrice K est donc égale à K = diag(y)(gram matrix + 1n 1n top) diag(y)
+    
+    Eigen::MatrixXd Yk = gram_factor_pivoted_cholesky(K,p_covariates+1);
+    // sort une matrice Yk telle que Yk Yk^top = K
+    //
+    // Boucle pour trouver alpha chapeau
+    //
+    
+    Eigen::VectorXd alpha_courrant=Eigen::VectorXd::Constant(n, 0.1); // initialisation du vecteur alpha
+    Eigen::VectorXd grad_courrant = grad_fct(alpha_courrant, n, lambda, K);
+    
+    bool condition_sortie = true; // initialisation de la condition de sortie de la boucle
+    
+    double epsilon = fix_epsilon(n, static_cast<int>(Yk.cols()) -1 ,lambda); //rank of Yk = p+1, epsilon takes p as input
+    
+    lambda *= n; // To match MPDs code
+    epsilon *= n; // To match MPDs code
+    
+    Yk.array() *= (1.0/sqrt(lambda));          // Yk contient maintenant une matrice telle que Yk Yk top = (1/lambda) diag(y)(K + 1n 1n top)diag(y)
+    
+    while(condition_sortie){
+        
+        double Newton_stepsize = 1.0;
+        Eigen::VectorXd Newton_dc = Newton_Update(alpha_courrant, n,Yk, grad_courrant);
+        
+        Eigen::VectorXd alpha_candidate(n);
+        bool reject_new_candidate = true;
+        while(reject_new_candidate){
+            
+            // calculate alpha_candidate with current Newton_stepsize;
+            for(int i = 0; i<n;i++){
+                bool condition_i = ((alpha_courrant(i) <= eps ) & (grad_courrant(i) >0.0) ) | ((alpha_courrant(i) >= (1.0-eps) ) & (grad_courrant(i) < 0.0) );
+                if(condition_i){
+                    alpha_candidate(i) = alpha_courrant(i) - Newton_stepsize * grad_courrant(i);
+                }
+                else{
+                    alpha_candidate(i) = alpha_courrant(i) - Newton_stepsize * Newton_dc(i);
+                }
+                
+                double temp = std::clamp(alpha_candidate(i), eps, 1.0 - eps); // if alpha_i is outside the box, re-enter it in the box
+                alpha_candidate(i) = temp;
+                
+            }
+            
+            // In praparation for assessing if convergence conditions are met
+            
+            double norm_grad = grad_courrant.norm(); // sqrt(sum_i ai 2 )
+            
+            Eigen::VectorXd Diff_alpha = alpha_courrant - alpha_candidate; // The following two lines: to compute Sum(grad_i *(alpha_courrant_i - alpha_candidate_i))
+            double prod_grad_diffapha = grad_courrant.dot(Diff_alpha);
+            
+            double rhs_armijo = tau * prod_grad_diffapha; // compute 0.00000001*(sum(grad_u*(alpha_u-alpha_u1)))
+            if(norm_grad>1){
+                double objective_alpha_courrant = objective_fct(alpha_courrant,Yk);
+                double objective_alpha_candidate = objective_fct(alpha_candidate,Yk);
+                double diff = objective_alpha_courrant - objective_alpha_candidate;
+                if(diff >= rhs_armijo){
+                    reject_new_candidate = false;
+                }
+            }
+            else{
+                long double objective_alpha_courrant = objective_fct_high_prec(alpha_courrant,Yk);
+                long double objective_alpha_candidate = objective_fct_high_prec(alpha_candidate,Yk);
+                long double diff = objective_alpha_courrant - objective_alpha_candidate;
+                if(diff >= rhs_armijo){
+                    reject_new_candidate = false;
+                }
+            }
+            
+            Newton_stepsize *= 0.5;
+        }
+        alpha_courrant =alpha_candidate;
+        grad_courrant = grad_fct(alpha_courrant, n, lambda, K);
+        double norm_grad = grad_courrant.norm();
+        if(norm_grad<epsilon){
+            condition_sortie = false;
+        }
+        
+    }
+    return(alpha_courrant);
+}
+
+// [[Rcpp::export]]
+Eigen::VectorXd sample_from_ker_Gram(Eigen::MatrixXd& Yk, const int random_seed=123){
+    // Yk is a matrix such that Yk Yk top = Gram
+    // random_seed is to initialize the random number generator
+    // returns a vector that lives in Ker(Gram) = Ker(Yk top)
+    // computes the projection matrix I - Yk (Yk top Yk) pow(-1) Yk top, then samples and project onto Ker(Yk top).
+    
+    const int n = static_cast<int>(Yk.rows());
+    
+    Eigen::MatrixXd S_varcovar = Yk.transpose() * Yk;          // rank(Yk) x rank(Yk)
+    Eigen::LLT<Eigen::MatrixXd> llt(S_varcovar);             // Cholesky
+
+    // One sample
+    std::mt19937_64 rng(random_seed);
+    std::normal_distribution<double> normal(0.0, 1.0);
+
+    Eigen::VectorXd z =
+      Eigen::VectorXd::NullaryExpr(n, [&](){ return normal(rng); }); // creates a vector of n iid normal(0,1)
+    
+    double nz = z.norm();
+    z.array() *= 1.0/nz;
+
+    Eigen::VectorXd u = Yk.transpose() * z;          // = Yk * z
+    Eigen::VectorXd w = llt.solve(u);               // = (Yk top Yk) pow(-1) Yk z
+    Eigen::VectorXd x = z - Yk * w;                 // = (I - Yk (Yk top Yk) pow(-1) Yk) z
+    
+    return(x);
+}
+'
+)
+
 
 # Extract node data and Initialization ----------------------------------------
 
@@ -190,9 +503,7 @@ for (k in 2:K) {
 #Setting parameters lambda (penalty) and epsilon (convergence) for the algorithm 
 #Can be adjusted if needed, please refer to article to ensure adequate settings
 if(lambda==-1){
-  if((1/n)>=5*10^(-6)){
-    lambda <- 5*10^(-6)
-  }else{lambda <- 1/n}
+  lambda = fix_lambda(n)
 }
 
 if(lambda<=0){
@@ -207,94 +518,35 @@ if(eta<=0){
   stop("The algorithm cannot run because the penalty parameter eta was set lower or equal to 0.")
 }
 
-if(n<=10000){
-  epsilon <- 2*lambda*(((p+1)*(p*(n-1)+n))^(-1/2))*n^(-1)
-}else{epsilon <- 2*lambda*(((p+1)*(p*(n-1)+n))^(-1/2))*5*(n^(-1))}
-
-# Adjustments to fit the following implementation simplified with a factor of n
-lambda <- lambda*n
-epsilon <- epsilon*n
 
 # Algorithm and coefficients ---------------------------------------------
 
-###Initialize alpha between 0 and 1 (excluded) and n components
-alpha_u <- rep(0.01,n)
-alpha_u1 <- alpha_u
-
 ###Projected newton raphson 
 
-#Quantity to reuse for Gradient and Hessian
-hessian_grad_part1 <- (1/lambda)*(t(y*(K_all)))*y
-
-#Output: Objective function
-objfun <- function(x){
-  (as.vector((1/(2*lambda))*t(x*y)%*%(K_all)%*%(x*y)))+(sum(x*log(x)+(1-x)*log(1-x)))
-}
-
-#Output: Gradient of objective function
-gradient <- function(x){
-  arma_mm(hessian_grad_part1, x)+(log(x/(1-x)))
-}
-
-#Output: Newton-Raphson step
-newtonstep <- function(alpha){
-  return(as.vector((solve_system_spd(hessian_grad_part1+diag(1/(alpha*(1-alpha))),
-                                                      (arma_mm(hessian_grad_part1, alpha)+(log(alpha/(1-alpha))))))))
-}
-
-#Output: Difference in objective functions with higher precision for last iterations
-diffobj <- function(xu1,xu){
-  a <- mpfr(xu1, precBits = 128)  # Set precision to 200 bits
-  b <- mpfr(xu, precBits = 128)
-  cu1 <- mpfr((sum(a*log(a)+(1-a)*log(1-a))),precBits = 128)
-  du <- mpfr((sum(b*log(b)+(1-b)*log(1-b))),precBits = 128)
-  eu1 <- mpfr((as.vector((1/(2*lambda))*t(a*y)%*%(K_all)%*%(a*y))),precBits = 128)
-  fu <- mpfr((as.vector((1/(2*lambda))*t(b*y)%*%(K_all)%*%(b*y))),precBits = 128)
-  return(as.numeric(mpfr(du+fu-cu1-eu1,precBits = 128)))
-}
-
-#Algorithm: Update with gradient descent for out of bounds components with direction leading out of bounds+
-#newton-raphson for other components. Step size based on Armijo rule adapted for projected newton.
-#See original paper for additional details.
-repeat{
-  stepsize <- 1
-  grad_u <- gradient(alpha_u)
-  
-  #identify components for gradient descent
-  i <- which((alpha_u <= 10^(-14) & grad_u>0) | (alpha_u >= (1-10^(-14)) & grad_u<0))
-  stepnewton <- newtonstep(alpha_u)
-  #Proceed with projected newton using adapted step size
-  repeat{
-    if(isempty(i)){
-      alpha_u1<-alpha_u - stepsize*stepnewton}else{
-        alpha_u1[-i]<-alpha_u[-i]- stepsize*stepnewton[-i]
-        alpha_u1[i]<-as.vector(alpha_u[i]-stepsize*((grad_u)[i]))}
-    alpha_u1[which((alpha_u1 < 0))] <- 10^(-14)
-    alpha_u1[which((alpha_u1 > 1))] <- 1-10^(-14)
-    if(l2_norm_rcpp(grad_u)>1){
-      if ((objfun(alpha_u)-objfun(alpha_u1))>=0.00000001*(sum(grad_u*(alpha_u-alpha_u1)))) break
-    }else{
-      if (diffobj(alpha_u1,alpha_u)>=0.00000001*(sum(grad_u*(alpha_u-alpha_u1)))) break
-    }
-    stepsize <- stepsize/2
-  }   
-  gc()
-  #Verify if stopping criteria is satisfied
-  if ((l2_norm_rcpp(gradient(alpha_u1)))<epsilon) break
-  alpha_u <- alpha_u1
-}
-alpha_u <- alpha_u1
-
-# Remove environment massive matrices and vector not needed anymore
-rm(hessian_grad_part1,alpha_u1,stepnewton)
-
+alpha_chap <- find_alpha_chap(K_all-1,y, p, lambda) 
+gc()
+alpha_u <- alpha_chap
 
 # Exporting quantities to be sent to covariate-nodes -----------------------
 
+### Adjustments to fit the following implementation simplified with a factor of n
+lambda <- lambda*n
+
+###Recomputing Global Gram matrix
+K_all <- cov_node_1%*%t(cov_node_1)
+for (k in 2:K) {
+  node_k <- readRDS(paste0(examplefilepath,"Data_node_", k, "_init_output.rds"))
+  # Adding local Gram Matrices
+  K_all <- K_all + reconstruct_from_upper_tri(node_k, n)
+}
+
 ### Produce the inverse matrix of S for standard errors
-X_beta <- exp((1/lambda)*arma_mm(K_all,(alpha_u*y)))
-S_inv <- inv_sympd_matrix((diag(1/as.vector((X_beta/
-                                               (1+X_beta))*(1-(X_beta/(1+X_beta))))))+(1/(n*eta))*K_all)
+Yk <- gram_factor_pivoted_cholesky(K_all,p+1)
+rm(K_all,node_k)
+gc()
+S_inv <- S_inv_woodbury(alpha_chap*(1-alpha_chap), Yk, eta)
+gc()
+
 
 ### Produce and export system of equation results and noisy inverse of S for each nodes
 
@@ -304,22 +556,26 @@ if(privacy_switch==1){
 }
 
 for (k in 2:K) {
+  # Vector of ck to export
   gram_k <- reconstruct_from_upper_tri(readRDS(paste0(examplefilepath, "Data_node_", k, "_init_output.rds")), n)
+  pk <- rank_psd_chol(reconstruct_from_upper_tri(gram_k, n))
   c_system_k <- (1/lambda)*arma_mm(gram_k,(alpha_u*y))
   eta_shared <- eta
   length(eta_shared) <- length(c_system_k)
   write.csv(data.frame(c_system_k,eta_shared),
             file=paste0(examplefilepath, "Coord_node_primerA_for_data_node_",k ,".csv"), row.names=FALSE)
-  null_addition_k <- nullspace_sym_pd(gram_k, tol = 1e-8)
   
   # If Privacy-check switch is on for response-node data, run privacy check
   if(privacy_switch==1){
-      print(paste0("Privacy check with data from covariate node ", k, "."))
-      flippable_ys_nodek <- privacy_check_ck2_complete(null_addition_k,alpha_u,y,n,k,examplefilepath,manualseed)
-    }  
+    null_addition_k2 <- nullspace_sym_pd(gram_k, tol = 1e-8)
+    print(paste0("Privacy check with data from covariate node ", k, "."))
+    flippable_ys_nodek <- privacy_check_ck2_complete(null_addition_k2,alpha_u,y,n,k,examplefilepath,manualseed)
+    rm(null_addition_k2)
+  } 
   
-  null_addition_k <- t(t(null_addition_k)*rnorm(ncol(null_addition_k)))
-  saveRDS(extract_upper_tri(0.1*null_addition_k%*%t(null_addition_k)+S_inv), file = paste0(examplefilepath, "Coord_node_primerB_for_data_node_",k,".rds"), compress = TRUE)
+  # Inverse of S plus part in ker of gram matrix to export
+  null_addition_k <- sample_from_ker_Gram(gram_factor_pivoted_cholesky(gram_k,pk),123)
+  saveRDS(extract_upper_tri(0.1*tcrossprod(null_addition_k)+S_inv), file = paste0(examplefilepath, "Coord_node_primerB_for_data_node_",k,".rds"), compress = TRUE)
 }
 
 
