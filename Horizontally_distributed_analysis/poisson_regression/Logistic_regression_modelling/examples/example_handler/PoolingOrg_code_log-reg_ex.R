@@ -58,7 +58,7 @@ logistic_regression_example_pooled_handler <- function(man_wd=-1, expath="", nno
   
   # Fitting and printing pooled model
   print("Pooled logistic regression results:")
-  fit <- glm(out1 ~ ., data=pooled_data, family="binomial", weights = weights_pooled)
+  fit <- glm(out1 ~ ., data=pooled_data, family="poisson", weights = weights_pooled)
   print(summary(fit)$coefficients)
   print("Confidence intervals")
   print(confint.default(fit))

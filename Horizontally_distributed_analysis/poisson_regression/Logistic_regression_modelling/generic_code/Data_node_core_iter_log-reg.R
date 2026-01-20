@@ -12,20 +12,12 @@ t <- iterationseq
 examplefilepath <- expath
 
 # Logistic-regression-specific functions
-
-sigmoid <- function(x) {
-  exp(x) / (1 + exp(x))
-}
-
 logreg_D <- function(beta, X, y, W) {
-  n <- nrow(X)
-  t(X) %*% W %*% (y - sigmoid(X %*% beta)) # / n
+  t(X) %*% W %*% (y - exp(X %*% beta)) # / n
 }
 
 logreg_V <- function(beta, X, W) {
-  n <- nrow(X)
-  sig <- sigmoid(X %*% beta)[,1]
-  t(X) %*% W %*% diag(sig*(1-sig)) %*% X # / n
+  t(X) %*% W %*% diag(as.vector(exp(X %*% beta))) %*% X # / n
 }
 
 # Importing data ----------------------------------------------------------
@@ -61,16 +53,13 @@ weights_handler(man_wd = manualwd, nodeid = k, expath = examplefilepath, nbrow =
 node_weights <- read.csv(paste0(examplefilepath, "Weights_node_", k, ".csv"))[,1]
 
 beta_t <- read.csv(paste0(examplefilepath, "Coord_node_iter_", t, "_primer.csv"))[,1]
-
 X_k <- as.matrix(cbind(1, node_data[,-1]))
 y_k <- node_data[,1]
 W_k <- diag(node_weights)
 
 # Computing local gradient and hessian for current iteration --------------
-
 D_k_t <- logreg_D(beta_t, X_k, y_k, W_k)
 V_k_t <- logreg_V(beta_t, X_k, W_k)
-
 
 # Exporting gradient and hessian ------------------------------------------
 

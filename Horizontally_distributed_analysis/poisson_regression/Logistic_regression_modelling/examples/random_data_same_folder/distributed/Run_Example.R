@@ -26,7 +26,7 @@ for(replicate in 1:nb_iter){
   # Run data node code
   logistic_regression_example_datanode_handler(nodeid = 1, expath = examplefilepath)
   logistic_regression_example_datanode_handler(nodeid = 2, expath = examplefilepath)
-  logistic_regression_example_datanode_handler(nodeid = 3, expath = examplefilepath)
+  # logistic_regression_example_datanode_handler(nodeid = 3, expath = examplefilepath)
   
   # Run coordination node code
   logistic_regression_example_coordnode_handler(expath = examplefilepath)

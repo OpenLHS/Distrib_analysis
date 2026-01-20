@@ -52,12 +52,12 @@ if (manualwd != 1) {
   node_weights <- read.csv(paste0(examplefilepath, "Weights_node_", k, ".csv"))[,1]
   
   # Makes sure the outcome variable is properly coded as 0s and 1s.
-  if(!all(unique(node_data$out1) %in% c(0,1))){
-    stop("The outcome variable (out1) contains values that are different from 0 and 1, which isn't allowed.")
-  }
+  #if(!all(unique(node_data$out1) %in% c(0,1))){
+  #  stop("The outcome variable (out1) contains values that are different from 0 and 1, which isn't allowed.")
+  #}
     
   # Fitting local model to generate an initial local estimator --------------
-  fit <- glm(out1 ~ ., data=node_data, family="binomial", weights = node_weights)
+  fit <- glm(out1 ~ ., data=node_data, family="poisson", weights = node_weights)
   coefs <- as.vector(fit$coefficients)
   
   # Exporting local estimator and sample size -------------------------------
