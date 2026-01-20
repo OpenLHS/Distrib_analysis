@@ -50,6 +50,11 @@ The generic_code folder contains examplar `R` code files pertaining to the distr
 	2. All the other ones are based on the same dataset, but if you simply want to look at the output, everything is happening in the same folder, without the need to copy files across.
 	4. The third example (`random_data_with_weights_same_folder`) is based on the same dataset and also uses weights. The weights used were chosen randomly.	
 
+2. `crab_data` and `crab_data_same_folder` are based on the same example. They both use the `CrabSatellites` data sets from the `R` package `vcdExtra`. See [vcdExtra](https://cran.r-project.org/web/packages/vcdExtra/index.html).
+
+	1. The first one (`crab_data`) has the files separated in different folders to better mimic a distributed environment. To run, you need to copy the results across folders, which clarifies what is sent where.
+	2. The second example (`crab_data_same_folder`) is based on the same dataset, but if you simply want to look at the output, everything is happening in the same folder, without the need to copy files across.
+
 ### Generic code
 
 The files in this folder can be used to execute a horizontally distributed poisson regression analysis.
