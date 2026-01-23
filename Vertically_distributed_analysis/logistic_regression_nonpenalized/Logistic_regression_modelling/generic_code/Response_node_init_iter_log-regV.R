@@ -497,7 +497,7 @@ for (k in 2:K) {
     
   # Adding local Gram Matrices
   K_all <- K_all + reconstruct_from_upper_tri(node_k, n)
-  p <- p + rankMatrix(reconstruct_from_upper_tri(node_k, n))[1]
+  p <- rank_psd_chol(reconstruct_from_upper_tri(node_k, n))
 }
 
 #Setting parameters lambda (penalty) and epsilon (convergence) for the algorithm 
