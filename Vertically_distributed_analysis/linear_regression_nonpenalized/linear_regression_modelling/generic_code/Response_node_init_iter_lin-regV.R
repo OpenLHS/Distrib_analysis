@@ -10,11 +10,10 @@ library(Rcpp)
 library(RcppArmadillo)
 library(RcppEigen)
 
-coord_lin_reg <- function(man_wd=-1, man_tau=-1, man_eta=-1, expath = "", man_seed) {
+coord_lin_reg <- function(man_wd=-1, man_tau=-1, man_eta=-1, expath = "") {
   
   # Setting up core variables
   tau <- man_tau
-  manualseed <- man_seed
   manualwd <- man_wd
   eta <- man_eta
   examplefilepath <- expath

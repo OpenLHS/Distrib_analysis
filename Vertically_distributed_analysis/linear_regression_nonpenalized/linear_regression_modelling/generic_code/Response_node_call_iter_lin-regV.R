@@ -21,11 +21,6 @@ tau <- -1
 # Else, an automated value that complies with the assumptions of the method will be assigned.
 eta <- -1
 
-# If you want to use a specific seed for the privacy check, specify it here.
-# If you do so, all nodes will use the same seed for their privacy check.
-# Else, no seed will be used
-manualseed <- -1
-
 # No modifications should be required below this point
 ###########################
 
@@ -60,7 +55,7 @@ nb_node_output_files <- length(list.files(path=path, pattern="Data_node_[[:digit
 
 if (nb_node1_files==1 & nb_node_output_files>0) {
   source("Response_node_init_iter_lin-regV.R")
-  coord_lin_reg(man_wd = manualwd, man_tau = tau, man_eta = eta, expath = path, man_seed = manualseed)
+  coord_lin_reg(man_wd = manualwd, man_tau = tau, man_eta = eta, expath = path)
 } else {
   stop("Node 1 data file missing or no output file from other nodes found")
   }
