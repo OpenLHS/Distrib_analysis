@@ -6,13 +6,8 @@
 # Allow to set working directory automatically
 library(this.path)
 
-# If you want to manually set the parameter lambda, specify value here.
-# If you do so, please refer to article to ensure adequate settings. 
-# Else, an automated value that complies with the assumptions of the method will be assigned.
-lambda <- -1
-
-# If you want to manually set the parameter tau, specify value here.
-# Else, an automated value that complies with the assumptions of the method will be assigned.
+# The parameter tau must be specified here.
+# Please refer to the article to ensure adequate settings.
 tau <- -1
 
 # If you want to manually set the parameter eta, specify value here.

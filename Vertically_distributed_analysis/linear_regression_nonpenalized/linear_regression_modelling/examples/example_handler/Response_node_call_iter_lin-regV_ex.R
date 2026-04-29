@@ -4,10 +4,9 @@
 ## License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 ## Copyright: GRIIS / Université de Sherbrooke
 
-vert_linear_regression_example_coordnode_handler <- function(man_wd=-1, man_lambda=-1, man_tau=-1, man_eta=-1, expath="", man_seed){
+vert_linear_regression_example_coordnode_handler <- function(man_wd=-1, man_tau=-1, man_eta=-1, expath="", man_seed){
 
   manualwd <- man_wd
-  lambda <- man_lambda
   tau <- man_tau
   eta <- man_eta
   examplefilepath <- expath
@@ -44,7 +43,7 @@ vert_linear_regression_example_coordnode_handler <- function(man_wd=-1, man_lamb
   
   if (nb_node1_files==1 & nb_node_output_files>0) {
     source("../../generic_code/Response_node_init_iter_lin-regV.R")
-    coord_lin_reg(man_wd = manualwd, man_lambda = lambda, man_tau = tau, man_eta = eta, expath = examplefilepath, man_seed = manualseed)
+    coord_lin_reg(man_wd = manualwd, man_tau = tau, man_eta = eta, expath = examplefilepath, man_seed = manualseed)
   } else {
     stop("Node 1 data file missing or no output file from other nodes found")
   }

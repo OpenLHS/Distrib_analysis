@@ -10,13 +10,12 @@ library(Rcpp)
 library(RcppArmadillo)
 library(RcppEigen)
 
-coord_lin_reg <- function(man_wd=-1, man_lambda=-1, man_tau=-1, man_eta=-1, expath = "", man_seed) {
+coord_lin_reg <- function(man_wd=-1, man_tau=-1, man_eta=-1, expath = "", man_seed) {
   
   # Setting up core variables
   tau <- man_tau
   manualseed <- man_seed
   manualwd <- man_wd
-  lambda <- man_lambda
   eta <- man_eta
   examplefilepath <- expath
   
@@ -291,20 +290,9 @@ Eigen::MatrixXd gram_factor_pivoted_cholesky(const Eigen::MatrixXd& G,int max_ra
     p <- p + rank_psd_chol(reconstruct_from_upper_tri(node_k, n))
   }
   
-  # Setting parameters lambda (penalty) and epsilon (convergence) for the algorithm 
-  # Can be adjusted if needed, please refer to article to ensure adequate settings
-  if(lambda==-1){
-      lambda <- 0.000005
-    if(n>3000){
-      lambda <- 1/(n^(3/2))
-    }
-  }
-  
-  if(lambda<=0){
-    stop("The algorithm cannot run because the penalty parameter lambda was set lower or equal to 0.")
-  }
-  
-  if(tau!=-1){
+  if(tau==-1){
+    stop("The algorithm cannot run because the parameter tau was set to -1 (not initialized)")
+  }else{
     eigenvalues <- eigen(K_all, symmetric = TRUE)$values
     smalleigen <- eigenvalues[p]
     lambda <- 2*smalleigen*tau/n
